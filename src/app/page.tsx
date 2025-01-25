@@ -1,3 +1,13 @@
+import Header from "@/components/Header";
+import Navigation from "@/components/Navigation";
+import OfferHeader from "@/components/OfferHeader";
+
 export default function Page() {
-  return <h1>Hello, Next.js!</h1>
+  return (
+    <>
+      <OfferHeader />
+      <Header />
+      <Navigation />
+    </>
+  );
 }
