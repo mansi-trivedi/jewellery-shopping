@@ -1,7 +1,21 @@
-import type { NextConfig } from "next";
+import { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  /* config options here */
+const config: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
+        port: "",
+        pathname: "/storage/v1/**",
+        search: "",
+      },
+      {
+        protocol: "https",
+        hostname: "shop.southindiajewels.com",
+      },
+    ],
+  },
 };
 
-export default nextConfig;
+export default config;
