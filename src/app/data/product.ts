@@ -1,46 +1,60 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { APIResponse } from "types/api";
-import { Product } from "types/product";
+import {
+  ProductAPIServerSidePropsTypes,
+  ProductSkuAPIServerSidePropTypes,
+} from "types/product";
 import { BASE_URL } from "@/app/constants/api";
+import { resolvePromise } from "../utils/apiUtils";
 
-const getProductByCategory = async (category: string) => {
+/** Gets all products with given category name */
+const getProductsByCategory = async (categoryName: string) => {
   const requestConfig: AxiosRequestConfig = {
-    url: `${BASE_URL}/api/collections/${category}`,
+    url: `${BASE_URL}/api/collections?category_name=${categoryName}`,
   };
-  const response = await axios.request(requestConfig);
-  return response?.data;
+  const [response, error] = await resolvePromise(axios.request(requestConfig));
+  return [response?.data, error];
 };
 
-const getAllProduct = async (): Promise<APIResponse<Product[]>> => {
-  const requestConfig: AxiosRequestConfig = {
-    url: `${BASE_URL}/api/product`,
+/** Gets all products with pagination */
+const getAllProduct =
+  async (): Promise<ProductAPIServerSidePropsTypes | null> => {
+    const requestConfig: AxiosRequestConfig = {
+      url: `${BASE_URL}/api/product`,
+    };
+    const response = await axios.request<ProductAPIServerSidePropsTypes>(
+      requestConfig
+    );
+    return response?.data;
   };
-  const response = await axios.request<APIResponse<Product[]>>(requestConfig);
-  return response?.data;
-};
 
+/** Gets product based on given SKU */
 const getProductBySku = async (
   skuId: string
-): Promise<APIResponse<Product>> => {
+): Promise<ProductSkuAPIServerSidePropTypes | null> => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/product?sku_id=${skuId}`,
   };
-  const response = await axios.request<APIResponse<Product>>(requestConfig);
+  const response = await axios.request<ProductSkuAPIServerSidePropTypes>(
+    requestConfig
+  );
   return response?.data;
 };
 
+/** Gets list of similar products */
 const getSimilarProducts = async (
   categoryId: string
-): Promise<APIResponse<Product>> => {
+): Promise<ProductAPIServerSidePropsTypes | null> => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/product?category_id=${categoryId}`,
   };
-  const response = await axios.request<APIResponse<Product>>(requestConfig);
+  const response = await axios.request<ProductAPIServerSidePropsTypes>(
+    requestConfig
+  );
   return response?.data;
 };
 
 export {
-  getProductByCategory,
+  getProductsByCategory,
   getAllProduct,
   getProductBySku,
   getSimilarProducts,

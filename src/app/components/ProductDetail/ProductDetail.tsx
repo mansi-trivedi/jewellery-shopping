@@ -1,7 +1,6 @@
 "use client";
 
 import React, { FC, useCallback } from "react";
-import Link from "next/link";
 import ImageSlider from "components/ImageSlider/ImageSlider";
 import Quantity from "components/Quantity/Quantity";
 import Rating from "components/Rating/Ratings";
@@ -9,15 +8,15 @@ import Review from "components/Review/Review";
 import { addToCart } from "@/app/data/cart";
 import { Product } from "@/app/types/productType";
 import toast from "react-hot-toast";
+import Button from "../ui/Button/Button";
 
 type ProductDetailPropTypes = {
-  product: Product;
+  product: Product | null;
 };
 
 const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
   const { product } = props;
-  const { SKU, description, price, productId } = product ?? {};
-
+  const { description, price, productId = "", name, SKU } = product ?? {};
   // const [similarProducts, setSimilarProducts] = useState<Product>([]);
 
   const handleOnAddToCart = useCallback(async () => {
@@ -31,44 +30,51 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
 
   return (
     <>
-      <div className="my-4 flex flex-col md:flex-row w-full justify-center lg:my-8">
-        <div className="flex">
-          <ImageSlider />
-        </div>
-        <div className="mx-4 flex">
-          <div className="my-3">
-            <h1 className="my-2 text-2xl font-bold">{description}</h1>
-            <div className="flex flex-row">
+      <div className="max-w-screen-xl mx-auto">
+        <div className="grid lg:grid-cols-[40%_60%] py-4 lg:py-8 gap-8">
+          <div>
+            <ImageSlider />
+          </div>
+          <div className="flex flex-col gap-2 lg:gap-4">
+            <div className="flex items-center gap-2">
               <Rating isEditable={false} rating={4} />
-              <p className="text-darkBlue mx-2 font-semibold">0 review</p>
+              <p className="font-semibold capitalize">0 reviews</p>
             </div>
-            <p className="text-xl font-semibold my-3">Rs. {price}</p>
-            <div className="my-2 text-lg w-32">
-              <p className="text-darkBlue">Quantity</p>
+            <h1 className="font-semibold text-blackShade text-fluid-body-2 leading-fluid-body-2">
+              {name}
+            </h1>
+            <p className="text-fluid-body-6 leading-fluid-body-6">
+              {description}
+            </p>
+            <p className="font-semibold text-fluid-body-5 leading-fluid-body-5">
+              Rs. {price}
+            </p>
+            {/* <div className="w-32">
+              <p className="text-fluid-micro-guided leading-fluid-micro-guided mb-3 font-medium">
+                Quantity
+              </p>
               <Quantity />
-            </div>
-            <div className="w-full flex flex-col my-3">
-              <button
-                className="border-lightBlue border-2 hover:bg-darkBlue hover:text-white my-1 py-2 font-semibold rounded-md"
+            </div> */}
+            <div className="w-full flex gap-2">
+              <Button
+                className="flex-1 flex-shrink-0"
                 onClick={handleOnAddToCart}
               >
                 Add To Cart
-              </button>
-              <button className="bg-lightBlue text-white hover:bg-darkBlue my-1 py-2 font-semibold rounded-md">
+              </Button>
+
+              <Button
+                className="flex-1 flex-shrink-0"
+                onClick={() => alert("hello")}
+                outline
+              >
                 Buy Now
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       </div>
-      <hr className="border border-gray-300 my-1 mx-4" />
-      <Review isReviewPage={false} />
-      <Link href={`/product/${SKU}/Reviews`}>
-        <p className="m-2 text-lightBlue font-semibold underline hover:text-darkBlue my-2 mx-5 mb-5">
-          See All reviews
-        </p>
-      </Link>
-      <hr className="border border-gray-300 my-2 mx-4" />
+      <Review isReviewPage={false} sku={SKU} />
       {/* <SimilarProduct /> */}
     </>
   );

@@ -2,42 +2,30 @@ const menuItems = [
   {
     href: "/",
     label: "Home",
-    target: "_self",
   },
   {
-    href: "/new_arrival",
-    label: "New Arrival",
-    target: "_self",
-  },
-  {
-    href: "/collections/earrings",
+    href: "/collection/earrings",
     label: "Earrings",
-    target: "_self",
   },
   {
-    href: "/collections/necklaces",
+    href: "/collection/necklaces",
     label: "Necklaces",
-    target: "_self",
   },
   {
-    href: "/collections/bracelets",
+    href: "/collection/bracelets",
     label: "Bracelets",
-    target: "_self",
   },
   {
-    href: "/collections/bangles",
+    href: "/collection/bangles",
     label: "Bangles",
-    target: "_self",
   },
   {
-    href: "/collections/rings",
+    href: "/collection/rings",
     label: "Rings",
-    target: "_self",
   },
   {
-    href: "/collections/anklets",
+    href: "/collection/anklets",
     label: "Anklets",
-    target: "_self",
   },
 ];
 

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Products from "../Products/Products";
 import { RxCross2 } from "react-icons/rx";
 import { useRouter } from "next/navigation";
-import { getWishlist } from "@/app/data/wishlist";
+import { getWishList } from "@/app/data/wishlist";
 import { Product } from "@/app/types/productType";
 
 const Wishlist = () => {
@@ -12,11 +12,11 @@ const Wishlist = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await getWishlist();
-      if (!response.success) {
+      const response = await getWishList();
+      if (!response?.success) {
         return null;
       }
-      setProducts(response.data);
+      setProducts(response?.data ?? []);
     }
     fetchData();
   }, []);

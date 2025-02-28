@@ -4,7 +4,9 @@ import React from "react";
 import { useEffect, useState } from "react";
 import ProductCard from "components/ProductCard/ProductCard";
 import Pagination from "components/Pagination/Pagination";
-import { Product } from "@/app/types/productType";
+import { Product } from "types/product";
+import { getWishList } from "@/app/data/wishlist";
+import { useProductContext } from "context/ProductContext";
 
 type ProductsPropTypes = {
   wishlist: boolean;
@@ -13,10 +15,13 @@ type ProductsPropTypes = {
 
 const productsPerPage = 20;
 
-const Products: React.FC<ProductsPropTypes> = ({ wishlist, products }) => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(1);
+const Products: React.FC<ProductsPropTypes> = (props) => {
+  const { products } = props;
+  const [currentPage] = useState<number>(1);
+  const [, setTotalPages] = useState<number>(1);
   const [, setCurrentProducts] = useState<Product[]>([]);
+  const { toggleProductsFromWishList, wishListProductsSkuIds } =
+    useProductContext();
 
   useEffect(() => {
     setTotalPages(Math.ceil(products.length / productsPerPage));
@@ -27,37 +32,45 @@ const Products: React.FC<ProductsPropTypes> = ({ wishlist, products }) => {
     );
   }, [currentPage, products]);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  /** Effects */
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      const response = await getWishList();
+      if (response?.success) {
+        response?.data?.forEach((product) =>
+          toggleProductsFromWishList(product.SKU)
+        );
+      }
+    };
+    fetchWishlist();
+  }, [toggleProductsFromWishList]);
+
+  // const handlePageChange = (page: number) => {
+  //   setCurrentPage(page);
+  // };
 
   return (
-    <>
-      <div className="container px-4 py-1 max-w-none">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
-          {products?.length ? (
-            products.map((product, key) => (
-              <ProductCard
-                key={key}
-                image={product.images}
-                price={String(product.price)}
-                name={product.name}
-                wishlist={wishlist}
-                sku={product.SKU}
-                productId={product.productId}
-              />
-            ))
-          ) : (
-            <div>No Product</div>
-          )}
-        </div>
+    <div className="relative">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-8">
+        {products?.length ? (
+          products.map((product, key) => (
+            <ProductCard
+              key={key}
+              product={product}
+              isItemInWishList={wishListProductsSkuIds.has(product.SKU)}
+            />
+          ))
+        ) : (
+          <div>No Product</div>
+        )}
       </div>
       <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
+        onPageClick={() => alert("hello")}
+        itemsPerPage={20}
+        totalItems={200}
+        currentPage={1}
       />
-    </>
+    </div>
   );
 };
 

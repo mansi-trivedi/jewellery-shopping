@@ -1,3 +1,5 @@
+import { APIResponse } from "types/api";
+
 type Product = {
   productId: string;
   SKU: string;
@@ -11,4 +13,23 @@ type Product = {
   images: string;
 };
 
-export type { Product };
+type ProductAPIResponse = Partial<{
+  products: Product[];
+  totalProducts: number | null;
+  currentPage: number | null;
+}>;
+
+type ProductAPIServerSidePropsTypes = APIResponse<ProductAPIResponse | null>;
+
+type SingleProductAPIResponse = {
+  products: Product[];
+};
+type ProductSkuAPIServerSidePropTypes =
+  APIResponse<SingleProductAPIResponse | null>;
+
+export type {
+  Product,
+  ProductAPIResponse,
+  ProductAPIServerSidePropsTypes,
+  ProductSkuAPIServerSidePropTypes,
+};

@@ -9,29 +9,40 @@ import {
   useMemo,
   useState,
 } from "react";
-import { Product } from "types/product";
 
 type ProductProviderPropTypes = {
   children: ReactNode;
 };
 
 type ProductContextType = {
-  products: Product[];
-  setProductsData: () => void;
+  wishListProductsSkuIds: Set<string>;
+  toggleProductsFromWishList: (productSkuId: string) => void;
 };
 
 const DEFAULT_VALUE: ProductContextType = {
-  products: [],
-  setProductsData: () => null,
+  wishListProductsSkuIds: new Set<string>(),
+  toggleProductsFromWishList: () => null,
 };
 
 const ProductContext = createContext(DEFAULT_VALUE);
 
 const ProductProvider: FC<ProductProviderPropTypes> = ({ children }) => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [wishListProductsSkuIds, setWishListProductsSkuIds] = useState<
+    typeof DEFAULT_VALUE.wishListProductsSkuIds
+  >(DEFAULT_VALUE.wishListProductsSkuIds);
 
-  const setProductsData = useCallback(() => {
-    setProducts([]);
+  /** Handlers */
+
+  /** Adds and remove product from wishlist state */
+  const toggleProductsFromWishList = useCallback((productSkuId: string) => {
+    setWishListProductsSkuIds((prev) => {
+      const _wishListProductsSkuIds = new Set(prev);
+      if (_wishListProductsSkuIds.delete(productSkuId)) {
+        return _wishListProductsSkuIds;
+      }
+      _wishListProductsSkuIds.add(productSkuId);
+      return _wishListProductsSkuIds;
+    });
   }, []);
 
   /**
@@ -39,10 +50,10 @@ const ProductProvider: FC<ProductProviderPropTypes> = ({ children }) => {
    */
   const providerValue: ProductContextType = useMemo(
     () => ({
-      products,
-      setProductsData,
+      wishListProductsSkuIds,
+      toggleProductsFromWishList,
     }),
-    [products, setProductsData] // update dependency as per requirement
+    [wishListProductsSkuIds, toggleProductsFromWishList] // update dependency as per requirement
   );
 
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import Modal from "react-modal";
-import Dropdown from "components/Dropdown/Dropdown";
+// import Dropdown from "components/Dropdown/Dropdown";
 import CustomModal from "components/Modal/Modal";
 
 const customStyles = {
@@ -148,7 +148,7 @@ const FilterModal: React.FC<NavigationProps> = ({
                 <span className="text-lg font-medium text-darkBlue">
                   Sort By
                 </span>
-                <Dropdown />
+                {/* <Dropdown /> */}
               </div>
             </div>
             <hr className="border border-gray-200 my-1 lg:hidden xl:hidden 2xl:hidden 3xl:hidden" />

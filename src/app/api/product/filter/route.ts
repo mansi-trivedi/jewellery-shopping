@@ -1,7 +1,6 @@
-import db from "@/app/libs/mysql";
-import { RowDataPacket } from "mysql2";
-import { NextResponse, NextRequest } from "next/server";
-import { response } from "../../utils/constants";
+import { NextRequest } from "next/server";
+import { executeQuery } from "@/app/libs/mysql";
+import serverResponse from "@/app/utils/nextServerResponse";
 
 // GET Request Handler
 export async function GET(request: NextRequest) {
@@ -16,7 +15,7 @@ export async function GET(request: NextRequest) {
     // Filter by category
     if (category) {
       const categoryIds = await getCategoryId(category);
-      const placeholders = categoryIds.map(() => '?').join(', ')
+      const placeholders = categoryIds.map(() => "?").join(", ");
       query += ` AND categoryId IN (${placeholders})`;
       queryParams.push(...categoryIds);
     }
@@ -28,25 +27,26 @@ export async function GET(request: NextRequest) {
       queryParams.push(minPrice, maxPrice);
     }
 
-    const [rows] = await db.query(query, queryParams);
-    return NextResponse.json(
-          { status: response.success, data: rows },
-          { status: 200 }
-        );
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        return NextResponse.json(
-          { status: response.error, error: error.message },
-          { status: 400 }
-        );
-      }
+    const rows = await executeQuery(query, queryParams);
+    return serverResponse({
+      success: true,
+      data: rows,
+    });
+  } catch (error) {
+    return serverResponse({
+      success: false,
+      message: "Internal Server Error",
+      error: error instanceof Error ? error.message : undefined,
+      status: 500,
+    });
+  }
 }
 
 const getCategoryId = async (category: string) => {
-  const [rows] = await db.query<RowDataPacket[]>(
+  const rows = await executeQuery(
     "SELECT categoryId FROM category where category.name = ?",
-    category
+    [category]
   );
-  const categoriesId = rows.map((row) => row.categoryId)
+  const categoriesId = rows.map((row) => row.categoryId);
   return categoriesId;
 };

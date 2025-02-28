@@ -31,4 +31,11 @@ async function executeQuery<T extends RowDataPacket>(
   }
 }
 
-export { executeQuery };
+async function closePool() {
+  if (pool) {
+    await pool.end();
+    pool = null;
+  }
+}
+
+export { executeQuery, closePool };

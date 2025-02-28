@@ -14,6 +14,10 @@ const config: NextConfig = {
         protocol: "https",
         hostname: "shop.southindiajewels.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
   },
 };

@@ -3,15 +3,28 @@ import React from "react";
 const Quantity = () => {
   return (
     <div className="mx-auto flex h-8 items-stretch text-darkBlue">
-      <button className="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-lightBlue hover:text-white">
-        -
-      </button>
-      <p className="flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">
-        1
-      </p>
-      <button className="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-lightBlue hover:text-white">
-        +
-      </button>
+      <div className="input-group relative flex">
+        <input
+          type="button"
+          value="-"
+          className="button-minus bg-darkGreen min-w-9 w-auto transition-all duration-200 ease-in text-white cursor-pointer "
+          data-field="quantity"
+        />
+        <input
+          type="number"
+          step="1"
+          max=""
+          value="1"
+          name="quantity"
+          className="quantity-field text-center"
+        />
+        <input
+          type="button"
+          value="+"
+          className="button-plus bg-darkGreen min-w-9 w-auto transition-all duration-200 ease-in text-white cursor-pointer"
+          data-field="quantity"
+        />
+      </div>
     </div>
   );
 };

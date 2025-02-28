@@ -22,38 +22,32 @@ const Header = () => {
 
   return (
     <>
-      <header className="px-4 py-4 flex items-center justify-between">
-        <div className="container mx-auto flex items-center flex-wrap justify-between">
+      <header className="py-4 flex items-center justify-between">
+        <div className="container mx-auto max-w-none flex items-center flex-wrap justify-between">
           {/* Logo */}
-          <div className="text-xl font-bold">Company Logo</div>
+          <div className="text-xl font-bold">Brand Logo</div>
 
-          <div className="hidden lg:block xl:block 2xl:block 3xl:block w-[400px]">
+          <div className="hidden lg:block w-[400px]">
             <Search />
           </div>
 
-          <div className="flex space-x-4 text-gray-500">
+          <div className="flex space-x-6 text-gray-500">
             <FiSearch
-              size={16}
+              size={24}
               className="cursor-pointer lg:hidden xl:hidden 2xl:hidden 3xl:hidden hover:text-orange hover:fill-orange"
               onClick={handleSearchModal}
             />
 
             <Link href="/wishlist">
-              <FiHeart
-                size={16}
-                className="cursor-pointer hover:text-orange hover:fill-orange"
-              />
+              <FiHeart size={24} className="hover:fill-darkGreen" />
             </Link>
 
             <Link href="/cart">
-              <FiShoppingCart
-                size={16}
-                className="cursor-pointer hover:text-orange hover:fill-orange"
-              />
+              <FiShoppingCart size={24} className="hover:fill-darkGreen" />
             </Link>
 
             <FiMenu
-              size={16}
+              size={24}
               className="cursor-pointer lg:hidden xl:hidden 2xl:hidden 3xl:hidden hover:text-orange hover:fill-orange"
               onClick={handleNavigationModal}
             />

@@ -14,12 +14,10 @@ async function decodeAndGetUserInfo() {
     if (!token) {
       return null;
     }
-    const { payload, protectedHeader } = await jwtVerify(
+    const { payload } = await jwtVerify(
       token,
       new TextEncoder().encode(process.env.ACCESS_TOKEN)
     );
-    console.log("Protected Header:", protectedHeader);
-    console.log("Payload:", payload);
     return payload; // Returns the payload if the token is valid.
   } catch (error) {
     console.error("JWT Verification Failed:", error);

@@ -3,10 +3,10 @@ import Image from "next/image";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const images: string[] = [
-  "https://ejpxzaxvroeaeixwhfjb.supabase.co/storage/v1/object/public/jewellery/earring.jpg",
-  "https://ejpxzaxvroeaeixwhfjb.supabase.co/storage/v1/object/public/jewellery/ring.jpg",
-  "https://ejpxzaxvroeaeixwhfjb.supabase.co/storage/v1/object/public/jewellery/bracelet.jpg",
-  "https://ejpxzaxvroeaeixwhfjb.supabase.co/storage/v1/object/public/jewellery/necklace.jpg",
+  "https://images.unsplash.com/photo-1722410180644-5955f83ec8b1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1722410180644-ff76ef805092?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1722410180681-9f5a22d7ebb6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  // "https://images.unsplash.com/photo-1602751584581-2e0372975b46?q=80&w=1977&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 ];
 
 const ImageSlider = () => {
@@ -31,7 +31,7 @@ const ImageSlider = () => {
             src={selectedImage}
             alt="Selected"
             fill={true}
-            className="w-full h-full object-cover rounded-lg"
+            className="w-full h-full object-cover rounded-lg block"
           />
         </div>
       </div>

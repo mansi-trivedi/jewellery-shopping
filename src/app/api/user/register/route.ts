@@ -1,28 +1,23 @@
-import pool from "@/app/libs/mysql";
-import { response } from "@/app/api/utils/constants";
 import { hashPassword } from "@/app/api/services/hashPassword";
-import { RowDataPacket } from "mysql2/promise";
+import { executeQuery } from "@/app/libs/mysql";
+import serverResponse from "@/app/utils/nextServerResponse";
 
 export async function POST(request: Request) {
   try {
     const res = await request.json();
-    const db = await pool.getConnection();
     const userPassword = await hashPassword(res.password);
     const query = "call register(?, ?)";
-    await db.query<RowDataPacket[][]>(query, [res.email, userPassword]);
-    db.release();
-    return Response.json(
-      {
-        status: response.success,
-        message: "User Registered Successfully",
-      },
-      { status: 200 }
-    );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    return Response.json(
-      { status: response.error, error: error.message },
-      { status: 400 }
-    );
+    await executeQuery(query, [res.email, userPassword]);
+    return serverResponse({
+      success: true,
+      message: "User Registered Successfully",
+    });
+  } catch (error) {
+    return serverResponse({
+      success: false,
+      message: "Internal Server Error",
+      error: error instanceof Error ? error.message : undefined,
+      status: 500,
+    });
   }
 }

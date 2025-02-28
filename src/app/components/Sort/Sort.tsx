@@ -1,31 +1,43 @@
-import React, { useState } from "react";
-import { BiSortAlt2 } from "react-icons/bi";
-import Dropdown from "components/Dropdown/Dropdown";
+import React from "react";
 
 type OptionValue = {
   label: string;
   value: string;
 };
 
-const Sort = () => {
-  const [selected, setSelected] = useState<string>("Select an option");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+const options: OptionValue[] = [
+  {
+    label: "Price High To Low",
+    value: "price_high_to_low",
+  },
+  {
+    label: "Price Low To High",
+    value: "price_low_to_high",
+  },
+  {
+    label: "Discount High To Low",
+    value: "discount_high_to_low",
+  },
+  {
+    label: "Discount Low To High",
+    value: "discount_low_to_high",
+  },
+];
 
-  const handleSelect = (option: OptionValue): void => {
-    console.log("optionss", option.value);
-    setSelected(option.label);
-    setIsOpen(false); // Close the dropdown after selection
-  };
+const Sort = () => {
   return (
-    <div className="flex items-center cursor-pointer">
-      <BiSortAlt2 size={20} color="#001e38" />
+    <div className="flex items-center">
       <span className="text-darkBlue">Sort By:</span>
-      <Dropdown
-        selected={selected}
-        handleSelect={handleSelect}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-      />
+      <select>
+        <option selected>Select Option To Sort</option>
+        {options.map((option) => {
+          return (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          );
+        })}
+      </select>
     </div>
   );
 };

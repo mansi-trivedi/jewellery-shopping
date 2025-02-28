@@ -1,7 +1,7 @@
 import Wishlist from "@/app/components/Wishlist/Wishlist";
 
-const Page = async () => {
+const WishListPage = () => {
   return <Wishlist />;
 };
 
-export default Page;
+export default WishListPage;
