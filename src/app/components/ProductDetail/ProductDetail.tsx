@@ -2,7 +2,6 @@
 
 import React, { FC, useCallback } from "react";
 import ImageSlider from "components/ImageSlider/ImageSlider";
-import Quantity from "components/Quantity/Quantity";
 import Rating from "components/Rating/Ratings";
 import Review from "components/Review/Review";
 import { addToCart } from "@/app/data/cart";

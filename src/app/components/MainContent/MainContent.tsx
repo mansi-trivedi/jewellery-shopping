@@ -20,7 +20,7 @@ const MainContent: FC<ProductProps> = ({ products }) => {
 
   return (
     <div className="relative">
-      <div className="flex w-full justify-between py-2 my-4 border">
+      <div className="flex w-full justify-between py-2 my-4">
         <div className="flex items-center">
           <button
             onClick={handleFilterModal}

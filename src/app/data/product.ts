@@ -16,16 +16,17 @@ const getProductsByCategory = async (categoryName: string) => {
 };
 
 /** Gets all products with pagination */
-const getAllProduct =
-  async (): Promise<ProductAPIServerSidePropsTypes | null> => {
-    const requestConfig: AxiosRequestConfig = {
-      url: `${BASE_URL}/api/product`,
-    };
-    const response = await axios.request<ProductAPIServerSidePropsTypes>(
-      requestConfig
-    );
-    return response?.data;
+const getAllProduct = async (
+  pageSize: number = 10
+): Promise<ProductAPIServerSidePropsTypes | null> => {
+  const requestConfig: AxiosRequestConfig = {
+    url: `${BASE_URL}/api/product?page_size=${pageSize}`,
   };
+  const response = await axios.request<ProductAPIServerSidePropsTypes>(
+    requestConfig
+  );
+  return response?.data;
+};
 
 /** Gets product based on given SKU */
 const getProductBySku = async (

@@ -50,7 +50,7 @@ const Products: React.FC<ProductsPropTypes> = (props) => {
   // };
 
   return (
-    <div className="relative">
+    <div className="relative pb-10">
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-8">
         {products?.length ? (
           products.map((product, key) => (
@@ -64,12 +64,12 @@ const Products: React.FC<ProductsPropTypes> = (props) => {
           <div>No Product</div>
         )}
       </div>
-      <Pagination
+      {/* <Pagination
         onPageClick={() => alert("hello")}
         itemsPerPage={20}
         totalItems={200}
         currentPage={1}
-      />
+      /> */}
     </div>
   );
 };
