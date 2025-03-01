@@ -19,7 +19,7 @@ const ProductDetailPage: FC<
 const getServerSideProps = (async (ctx: GetServerSidePropsContext) => {
   const { query } = ctx;
   const skuId = query["sku"] as string;
-  const response = await getProductBySku(skuId);
+  const [response] = await getProductBySku(skuId);
   const { success, data, error, message, status } = response ?? {};
 
   return {

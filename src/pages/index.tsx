@@ -24,7 +24,7 @@ const Homepage: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 };
 
 const getServerSideProps = (async () => {
-  const response = await getAllProduct();
+  const [response] = await getAllProduct();
   const { success, data, error, message, status } = response ?? {};
   return {
     props: {

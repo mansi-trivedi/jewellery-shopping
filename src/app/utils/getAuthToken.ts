@@ -10,7 +10,6 @@ const getAuthToken = async (): Promise<string> => {
 async function decodeAndGetUserInfo() {
   try {
     const token = await getAuthToken();
-    console.log(token, "token");
     if (!token) {
       return null;
     }

@@ -11,7 +11,7 @@ const Button: FC<ButtonPropsTypes> = (props) => {
   const { children, className, outline, ...restProps } = props;
   const classes = outline
     ? "bg-transparent text-darkGreen border-darkGreen hover:bg-darkGreen hover:text-white"
-    : "bg-darkGreen text-white hover:bg-transparent hover:text-darkGreen hover:border-darkGreen";
+    : "bg-darkGreen text-white hover:bg-transparent hover:text-darkGreen hover:border-darkGreen border-transparent";
 
   return (
     <button

@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import {
   ProductAPIServerSidePropsTypes,
   ProductSkuAPIServerSidePropTypes,
@@ -18,40 +18,40 @@ const getProductsByCategory = async (categoryName: string) => {
 /** Gets all products with pagination */
 const getAllProduct = async (
   pageSize: number = 10
-): Promise<ProductAPIServerSidePropsTypes | null> => {
+): Promise<[ProductAPIServerSidePropsTypes | undefined, AxiosError]> => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/product?page_size=${pageSize}`,
   };
-  const response = await axios.request<ProductAPIServerSidePropsTypes>(
-    requestConfig
+  const [response, error] = await resolvePromise(
+    axios.request<ProductAPIServerSidePropsTypes>(requestConfig)
   );
-  return response?.data;
+  return [response?.data, error];
 };
 
 /** Gets product based on given SKU */
 const getProductBySku = async (
   skuId: string
-): Promise<ProductSkuAPIServerSidePropTypes | null> => {
+): Promise<[ProductSkuAPIServerSidePropTypes | undefined, AxiosError]> => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/product?sku_id=${skuId}`,
   };
-  const response = await axios.request<ProductSkuAPIServerSidePropTypes>(
-    requestConfig
+  const [response, error] = await resolvePromise(
+    axios.request<ProductSkuAPIServerSidePropTypes>(requestConfig)
   );
-  return response?.data;
+  return [response?.data, error];
 };
 
 /** Gets list of similar products */
 const getSimilarProducts = async (
   categoryId: string
-): Promise<ProductAPIServerSidePropsTypes | null> => {
+): Promise<[ProductAPIServerSidePropsTypes | undefined, AxiosError]> => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/product?category_id=${categoryId}`,
   };
-  const response = await axios.request<ProductAPIServerSidePropsTypes>(
-    requestConfig
+  const [response, error] = await resolvePromise(
+    axios.request<ProductAPIServerSidePropsTypes>(requestConfig)
   );
-  return response?.data;
+  return [response?.data, error];
 };
 
 export {

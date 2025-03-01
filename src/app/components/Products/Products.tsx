@@ -3,7 +3,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import ProductCard from "components/ProductCard/ProductCard";
-import Pagination from "components/Pagination/Pagination";
 import { Product } from "types/product";
 import { getWishList } from "@/app/data/wishlist";
 import { useProductContext } from "context/ProductContext";
@@ -35,7 +34,7 @@ const Products: React.FC<ProductsPropTypes> = (props) => {
   /** Effects */
   useEffect(() => {
     const fetchWishlist = async () => {
-      const response = await getWishList();
+      const [response] = await getWishList();
       if (response?.success) {
         response?.data?.forEach((product) =>
           toggleProductsFromWishList(product.SKU)

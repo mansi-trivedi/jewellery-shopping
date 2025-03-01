@@ -50,7 +50,7 @@ const NavigationModal: React.FC<NavigationProps> = ({
                   key={index}
                   className="px-3 py-4 text-darkBlue text-sm hover:border-orange font-semibold"
                 >
-                  <Link href={item.href} target={item.target}>
+                  <Link href={item.href}>
                     <span>{item.label}</span>
                   </Link>
                 </li>

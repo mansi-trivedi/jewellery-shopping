@@ -4,34 +4,37 @@ import {
   createContext,
   FC,
   ReactNode,
-  useCallback,
+  useState,
   useContext,
   useMemo,
+  useCallback,
 } from "react";
-import Cookies from "js-cookie";
 
 type UserProviderPropTypes = {
   children: ReactNode;
+  value: {
+    isAuthenticated: boolean;
+  };
 };
 
 type UserContextType = {
-  isUserLoggedIn: () => void;
+  isLoggedIn: boolean;
+  handleUserLoggedInState: (loggedInState: boolean) => void;
 };
 
 const DEFAULT_VALUE: UserContextType = {
-  isUserLoggedIn: () => null,
+  isLoggedIn: false,
+  handleUserLoggedInState: () => null,
 };
 
 const UserContext = createContext(DEFAULT_VALUE);
 
-const UserProvider: FC<UserProviderPropTypes> = ({ children }) => {
-  const isUserLoggedIn = useCallback(() => {
-    const token = Cookies.get("token") || null;
-    if (token) {
-      return true;
-    } else {
-      return false;
-    }
+const UserProvider: FC<UserProviderPropTypes> = ({ children, value }) => {
+  const { isAuthenticated } = value;
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isAuthenticated);
+
+  const handleUserLoggedInState = useCallback((loggedInState: boolean) => {
+    setIsLoggedIn(loggedInState);
   }, []);
 
   /**
@@ -39,9 +42,10 @@ const UserProvider: FC<UserProviderPropTypes> = ({ children }) => {
    */
   const providerValue: UserContextType = useMemo(
     () => ({
-      isUserLoggedIn,
+      isLoggedIn,
+      handleUserLoggedInState,
     }),
-    [isUserLoggedIn] // update dependency as per requirement
+    [isLoggedIn, handleUserLoggedInState] // update dependency as per requirement
   );
 
   return (
@@ -60,5 +64,5 @@ const useUserContext = (): UserContextType => {
   return context;
 };
 
-export { useUserContext, UserProvider };
+export { useUserContext, UserProvider, UserContext };
 export type { UserContextType };

@@ -1,8 +1,9 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { BASE_URL } from "@/app/constants/api";
 import { APIResponse } from "types/api";
 import { Product } from "types/product";
 import { ServerResponseType } from "types/global";
+import { resolvePromise } from "../utils/apiUtils";
 
 const addToWishlist = async (
   productId: string
@@ -18,13 +19,15 @@ const addToWishlist = async (
   return response?.data;
 };
 
-const getWishList = async (): Promise<APIResponse<Product[]> | null> => {
+const getWishList = async (): Promise<
+  [APIResponse<Product[]> | undefined, AxiosError]
+> => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/wishlist`,
     method: "get",
   };
-  const response = await axios.request(requestConfig);
-  return response?.data;
+  const [response, error] = await resolvePromise(axios.request(requestConfig));
+  return [response?.data, error];
 };
 
 const removeItemFromWishList = async (

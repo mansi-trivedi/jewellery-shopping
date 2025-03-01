@@ -6,9 +6,15 @@ import { UserProvider } from "context/UserContext";
 import { AppProps } from "next/app";
 import { Toaster } from "react-hot-toast";
 import { quickSand, openSans, robFont } from "@/app/constants/fonts";
+import { parseCookies } from "@/app/utils/cookie";
+import { NextPageContext } from "next";
 
-const MyApp = (props: AppProps) => {
-  const { Component, pageProps } = props;
+type MyAppPropsTypes = {
+  isAuthenticated: boolean;
+} & AppProps;
+
+const MyApp = (props: MyAppPropsTypes) => {
+  const { Component, pageProps, isAuthenticated } = props;
 
   return (
     <>
@@ -20,22 +26,37 @@ const MyApp = (props: AppProps) => {
         }
       `}</style>
       <GlobalContextProvider>
-        <UserProvider>
+        <UserProvider
+          value={{
+            isAuthenticated: isAuthenticated,
+          }}
+        >
           <ProductProvider>
             <Layout>
               <Component {...pageProps} />
               <Toaster
+                position="top-right"
                 toastOptions={{
                   success: {
+                    iconTheme: {
+                      primary: "#516559",
+                      secondary: "white",
+                    },
                     style: {
-                      background: "green",
+                      background: "#516559",
                       color: "white",
+                      padding: "10px",
+                      borderRadius: "0",
+                      fontSize: "16px",
+                      fontWeight: "500",
                     },
                   },
                   error: {
                     style: {
                       background: "red",
                       color: "white",
+                      padding: "10px",
+                      borderRadius: "0",
                     },
                   },
                 }}
@@ -49,3 +70,14 @@ const MyApp = (props: AppProps) => {
 };
 
 export default MyApp;
+
+MyApp.getInitialProps = async ({ ctx }: { ctx: NextPageContext }) => {
+  let isAuthenticated = false;
+  const cookies = parseCookies(ctx?.req?.headers.cookie || "");
+  if (cookies["authToken"]) {
+    isAuthenticated = true;
+  }
+  return {
+    isAuthenticated: isAuthenticated,
+  };
+};

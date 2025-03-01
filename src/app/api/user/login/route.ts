@@ -1,45 +1,45 @@
-import { response } from "@/app/api/utils/constants";
-// import { verifyPassword } from "@/app/api/services/hashPassword";
-import { NextResponse } from "next/server";
-// import jwt from "jsonwebtoken";
+import { verifyPassword } from "@/app/api/services/hashPassword";
 import { SignJWT } from "jose";
-// import { executeQuery } from "@/app/libs/mysql";
+import { executeQuery } from "@/app/libs/mysql";
+import serverResponse from "@/app/utils/nextServerResponse";
 
 export async function POST(request: Request) {
-  console.log(request);
   try {
-    // const res = await request.json();
-    // const rows = await executeQuery("call login(?)", [res.email]);
-    // const user = rows[0][0];
-    // const result = await verifyPassword(res.password, user.password);
-    // if (!result) {
-    //   throw new Error("Incorrect Password");
-    // }
+    const res = await request.json();
+    const rows = await executeQuery("call login(?)", [res.email]);
+    const user = rows[0][0];
+    const isPasswordValid = await verifyPassword(res.password, user.password);
+    if (!isPasswordValid) {
+      return serverResponse({
+        success: false,
+        message: "Internal Server Error",
+        status: 400,
+      });
+    }
     const userPayload = {
-      userEmail: "mansi@gmail.com",
-      userId: "6e00eace-e7a6-11ef-a79b-00059a3c7a00",
+      userEmail: user.email,
+      userId: user.userId,
     };
     const secret = new TextEncoder().encode(process.env.ACCESS_TOKEN);
     const token = await new SignJWT(userPayload)
       .setProtectedHeader({ alg: "HS256" })
       .sign(secret);
-    const nextResponse = NextResponse.json(
-      {
-        status: response.success,
-        data: "data",
-      },
-      { status: 200 }
-    );
+
+    const nextResponse = serverResponse({
+      success: true,
+      message: "Login successful",
+    });
     nextResponse.cookies.set("authToken", token, {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       httpOnly: true,
     });
     return nextResponse;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    return NextResponse.json(
-      { status: response.error, error: error.message },
-      { status: 400 }
-    );
+  } catch (error) {
+    return serverResponse({
+      success: false,
+      message: "Internal Server Error",
+      error: error instanceof Error ? error.message : undefined,
+      status: 500,
+    });
   }
 }

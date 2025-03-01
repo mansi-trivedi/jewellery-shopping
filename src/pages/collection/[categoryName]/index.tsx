@@ -49,19 +49,22 @@ const Collection: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 
   if (!products?.length) {
     return (
-      <div className="py-8">
-        <h1 className="text-blackShade capitalize">
-          Category product not found
-        </h1>
+      <div className="py-20 text-center max-w-3xl mx-auto">
+        <h1
+          className="text-blackShade capitalize text-fluid-h5 leading-fluid-h5"
+          dangerouslySetInnerHTML={{
+            __html: `products with <q>${collectionName}</q> category not found`,
+          }}
+        />
       </div>
     );
   }
 
   return (
     <>
-      <div className="relative text-fluid-body-1">
+      <div className="relative">
         <HeroImage imageURL={collectionImg} />
-        <p className="absolute top-0 right-0 bottom-0 z-10 text-white h-full">
+        <p className="absolute left-0 right-0 bottom-0 z-10 text-white h-full capitalize flex justify-center items-end pb-8 tracking-wider text-fluid-body-1 leading-fluid-body-1 font-medium">
           {collectionName}
         </p>
       </div>

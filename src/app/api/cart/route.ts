@@ -26,7 +26,6 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const requestBody = await request.json();
-    console.log(requestBody);
     const { cartId, productId, quantity } = requestBody ?? {};
     await executeQuery("call AddProductToCart(?, ?, ?)", [
       cartId ?? "6e00eace-e7a6-11ef-a79b-00059a3c7a00",

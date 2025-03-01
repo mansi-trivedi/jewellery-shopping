@@ -2,15 +2,13 @@ import Image from "next/image";
 import { FC, FormEvent, useCallback, useRef, useState } from "react";
 import Button from "@/app/components/ui/Button/Button";
 import Link from "next/link";
-import { performLoginOperation } from "@/app/data/user";
+import { performUserRegistration } from "@/app/data/user";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import necklaceImg from "@/app/assets/necklaces.jpg";
-import LoadingSpinner from "@/app/components/LoadingSpinner/LoadingSpinner";
-import { useUserContext } from "context/UserContext";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 
-const Login: FC = () => {
-  const { handleUserLoggedInState } = useUserContext();
+const Register: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
@@ -23,24 +21,22 @@ const Login: FC = () => {
         const formData = new FormData(formRef.current);
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
-        const [response, err] = await performLoginOperation(email, password);
-
+        const [, err] = await performUserRegistration(email, password);
         if (err) {
+          toast.error(
+            "Not able to register at this moment. Please try again later"
+          );
           setIsLoading(false);
-          toast.error("Not able log in. Please try again later");
           return;
         }
         setIsLoading(false);
-        if (response?.success) {
-          handleUserLoggedInState(true);
-          toast.success("User successfully logged in", {
-            duration: 1000,
-          });
-          router.push("/");
-        }
+        toast.success("User registered successfully", {
+          duration: 1000,
+        });
+        router.push("/login");
       }
     },
-    [router, handleUserLoggedInState]
+    [router]
   );
 
   return (
@@ -57,10 +53,10 @@ const Login: FC = () => {
               />
             </div>
           </div>
-          <div className="login-form-container p-10">
+          <div className="registration-form-container p-10">
             <fieldset>
               <legend className="text-fluid-body-2 leading-fluid-body-2 font-semibold mb-3">
-                <h1>Login</h1>
+                <h1>Registration</h1>
               </legend>
               <form
                 ref={formRef}
@@ -75,6 +71,7 @@ const Login: FC = () => {
                     Email
                   </label>
                   <input
+                    id="email"
                     type="email"
                     name="email"
                     placeholder="Enter your email"
@@ -91,6 +88,7 @@ const Login: FC = () => {
                     password
                   </label>
                   <input
+                    id="password"
                     type="password"
                     name="password"
                     placeholder="Enter your password"
@@ -100,17 +98,34 @@ const Login: FC = () => {
                 </div>
 
                 <div className="flex flex-col">
-                  <Button type="submit">Login</Button>
+                  <label
+                    htmlFor="confirm-password"
+                    className="mb-2 capitalize text-fluid-micro-guided leading-fluid-micro-guided font-medium"
+                  >
+                    confirm password
+                  </label>
+                  <input
+                    id="confirm-password"
+                    type="password"
+                    name="confirm-password"
+                    placeholder="Re-Enter your password"
+                    className="py-2 px-4 border border-blackShade mb-2"
+                    required
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <Button type="submit">Register</Button>
                 </div>
               </form>
             </fieldset>
             <span className="mt-4 inline-block text-fluid-body-5-guided leading-fluid-body-5-guided">
-              Want to register new account ?{" "}
+              Already have an account ?{" "}
               <Link
-                href={"/register"}
+                href={"/login"}
                 className="underline font-semibold underline-offset-2"
               >
-                Register
+                Login
               </Link>
             </span>
           </div>
@@ -121,4 +136,4 @@ const Login: FC = () => {
   );
 };
 
-export default Login;
+export default Register;
