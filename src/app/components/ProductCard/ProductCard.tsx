@@ -9,6 +9,8 @@ import { Product } from "types/product";
 import { useProductContext } from "@/app/contexts/ProductContext";
 import toast from "react-hot-toast";
 import { ServerResponseType } from "types/global";
+import { PiShoppingCartSimpleBold } from "react-icons/pi";
+import { addToCart } from "@/app/data/cart";
 
 type ProductCardPropTypes = {
   product: Product;
@@ -18,11 +20,7 @@ type ProductCardPropTypes = {
 
 const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
   /** Derived props */
-  const {
-    product,
-    shouldShowAddToCart = false,
-    isItemInWishList = false,
-  } = props;
+  const { product, isItemInWishList = false } = props;
   const { images: image, price, name, SKU: sku, productId } = product ?? {};
 
   /** Contexts */
@@ -30,6 +28,7 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
 
   /** Handlers */
 
+  /** Adds and remove items from wishlist */
   const handleWishList = useCallback(async () => {
     toggleProductsFromWishList(sku);
     let response: ServerResponseType<"">;
@@ -41,10 +40,21 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
     if (response.success) {
       toast.success(response?.message ?? "");
     } else {
-      toast.success("Something went wrong. Please try after sometime");
+      toast.error("Something went wrong. Please try after sometime");
       toggleProductsFromWishList(sku);
     }
   }, [productId, sku, toggleProductsFromWishList, isItemInWishList]);
+
+  const handleOnAddToCartBtnClick = useCallback(async () => {
+    const [cartResp, cartErr] = await addToCart(productId, 1);
+    if (cartErr) {
+      toast.error("Something went wrong. Please try after sometime");
+      return;
+    }
+    if (cartResp?.success) {
+      toast.success(cartResp?.message || "");
+    }
+  }, [productId]);
 
   return (
     <div className="relative shadow-lg flex flex-col bg-offWhite">
@@ -71,29 +81,27 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
           </div>
         </Link>
 
-        <button
-          type="button"
-          onClick={handleWishList}
-          aria-label="add to wish list"
-        >
-          <FiHeart
-            className={`w-6 h-6 
-               ${isItemInWishList ? "fill-blackShade" : "fill-offWhite"} 
-               hover:fill-blackShade`}
-          />
-        </button>
-      </div>
-
-      {shouldShowAddToCart && (
-        <div className="px-4 pb-4 w-full">
+        <div className="action-container flex gap-6">
           <button
             type="button"
-            className="bg-lightBlue text-white px-4 py-3 rounded-md w-full"
+            aria-label={`add ${name} to cart`}
+            onClick={handleOnAddToCartBtnClick}
           >
-            Add To Cart
+            <PiShoppingCartSimpleBold size={24} className="fill-darkGreen" />
+          </button>
+          <button
+            type="button"
+            onClick={handleWishList}
+            aria-label="add to wish list"
+          >
+            <FiHeart
+              className={`w-6 h-6 
+               ${isItemInWishList ? "fill-darkGreen" : "fill-offWhite"} 
+               hover:fill-darkGreen`}
+            />
           </button>
         </div>
-      )}
+      </div>
     </div>
   );
 };

@@ -1,24 +1,33 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { APIResponse } from "types/api";
-import { Cart, AddToCart } from "types/cart";
+import {
+  AddToCartAPIServerSidePropsTypes,
+  CartItemsAPIServerSidePropsTypes,
+  RemoveFromCartAPIServerSidePropsTypes,
+} from "types/cart";
 import { BASE_URL } from "@/app/constants/api";
+import { resolvePromise } from "../utils/apiUtils";
 
-const getCartInternal = async (): Promise<APIResponse<Cart>> => {
+const getCartItems = async (): Promise<
+  [CartItemsAPIServerSidePropsTypes, AxiosError]
+> => {
   const requestConfig: AxiosRequestConfig = {
+    method: "get",
     url: `${BASE_URL}/api/cart`,
   };
-  const response = await axios.request<APIResponse<Cart>>(requestConfig);
-  return response?.data;
+  const [response, error] =
+    await resolvePromise<CartItemsAPIServerSidePropsTypes>(
+      axios.request(requestConfig)
+    );
+  return [response?.data, error];
 };
 
 const addToCart = async (
   productId: string,
   quantity: number = 1
-): Promise<APIResponse<AddToCart>> => {
+): Promise<[AddToCartAPIServerSidePropsTypes | undefined, AxiosError]> => {
   /** Getting cart details */
-  const cart = await getCartInternal();
   const requestData = {
-    cartId: cart?.data?.cartId,
     productId,
     quantity,
   };
@@ -30,8 +39,27 @@ const addToCart = async (
       "Content-Type": "application/json",
     },
   };
-  const response = await axios.request<APIResponse<AddToCart>>(requestConfig);
-  return response?.data;
+  const [response, error] = await resolvePromise(
+    axios.request<APIResponse<AddToCartAPIServerSidePropsTypes>>(requestConfig)
+  );
+  return [response?.data, error];
 };
 
-export { addToCart, getCartInternal };
+const removeItemFromCart = async (
+  cartItemId: string
+): Promise<[RemoveFromCartAPIServerSidePropsTypes | undefined, AxiosError]> => {
+  /** Getting cart details */
+  const requestConfig: AxiosRequestConfig = {
+    url: `${BASE_URL}/api/cart?cart_item_id=${cartItemId}`,
+    method: "delete",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const [response, error] = await resolvePromise(
+    axios.request<RemoveFromCartAPIServerSidePropsTypes>(requestConfig)
+  );
+  return [response?.data, error];
+};
+
+export { addToCart, getCartItems, removeItemFromCart };

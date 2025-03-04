@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import { quickSand, openSans, robFont } from "@/app/constants/fonts";
 import { parseCookies } from "@/app/utils/cookie";
 import { NextPageContext } from "next";
+import { CartProvider } from "context/CartContext";
 
 type MyAppPropsTypes = {
   isAuthenticated: boolean;
@@ -31,38 +32,40 @@ const MyApp = (props: MyAppPropsTypes) => {
             isAuthenticated: isAuthenticated,
           }}
         >
-          <ProductProvider>
-            <Layout>
-              <Component {...pageProps} />
-              <Toaster
-                position="top-right"
-                toastOptions={{
-                  success: {
-                    iconTheme: {
-                      primary: "#516559",
-                      secondary: "white",
+          <CartProvider>
+            <ProductProvider>
+              <Layout>
+                <Component {...pageProps} />
+                <Toaster
+                  position="top-right"
+                  toastOptions={{
+                    success: {
+                      iconTheme: {
+                        primary: "#516559",
+                        secondary: "white",
+                      },
+                      style: {
+                        background: "#516559",
+                        color: "white",
+                        padding: "10px",
+                        borderRadius: "0",
+                        fontSize: "16px",
+                        fontWeight: "500",
+                      },
                     },
-                    style: {
-                      background: "#516559",
-                      color: "white",
-                      padding: "10px",
-                      borderRadius: "0",
-                      fontSize: "16px",
-                      fontWeight: "500",
+                    error: {
+                      style: {
+                        background: "red",
+                        color: "white",
+                        padding: "10px",
+                        borderRadius: "0",
+                      },
                     },
-                  },
-                  error: {
-                    style: {
-                      background: "red",
-                      color: "white",
-                      padding: "10px",
-                      borderRadius: "0",
-                    },
-                  },
-                }}
-              />
-            </Layout>
-          </ProductProvider>
+                  }}
+                />
+              </Layout>
+            </ProductProvider>
+          </CartProvider>
         </UserProvider>
       </GlobalContextProvider>
     </>

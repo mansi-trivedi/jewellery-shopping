@@ -1,15 +1,19 @@
-type Cart = {
-  Total: string;
-  cartId: string;
-  dateCreated: string;
-  dateModified: string;
-  userId: string;
+type CartItem = {
+  cartItemId: string;
+  description: string;
+  name: string;
+  price: string;
+  productId: string;
+  quantity: number;
+  subtotal: string;
 };
+type CartItemsAPIServerSidePropsTypes = APIResponse<CartItem>;
+type AddToCartAPIServerSidePropsTypes = APIResponse<"">;
+type RemoveFromCartAPIServerSidePropsTypes = APIResponse<"">;
 
-type AddToCart = {
-  message: string;
-  status: number;
-  success: boolean;
+export type {
+  AddToCartAPIServerSidePropsTypes,
+  CartItemsAPIServerSidePropsTypes,
+  RemoveFromCartAPIServerSidePropsTypes,
+  CartItem,
 };
-
-export type { Cart, AddToCart };

@@ -1,48 +1,47 @@
 import React from "react";
-import { RxCross2 } from "react-icons/rx";
-import Quantity from "components/Quantity/Quantity";
 import Image from "next/image";
+import { FaTrashCan } from "react-icons/fa6";
+import { CartItem as CartItemType } from "types/cart";
 
-interface CartItemProps {
-  image: string;
-  price: string;
-  name: string;
-}
-const CartItem: React.FC<CartItemProps> = ({
-  image = "https://shop.southindiajewels.com/wp-content/uploads/2024/04/219.a.jpg",
-  price,
-  name,
-}) => {
+type CartItemPropsTypes = {
+  cartItem: CartItemType;
+};
+const CartItem: React.FC<CartItemPropsTypes> = (props) => {
+  const { cartItem } = props;
+  const { name, description } = cartItem ?? {};
+
   return (
     <>
-      <div className="shrink-0">
-        <Image
-          className="rounded-lg"
-          src={image}
-          width={80}
-          height={80}
-          alt=""
-        />
-      </div>
-
-      <div className="relative flex flex-1 flex-col justify-between">
-        <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
-          <div className="pr-8 sm:pr-5">
-            <p className="text-base font-semibold text-darkBlue">{name}</p>
-            <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">Rs. {price}</p>
-          </div>
-
-          <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-            <p className="shrink-0 w-20 text-base font-semibold text-darkBlue sm:order-2 sm:ml-8 sm:text-right">
-              Rs. {price}
-            </p>
-
-            <div className="sm:order-1">
-              <Quantity />
+      <div className="col-span-2 border">
+        <div className="w-full grid gap-4 lg:grid-cols-[60%_20%_20%] bg-badgeShade">
+          <div className="product-information">
+            <Image
+              className="rounded-lg"
+              src="https://shop.southindiajewels.com/wp-content/uploads/2024/04/219.a.jpg"
+              width={50}
+              height={50}
+              alt="Product Image"
+            />
+            <div>
+              <p className="font-semibold text-xs md:text-sm">{name}</p>
+              <p className="text-xs md:text-sm text-gray-500">{description}</p>
             </div>
           </div>
-          <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto cursor-pointer">
-            <RxCross2 size={20} />
+          <div className="quantity-selector">
+            <div className="flex items-center justify-center">
+              <button className="border px-2 bg-cloudGray text-xs md:text-sm">
+                -
+              </button>
+              <span className="px-2 md:px-3 border text-xs md:text-sm">1</span>
+              <button className="border px-2 bg-cloudGray text-xs md:text-sm">
+                +
+              </button>
+            </div>
+          </div>
+          <div className="action-container">
+            <button className="text-darkGreen">
+              <FaTrashCan size={16} />
+            </button>
           </div>
         </div>
       </div>

@@ -18,11 +18,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/api/wishlist/:slug",
-    "/api/wishlist",
-    "/api/cart",
-    "/api/cart/:slug",
-    "/cart",
-  ],
+  matcher: ["/api/cart", "/api/cart/:slug", "/cart"],
 };

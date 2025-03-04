@@ -2,7 +2,7 @@ import React from "react";
 
 const CartTotal = () => {
   return (
-    <div className="mt-6 mx-4 py-4">
+    <div className="">
       <table className="w-full border-collapse border border-gray-200">
         <tbody>
           <tr className="border-b border-gray-200">
