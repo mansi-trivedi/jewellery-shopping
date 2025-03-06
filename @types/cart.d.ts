@@ -1,4 +1,6 @@
-type CartItem = {
+import type { ServerResponseType } from "types/global";
+
+type CartItemData = {
   cartItemId: string;
   description: string;
   name: string;
@@ -7,13 +9,17 @@ type CartItem = {
   quantity: number;
   subtotal: string;
 };
-type CartItemsAPIServerSidePropsTypes = APIResponse<CartItem>;
-type AddToCartAPIServerSidePropsTypes = APIResponse<"">;
-type RemoveFromCartAPIServerSidePropsTypes = APIResponse<"">;
 
-export type {
-  AddToCartAPIServerSidePropsTypes,
-  CartItemsAPIServerSidePropsTypes,
-  RemoveFromCartAPIServerSidePropsTypes,
-  CartItem,
+type GetCartItemsResponse = ServerResponseType<Array<CartItem>>;
+type AddCartItemResponse = ServerResponseType<void>;
+type DeleteCartItemResponse = ServerResponseType<void>;
+
+type CartAPIProps = {
+  cartItem: CartItemData;
+  getCartItemsResponse: GetCartItemsResponse;
+  addCartItemResponse: AddCartItemResponse;
+  deleteCartItemResponse: DeleteCartItemResponse;
+  getServerSideProps: never;
 };
+
+export type { CartAPIProps };

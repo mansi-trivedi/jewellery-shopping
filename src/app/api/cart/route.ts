@@ -1,17 +1,23 @@
 import { executeQuery } from "@/app/libs/mysql";
 import { decodeAndGetUserInfo } from "@/app/utils/getAuthToken";
 import serverResponse from "@/app/utils/nextServerResponse";
+import { NextResponse } from "next/server";
+import { CartAPIProps } from "types/cart";
 
 export const revalidate = 0;
 
-export async function GET() {
+export async function GET(): Promise<
+  NextResponse<CartAPIProps["getCartItemsResponse"]>
+> {
   const payload = (await decodeAndGetUserInfo()) ?? {};
   try {
     const rows = await executeQuery("call GetCartItems(?)", [payload?.userId]);
-    const cartItems = rows[0];
+    const cartItems = rows[0] as Array<CartAPIProps["cartItem"]>;
     return serverResponse({
-      success: true,
       data: cartItems,
+      status: 200,
+      success: true,
+      message: "Cart items fetched successfully",
     });
   } catch (error) {
     return serverResponse({
@@ -23,7 +29,9 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(
+  request: Request
+): Promise<NextResponse<CartAPIProps["addCartItemResponse"]>> {
   try {
     const payload = (await decodeAndGetUserInfo()) ?? {};
     const requestBody = await request.json();
@@ -47,12 +55,14 @@ export async function POST(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(
+  request: Request
+): Promise<NextResponse<CartAPIProps["deleteCartItemResponse"]>> {
   try {
     const payload = (await decodeAndGetUserInfo()) ?? {};
-    const requestBody = await request.json();
-    const { cartItemId } = requestBody ?? {};
-    await executeQuery("call RemoveCartItem(?, ?, ?)", [
+    const { searchParams } = new URL(request.url);
+    const cartItemId = searchParams.get("cart_item_id");
+    await executeQuery("call RemoveCartItem(?, ?)", [
       payload.userId,
       cartItemId,
     ]);

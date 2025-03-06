@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import mysql, { Pool, RowDataPacket } from "mysql2/promise";
+import mysql, { Pool, RowDataPacket, PoolConnection } from "mysql2/promise";
 
 let pool: Pool | null = null;
 
-const getConnection = async () => {
+const getPool = async () => {
   if (!pool) {
     pool = mysql.createPool({
       host: "localhost",
@@ -14,20 +14,26 @@ const getConnection = async () => {
       waitForConnections: true,
     });
   }
-  return pool.getConnection();
+  return pool;
 };
 
 async function executeQuery<T extends RowDataPacket>(
   query: string,
   values?: any[]
 ): Promise<T[]> {
+  let connection: PoolConnection | undefined;
   try {
-    const pool = await getConnection();
-    const [rows] = await pool.execute<T[]>(query, values);
+    const poolInstance = await getPool();
+    connection = await poolInstance.getConnection();
+    const [rows] = await connection.execute<T[]>(query, values);
     return rows;
   } catch (error) {
     console.error("MySQL query error:", error);
     throw error;
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 }
 

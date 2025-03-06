@@ -31,23 +31,22 @@ const ImageSlider = () => {
             src={selectedImage}
             alt="Selected"
             fill={true}
-            className="w-full h-full object-cover rounded-lg block"
+            className="w-full h-full object-cover block"
           />
         </div>
       </div>
 
       {/* Slider with Arrow Navigation */}
-      <div className="flex items-center space-x-2 w-full justify-center">
-        {/* Left Arrow */}
-        <button
+      {/* <div className="flex items-center space-x-2 w-full justify-center"> */}
+      {/* <button
           onClick={prevImage}
           className="p-2 bg-gray-200 rounded-full shadow hover:bg-gray-300 focus:outline-none"
         >
           <FaChevronLeft />
-        </button>
+        </button> */}
 
-        {/* Image Thumbnails */}
-        <div className="flex space-x-1">
+      {/* Image Thumbnails */}
+      {/* <div className="flex space-x-1">
           {images.map((image, index) => (
             <div
               key={index}
@@ -61,16 +60,16 @@ const ImageSlider = () => {
               }}
             ></div>
           ))}
-        </div>
+        </div> */}
 
-        {/* Right Arrow */}
-        <button
+      {/* Right Arrow */}
+      {/* <button
           onClick={nextImage}
           className="p-2 bg-gray-200 rounded-full shadow hover:bg-gray-300 focus:outline-none"
         >
           <FaChevronRight />
-        </button>
-      </div>
+        </button> */}
+      {/* </div> */}
     </div>
   );
 };

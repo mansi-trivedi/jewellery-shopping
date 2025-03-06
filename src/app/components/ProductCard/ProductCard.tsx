@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { FiHeart } from "react-icons/fi";
 import { addToWishlist, removeItemFromWishList } from "@/app/data/wishlist";
 import Link from "next/link";
@@ -10,7 +10,7 @@ import { useProductContext } from "@/app/contexts/ProductContext";
 import toast from "react-hot-toast";
 import { ServerResponseType } from "types/global";
 import { PiShoppingCartSimpleBold } from "react-icons/pi";
-import { addToCart } from "@/app/data/cart";
+import { useCartContext } from "context/CartContext";
 
 type ProductCardPropTypes = {
   product: Product;
@@ -25,6 +25,7 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
 
   /** Contexts */
   const { toggleProductsFromWishList } = useProductContext();
+  const { addToCart } = useCartContext();
 
   /** Handlers */
 
@@ -46,15 +47,8 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
   }, [productId, sku, toggleProductsFromWishList, isItemInWishList]);
 
   const handleOnAddToCartBtnClick = useCallback(async () => {
-    const [cartResp, cartErr] = await addToCart(productId, 1);
-    if (cartErr) {
-      toast.error("Something went wrong. Please try after sometime");
-      return;
-    }
-    if (cartResp?.success) {
-      toast.success(cartResp?.message || "");
-    }
-  }, [productId]);
+    await addToCart(productId, 1);
+  }, [addToCart, productId]);
 
   return (
     <div className="relative shadow-lg flex flex-col bg-offWhite">
@@ -106,4 +100,4 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
   );
 };
 
-export default ProductCard;
+export default memo(ProductCard);

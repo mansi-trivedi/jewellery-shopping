@@ -24,13 +24,13 @@ const Cart: FC = () => {
   }, [setCartItemsHandler]);
 
   return (
-    <div className="grid lg:grid-cols-[70%_30%] py-4 lg:py-8 gap-8">
-      <div className="cart-items-container">
+    <div className="grid lg:grid-cols-[calc(70%-1rem)_calc(30%-1rem)] py-4 lg:py-8 relative min-h-screen w-full max-w-full gap-8">
+      <div className="cart-items-container flex flex-col gap-5">
         {cartItems?.map((cartItem, index) => {
           return <CartItem key={index} cartItem={cartItem} />;
         })}
       </div>
-      <div className="cart-summary-container">
+      <div className="cart-summary-container sticky top-8 self-start w-full bg-cloudGray">
         <CartTotal />
         <div className="mt-6 text-center">
           <Button type="button" className="w-full">

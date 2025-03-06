@@ -15,12 +15,12 @@ const Button: FC<ButtonPropsTypes> = (props) => {
 
   return (
     <button
-      className={`font-bold min-w-28 rounded-sm overflow-hidden border-2 text-fluid-micro-guided leading-fluid-micro-guided transition-all duration-200 ${classes} ${
+      className={`font-bold min-w-28 rounded-sm overflow-hidden border-2 text-fluid-micro-guided leading-fluid-micro-guided transition-all duration-200 py-3 px-7 ${classes} ${
         className ?? ""
       }`}
       {...restProps}
     >
-      <span className="inline-flex items-center justify-center py-3 px-7">
+      <span className="inline-flex items-center justify-center">
         {children}
       </span>
     </button>

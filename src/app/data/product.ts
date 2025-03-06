@@ -38,6 +38,7 @@ const getProductBySku = async (
   const [response, error] = await resolvePromise(
     axios.request<ProductSkuAPIServerSidePropTypes>(requestConfig)
   );
+
   return [response?.data, error];
 };
 
