@@ -72,7 +72,10 @@ export async function DELETE(request: Request) {
         status: 401,
       });
     }
-    await executeQuery("call RemoveFromWishList(?)", [productId]);
+    await executeQuery("call RemoveFromWishList(?, ?)", [
+      productId,
+      payload.userId,
+    ]);
     return serverResponse({
       success: true,
       message: "Item successfully removed from your wish list",
