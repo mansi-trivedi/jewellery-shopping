@@ -8,7 +8,9 @@ import {
   useContext,
   useMemo,
   useState,
+  useEffect,
 } from "react";
+import { getWishList } from "@/app/data/wishlist";
 
 type ProductProviderPropTypes = {
   children: ReactNode;
@@ -44,6 +46,20 @@ const ProductProvider: FC<ProductProviderPropTypes> = ({ children }) => {
       return _wishListProductsSkuIds;
     });
   }, []);
+
+  /** Effects */
+
+  /** Gets and Sets the initial wish list products codes */
+  useEffect(() => {
+    (async () => {
+      const [response] = await getWishList();
+      if (response?.success) {
+        response?.data?.forEach((product) =>
+          toggleProductsFromWishList(product.SKU)
+        );
+      }
+    })();
+  }, [toggleProductsFromWishList]);
 
   /**
    * add your context values and handlers here

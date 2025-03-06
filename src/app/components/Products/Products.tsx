@@ -4,7 +4,6 @@ import React from "react";
 import { useEffect, useState } from "react";
 import ProductCard from "components/ProductCard/ProductCard";
 import { Product } from "types/product";
-import { getWishList } from "@/app/data/wishlist";
 import { useProductContext } from "context/ProductContext";
 
 type ProductsPropTypes = {
@@ -19,8 +18,7 @@ const Products: React.FC<ProductsPropTypes> = (props) => {
   const [currentPage] = useState<number>(1);
   const [, setTotalPages] = useState<number>(1);
   const [, setCurrentProducts] = useState<Product[]>([]);
-  const { toggleProductsFromWishList, wishListProductsSkuIds } =
-    useProductContext();
+  const { wishListProductsSkuIds } = useProductContext();
 
   useEffect(() => {
     setTotalPages(Math.ceil(products.length / productsPerPage));
@@ -30,19 +28,6 @@ const Products: React.FC<ProductsPropTypes> = (props) => {
       products?.slice(indexOfFirstProduct, indexOfLastProduct)
     );
   }, [currentPage, products]);
-
-  /** Effects */
-  useEffect(() => {
-    const fetchWishlist = async () => {
-      const [response] = await getWishList();
-      if (response?.success) {
-        response?.data?.forEach((product) =>
-          toggleProductsFromWishList(product.SKU)
-        );
-      }
-    };
-    fetchWishlist();
-  }, [toggleProductsFromWishList]);
 
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
