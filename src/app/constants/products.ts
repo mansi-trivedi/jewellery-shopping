@@ -343,4 +343,31 @@ const products = [
   },
 ];
 
-export { products };
+const DETAILS = [
+  {
+    title: "details",
+    description: `If you are not completely satisfied with your purchase, you have 30 days from the date of purchase to return the item. The original purchase price, less shipping, will be credited to the card used to make the purchase.
+
+Read more on our return policy`,
+  },
+  {
+    title: "shipping info",
+    description: `If you are not completely satisfied with your purchase, you have 30 days from the date of purchase to return the item. The original purchase price, less shipping, will be credited to the card used to make the purchase.
+
+Read more on our return policy`,
+  },
+  {
+    title: "returns & exchange",
+    description: `If you are not completely satisfied with your purchase, you have 30 days from the date of purchase to return the item. The original purchase price, less shipping, will be credited to the card used to make the purchase.
+
+Read more on our return policy`,
+  },
+  {
+    title: "payment options",
+    description: `If you are not completely satisfied with your purchase, you have 30 days from the date of purchase to return the item. The original purchase price, less shipping, will be credited to the card used to make the purchase.
+
+Read more on our return policy`,
+  },
+];
+
+export { products, DETAILS };

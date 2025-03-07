@@ -10,9 +10,8 @@ import toast from "react-hot-toast";
 import Button from "../ui/Button/Button";
 import FullWidthContainer from "components/FullWidthContainer/FullWidthContainer";
 import { FaCircle } from "react-icons/fa";
-import { FaShippingFast } from "react-icons/fa";
-import { IoIosStopwatch } from "react-icons/io";
-import { FiPackage } from "react-icons/fi";
+import Collapse from "../ui/Collapse/Collapse";
+import { DETAILS } from "@/app/constants/products";
 
 type ProductDetailPropTypes = {
   product: Product | null;
@@ -60,46 +59,40 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
                 Collection and ties any look together with an exquisite
                 finishing touch.
               </p>
+              <p className="font-semibold">
+                <span className="text-fluid-micro-guided leading-fluid-micro-guided flex items-center gap-2">
+                  <FaCircle className="fill-darkGreen" /> In Stock
+                </span>
+              </p>
               <p className="font-semibold text-fluid-body-5 leading-fluid-body-5">
                 Rs. {price}
               </p>
-              <div className="w-full flex flex-col gap-2">
-                <p className="font-semibold">
-                  <span className="text-fluid-micro-guided leading-fluid-micro-guided flex items-center gap-2">
-                    <FaCircle className="fill-darkGreen" /> In Stock
-                  </span>
-                </p>
-                <Button
-                  className="flex-1 flex-shrink-0"
-                  onClick={handleOnAddToCart}
-                >
+
+              <div className="information-accordion flex flex-col">
+                {DETAILS.map(({ title, description }, idx) => {
+                  return (
+                    <div
+                      key={idx}
+                      className="py-4 border-b border-b-blackShade border-opacity-25"
+                    >
+                      <Collapse title={title}>
+                        <p
+                          className="py-4"
+                          dangerouslySetInnerHTML={{ __html: description }}
+                        />
+                      </Collapse>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="w-full flex gap-2 mt-4">
+                <Button className="flex-1" onClick={handleOnAddToCart}>
                   Add To Cart
                 </Button>
-              </div>
-
-              <div className="w-full flex gap-2">
-                <Button
-                  className="flex-1 flex-shrink-0"
-                  onClick={() => alert("hello")}
-                  outline
-                >
+                <Button className="flex-1" onClick={() => alert("hello")}>
                   Buy Now
                 </Button>
-              </div>
-
-              <div className="options-container px-4 flex justify-between items-center">
-                <div className="info-container flex flex-col justify-center items-center">
-                  <FaShippingFast size={32} className="fill-darkGreen" />
-                  <p className="capitalize font-medium">free shipping</p>
-                </div>
-                <div className="info-container flex flex-col justify-center items-center">
-                  <FiPackage size={32} className="fill-darkGreen" />
-                  <p className="capitalize font-medium">free returns</p>
-                </div>
-                <div className="info-container flex flex-col justify-center items-center">
-                  <IoIosStopwatch size={32} className="fill-darkGreen" />
-                  <p className="capitalize font-medium">2 years warranty</p>
-                </div>
               </div>
             </div>
           </div>
