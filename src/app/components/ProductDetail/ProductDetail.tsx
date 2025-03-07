@@ -18,6 +18,11 @@ type ProductDetailPropTypes = {
   product: Product | null;
 };
 
+const imageSlides: string[] = [
+  "https://images.unsplash.com/photo-1722410180644-5955f83ec8b1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1722410180644-ff76ef805092?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+];
+
 const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
   const { product } = props;
   const { description, price, productId = "", name, SKU } = product ?? {};
@@ -37,8 +42,8 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
       <FullWidthContainer>
         <div className="mx-auto relative overflow-hidden">
           <div className="grid lg:grid-cols-[50%_50%]">
-            <div className="relative">
-              <ImageSlider />
+            <div className="slider-container">
+              <ImageSlider images={imageSlides} />
             </div>
             <div className="container max-w-none flex flex-col gap-2 lg:gap-4 py-10 lg:px-10 2xl:px-24">
               <div className="flex items-center gap-2">
