@@ -51,7 +51,7 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
   }, [addToCart, productId]);
 
   return (
-    <div className="relative shadow-lg flex flex-col bg-offWhite">
+    <div className="relative shadow-lg flex flex-col bg-offWhite rounded-lg overflow-hidden">
       <div className="imageBlock w-full relative overflow-hidden before:content-[''] before:block before:pt-[calc(50%*16/9)]">
         <Image
           className="w-full border object-cover"

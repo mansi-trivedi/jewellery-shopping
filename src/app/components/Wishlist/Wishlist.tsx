@@ -5,9 +5,12 @@ import Products from "../Products/Products";
 import { getWishList } from "@/app/data/wishlist";
 import { Product } from "@/app/types/productType";
 import toast from "react-hot-toast";
+import { useProductContext } from "context/ProductContext";
 
 const Wishlist = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const { addProductToWishList, wishListProductsSkuIds } = useProductContext();
+  console.log(wishListProductsSkuIds);
 
   useEffect(() => {
     async function fetchData() {
@@ -18,10 +21,11 @@ const Wishlist = () => {
         );
         return null;
       }
+      response?.data?.forEach((product) => addProductToWishList(product.SKU));
       setProducts(response?.data ?? []);
     }
     fetchData();
-  }, []);
+  }, [addProductToWishList]);
 
   return (
     <div className="py-10">

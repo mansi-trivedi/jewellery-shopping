@@ -19,11 +19,15 @@ type ProductProviderPropTypes = {
 type ProductContextType = {
   wishListProductsSkuIds: Set<string>;
   toggleProductsFromWishList: (productSkuId: string) => void;
+  addProductToWishList: (productSkuId: string) => void;
+  RemoveProductFromWishList: (productSkuId: string) => void;
 };
 
 const DEFAULT_VALUE: ProductContextType = {
   wishListProductsSkuIds: new Set<string>(),
   toggleProductsFromWishList: () => null,
+  addProductToWishList: () => null,
+  RemoveProductFromWishList: () => null,
 };
 
 const ProductContext = createContext(DEFAULT_VALUE);
@@ -34,6 +38,26 @@ const ProductProvider: FC<ProductProviderPropTypes> = ({ children }) => {
   >(DEFAULT_VALUE.wishListProductsSkuIds);
 
   /** Handlers */
+
+  /** Adds product to wishlist */
+  const addProductToWishList = useCallback((productSkuId: string) => {
+    setWishListProductsSkuIds((prev) => {
+      const _wishListProductsSkuIds = new Set(prev);
+      _wishListProductsSkuIds.add(productSkuId);
+      return _wishListProductsSkuIds;
+    });
+  }, []);
+
+  /** Removes product from wishlist */
+  const RemoveProductFromWishList = useCallback((productSkuId: string) => {
+    setWishListProductsSkuIds((prev) => {
+      const _wishListProductsSkuIds = new Set(prev);
+      if (_wishListProductsSkuIds.delete(productSkuId)) {
+        return _wishListProductsSkuIds;
+      }
+      return _wishListProductsSkuIds;
+    });
+  }, []);
 
   /** Adds and remove product from wishlist state */
   const toggleProductsFromWishList = useCallback((productSkuId: string) => {
@@ -54,12 +78,10 @@ const ProductProvider: FC<ProductProviderPropTypes> = ({ children }) => {
     (async () => {
       const [response] = await getWishList();
       if (response?.success) {
-        response?.data?.forEach((product) =>
-          toggleProductsFromWishList(product.SKU)
-        );
+        response?.data?.forEach((product) => addProductToWishList(product.SKU));
       }
     })();
-  }, [toggleProductsFromWishList]);
+  }, [addProductToWishList]);
 
   /**
    * add your context values and handlers here
@@ -68,8 +90,15 @@ const ProductProvider: FC<ProductProviderPropTypes> = ({ children }) => {
     () => ({
       wishListProductsSkuIds,
       toggleProductsFromWishList,
+      addProductToWishList,
+      RemoveProductFromWishList,
     }),
-    [wishListProductsSkuIds, toggleProductsFromWishList] // update dependency as per requirement
+    [
+      wishListProductsSkuIds,
+      toggleProductsFromWishList,
+      addProductToWishList,
+      RemoveProductFromWishList,
+    ] // update dependency as per requirement
   );
 
   return (

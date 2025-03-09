@@ -8,10 +8,51 @@ import { useRouter } from "next/router";
 import necklaceImg from "@/app/assets/necklaces.jpg";
 import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 
+type RegisterErrorProps = {
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+};
+
 const Register: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const [, setErrors] = useState<RegisterErrorProps>({});
   const router = useRouter();
+
+  const validateForm = useCallback(
+    (email: string, password: string, cPassword: string) => {
+      const formErrors: RegisterErrorProps = {};
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const passwordRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+      if (!email) {
+        formErrors.email = "Email is required";
+      } else if (!emailRegex.test(email)) {
+        formErrors.email = "Email is invalid";
+      }
+
+      if (!password) {
+        formErrors.password = "Password is required";
+      } else if (passwordRegex.test(password)) {
+        formErrors.password =
+          "password must contain at least one uppercase letter, one lowercase, one special character and contain at least 8 character";
+      }
+
+      if (!cPassword) {
+        formErrors.confirmPassword = "Confirm Password is required";
+      } else if (password !== cPassword) {
+        formErrors.password = "Password and confirm Password must be equal";
+      }
+      setErrors(formErrors);
+      if (Object.keys(formErrors).length !== 0) {
+        return false;
+      }
+      return true;
+    },
+    []
+  );
 
   const handleOnFormSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -21,6 +62,13 @@ const Register: FC = () => {
         const formData = new FormData(formRef.current);
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
+        const cPassword = formData.get("confirm-password") as string;
+        const isFormValid = validateForm(email, password, cPassword);
+        if (!isFormValid) {
+          toast.error("Please check form fields and try again");
+          setIsLoading(false);
+          return;
+        }
         const [, err] = await performUserRegistration(email, password);
         if (err) {
           toast.error(
@@ -36,7 +84,7 @@ const Register: FC = () => {
         router.push("/login");
       }
     },
-    [router]
+    [router, validateForm]
   );
 
   return (

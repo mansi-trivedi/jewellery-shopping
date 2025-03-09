@@ -9,11 +9,39 @@ import necklaceImg from "@/app/assets/necklaces.jpg";
 import LoadingSpinner from "@/app/components/LoadingSpinner/LoadingSpinner";
 import { useUserContext } from "context/UserContext";
 
+type LoginErrorProps = {
+  email?: string;
+  password?: string;
+};
+
 const Login: FC = () => {
   const { handleUserLoggedInState } = useUserContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [, setErrors] = useState<LoginErrorProps>({});
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
+
+  const validateForm = useCallback((email: string, password: string) => {
+    const formErrors: LoginErrorProps = {};
+    const emailRegex =
+      /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+(\.[a-zA-Z]{2,})+$/;
+
+    if (!email) {
+      formErrors.email = "Email is required.";
+    } else if (!emailRegex.test(email)) {
+      formErrors.email = "Email is invalid.";
+    }
+
+    if (!password) {
+      formErrors.password = "Password is required.";
+    }
+
+    setErrors(formErrors);
+    if (Object.keys(formErrors).length !== 0) {
+      return false;
+    }
+    return true;
+  }, []);
 
   const handleOnFormSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -23,6 +51,12 @@ const Login: FC = () => {
         const formData = new FormData(formRef.current);
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
+        const isFormValid = validateForm(email, password);
+        if (!isFormValid) {
+          toast.error("Please check form fields and try again");
+          setIsLoading(false);
+          return;
+        }
         const [response, err] = await performLoginOperation(email, password);
 
         if (err) {
@@ -40,7 +74,7 @@ const Login: FC = () => {
         }
       }
     },
-    [router, handleUserLoggedInState]
+    [router, handleUserLoggedInState, validateForm]
   );
 
   return (
