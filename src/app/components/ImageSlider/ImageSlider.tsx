@@ -44,11 +44,14 @@ const ImageSlider: FC<ImageSliderPropsTypes> = (props) => {
       >
         {images?.map((image, idx) => {
           return (
-            <div className="imageBlock w-full flex-shrink-0" key={idx}>
+            <div
+              className="imageBlock w-full flex-shrink-0 overflow-hidden"
+              key={idx}
+            >
               <img
                 src={image}
                 alt="Selected"
-                className="w-full h-full object-cover block"
+                className="w-full object-cover block max-w-full aspect-video"
               />
             </div>
           );
