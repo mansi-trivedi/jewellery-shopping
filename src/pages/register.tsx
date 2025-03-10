@@ -17,7 +17,7 @@ type RegisterErrorProps = {
 const Register: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
-  const [, setErrors] = useState<RegisterErrorProps>({});
+  const [errors, setErrors] = useState<RegisterErrorProps>({});
   const router = useRouter();
 
   const validateForm = useCallback(
@@ -72,7 +72,9 @@ const Register: FC = () => {
         const [, err] = await performUserRegistration(email, password);
         if (err) {
           toast.error(
-            "Not able to register at this moment. Please try again later"
+            err.response
+              ? err.response.data?.error
+              : "Not able to register at this moment. Please try again later"
           );
           setIsLoading(false);
           return;
@@ -126,6 +128,9 @@ const Register: FC = () => {
                     className="py-2 px-4 border border-blackShade"
                     required
                   />
+                  {errors.email && (
+                    <p className="text-red-500">{errors.email}</p>
+                  )}
                 </div>
 
                 <div className="flex flex-col">
@@ -143,6 +148,9 @@ const Register: FC = () => {
                     className="py-2 px-4 border border-blackShade mb-2"
                     required
                   />
+                  {errors.password && (
+                    <p className="text-red-500">{errors.password}</p>
+                  )}
                 </div>
 
                 <div className="flex flex-col">
@@ -160,6 +168,9 @@ const Register: FC = () => {
                     className="py-2 px-4 border border-blackShade mb-2"
                     required
                   />
+                  {errors.confirmPassword && (
+                    <p className="text-red-500">{errors.confirmPassword}</p>
+                  )}
                 </div>
 
                 <div className="flex flex-col">

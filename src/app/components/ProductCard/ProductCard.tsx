@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { FiHeart } from "react-icons/fi";
 import { addToWishlist, removeItemFromWishList } from "@/app/data/wishlist";
 import Link from "next/link";
@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { ServerResponseType } from "types/global";
 import { PiShoppingCartSimpleBold } from "react-icons/pi";
 import { useCartContext } from "context/CartContext";
+import { fetchProductImages } from "@/app/utils/imageUtils";
 
 type ProductCardPropTypes = {
   product: Product;
@@ -26,6 +27,15 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
   /** Contexts */
   const { toggleProductsFromWishList } = useProductContext();
   const { addToCart } = useCartContext();
+
+  /** Memorized values */
+
+  const images = useMemo(() => {
+    if (!image) {
+      return [];
+    }
+    return fetchProductImages(image);
+  }, [image]);
 
   /** Handlers */
 
@@ -55,7 +65,7 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
       <div className="imageBlock w-full relative overflow-hidden before:content-[''] before:block before:pt-[calc(50%*16/9)]">
         <Image
           className="w-full border object-cover"
-          src={image}
+          src={images[0]}
           alt="product"
           fill={true}
         />

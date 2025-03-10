@@ -13,6 +13,7 @@ export async function POST(request: Request) {
       return serverResponse({
         success: false,
         message: "Internal Server Error",
+        error: "Incorrect Password",
         status: 400,
       });
     }

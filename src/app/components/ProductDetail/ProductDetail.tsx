@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useMemo } from "react";
 import ImageSlider from "components/ImageSlider/ImageSlider";
 import Rating from "components/Rating/Ratings";
 import Review from "components/Review/Review";
@@ -12,20 +12,35 @@ import FullWidthContainer from "components/FullWidthContainer/FullWidthContainer
 import { FaCircle } from "react-icons/fa";
 import Collapse from "../ui/Collapse/Collapse";
 import { DETAILS } from "@/app/constants/products";
+import { fetchProductImages } from "@/app/utils/imageUtils";
 
 type ProductDetailPropTypes = {
   product: Product | null;
 };
 
-const imageSlides: string[] = [
-  "https://images.unsplash.com/photo-1722410180644-5955f83ec8b1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1722410180644-ff76ef805092?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-];
+// const imageSlides: string[] = [
+//   "https://images.unsplash.com/photo-1722410180644-5955f83ec8b1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   "https://images.unsplash.com/photo-1722410180644-ff76ef805092?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+// ];
 
 const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
   const { product } = props;
-  const { description, price, productId = "", name, SKU } = product ?? {};
+  const {
+    description,
+    price,
+    productId = "",
+    name,
+    SKU,
+    images,
+  } = product ?? {};
   // const [similarProducts, setSimilarProducts] = useState<Product>([]);
+
+  const imageSlides = useMemo(() => {
+    if (!images) {
+      return [];
+    }
+    return fetchProductImages(images);
+  }, [images]);
 
   const handleOnAddToCart = useCallback(async () => {
     const [atcResp, atcErr] = await addToCart(productId);

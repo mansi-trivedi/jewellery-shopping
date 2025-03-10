@@ -7,7 +7,14 @@ import { ServerResponseType } from "types/global";
 const performLoginOperation = async (
   email: string,
   password: string
-): Promise<[ServerResponseType<""> | undefined, AxiosError]> => {
+): Promise<
+  [
+    ServerResponseType<""> | undefined,
+    AxiosError<{
+      error: string;
+    }>
+  ]
+> => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/user/login`,
     method: "post",
@@ -23,7 +30,17 @@ const performLoginOperation = async (
 };
 
 /** Registers user */
-const performUserRegistration = async (email: string, password: string) => {
+const performUserRegistration = async (
+  email: string,
+  password: string
+): Promise<
+  [
+    ServerResponseType<""> | undefined,
+    AxiosError<{
+      error: string;
+    }>
+  ]
+> => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/user/register`,
     method: "post",

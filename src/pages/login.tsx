@@ -17,7 +17,7 @@ type LoginErrorProps = {
 const Login: FC = () => {
   const { handleUserLoggedInState } = useUserContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [, setErrors] = useState<LoginErrorProps>({});
+  const [errors, setErrors] = useState<LoginErrorProps>({});
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
@@ -60,8 +60,13 @@ const Login: FC = () => {
         const [response, err] = await performLoginOperation(email, password);
 
         if (err) {
+          console.log(err);
           setIsLoading(false);
-          toast.error("Not able log in. Please try again later");
+          toast.error(
+            err.response
+              ? err.response.data?.error
+              : "Not able log in. Please try again later"
+          );
           return;
         }
         setIsLoading(false);
@@ -115,6 +120,9 @@ const Login: FC = () => {
                     className="py-2 px-4 border border-blackShade"
                     required
                   />
+                  {errors.email && (
+                    <p className="text-red-500">{errors.email}</p>
+                  )}
                 </div>
 
                 <div className="flex flex-col">
@@ -131,6 +139,9 @@ const Login: FC = () => {
                     className="py-2 px-4 border border-blackShade mb-2"
                     required
                   />
+                  {errors.password && (
+                    <p className="text-red-500">{errors.password}</p>
+                  )}
                 </div>
 
                 <div className="flex flex-col">
