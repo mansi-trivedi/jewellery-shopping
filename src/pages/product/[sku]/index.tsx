@@ -1,4 +1,5 @@
 import ProductDetail from "@/app/components/ProductDetail/ProductDetail";
+import { useProductContext } from "@/app/contexts/ProductContext";
 import { getProductBySku } from "@/app/data/product";
 import {
   GetServerSideProps,
@@ -12,8 +13,9 @@ const ProductDetailPage: FC<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = (props) => {
   const { data } = props;
+  const { wishListProductsSkuIds } = useProductContext();
   const productData = data?.products?.[0] ?? null;
-  return <ProductDetail product={productData} />;
+  return <ProductDetail product={productData} isItemInWishList={wishListProductsSkuIds.has(productData?.SKU ?? '')} />;
 };
 
 const getServerSideProps = (async (ctx: GetServerSidePropsContext) => {

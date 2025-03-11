@@ -99,7 +99,7 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
             aria-label="add to wish list"
           >
             <FiHeart
-              className={`w-6 h-6 
+              className={`w-6 h-6 text-darkGreen
                ${isItemInWishList ? "fill-darkGreen" : "fill-offWhite"} 
                hover:fill-darkGreen`}
             />

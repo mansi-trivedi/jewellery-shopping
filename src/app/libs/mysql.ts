@@ -9,8 +9,8 @@ const getPool = async () => {
       host: "localhost",
       user: "root",
       port: 3306,
-      password: "",
-      database: "jewellery",
+      password: "1234",
+      database: "jewellery_new",
       waitForConnections: true,
     });
   }

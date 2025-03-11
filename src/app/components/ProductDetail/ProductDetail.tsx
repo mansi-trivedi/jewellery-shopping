@@ -13,9 +13,14 @@ import { FaCircle } from "react-icons/fa";
 import Collapse from "../ui/Collapse/Collapse";
 import { DETAILS } from "@/app/constants/products";
 import { fetchProductImages } from "@/app/utils/imageUtils";
+import { addToWishlist, removeItemFromWishList } from "@/app/data/wishlist";
+import { ServerResponseType } from "types/global";
+import { FiHeart } from "react-icons/fi";
+import { useProductContext } from "@/app/contexts/ProductContext";
 
 type ProductDetailPropTypes = {
   product: Product | null;
+  isItemInWishList?: boolean
 };
 
 // const imageSlides: string[] = [
@@ -24,7 +29,7 @@ type ProductDetailPropTypes = {
 // ];
 
 const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
-  const { product } = props;
+  const { product, isItemInWishList = false } = props;
   const {
     description,
     price,
@@ -33,6 +38,7 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
     SKU,
     images,
   } = product ?? {};
+  const { toggleProductsFromWishList } = useProductContext();
   // const [similarProducts, setSimilarProducts] = useState<Product>([]);
 
   const imageSlides = useMemo(() => {
@@ -51,6 +57,22 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
     toast.success(atcResp?.message ?? "");
   }, [productId]);
 
+  const handleWishList = useCallback(async () => {
+    toggleProductsFromWishList(SKU ?? '');
+    let response: ServerResponseType<"">;
+    if (isItemInWishList) {
+      response = await removeItemFromWishList(productId);
+    } else {
+      response = await addToWishlist(productId);
+    }
+    if (response.success) {
+      toast.success(response?.message ?? "");
+    } else {
+      toast.error("Something went wrong. Please try after sometime");
+      toggleProductsFromWishList(SKU ?? '');
+    }
+  }, [productId, SKU, toggleProductsFromWishList, isItemInWishList]);
+
   return (
     <>
       <FullWidthContainer>
@@ -64,9 +86,23 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
                 <Rating isEditable={false} rating={4} />
                 <p className="font-semibold capitalize">0 reviews</p>
               </div>
-              <h1 className="font-semibold text-blackShade text-fluid-body-2 leading-fluid-body-2">
-                {name}
-              </h1>
+              <div className="flex">
+                <h1 className="font-semibold text-blackShade text-fluid-body-2 leading-fluid-body-2">
+                  {name}
+                </h1>
+                <button
+                  type="button"
+                  onClick={handleWishList}
+                  aria-label="add to wish list"
+                  className="px-3"
+                >
+                  <FiHeart
+                    className={`w-5 h-5 text-darkGreen
+                             ${isItemInWishList ? "fill-darkGreen" : "fill-offWhite"} 
+                             hover:fill-darkGreen`}
+                  />
+                </button>
+              </div>
               <p className="text-fluid-body-6 leading-fluid-body-6">
                 {description} The Elan Necklace with its elegant design is
                 intended to be worn as a daily accessory. Inspired by the Elan
