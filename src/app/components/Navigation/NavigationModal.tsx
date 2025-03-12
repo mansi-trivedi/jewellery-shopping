@@ -3,22 +3,7 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
 import Modal from "react-modal";
-
-const customStyles = {
-  content: {
-    left: "auto",
-    right: 0,
-    top: 0,
-    width: "30%",
-    height: "100%",
-    backgroundColor: "#F8F8F8",
-    padding: "5px",
-    border: "none",
-    borderRadius: "none",
-    boxShadow: "-4px 0 6px rgba(0, 0, 0, 0.1)",
-    overflow: "hidden",
-  },
-};
+import CustomModal from "../Modal/Modal";
 
 type NavigationProps = {
   navigationModalOpen: boolean;
@@ -36,30 +21,37 @@ const NavigationModal: React.FC<NavigationProps> = ({
   }, []);
 
   return (
-    <>
-      <Modal isOpen={navigationModalOpen} style={customStyles}>
-        <div className="flex justify-end m-2 p-1">
-          <RxCross2 size={20} onClick={handleNavigationModal} />
-        </div>
-        <hr className="border border-gray-200 my-2" />
-        <div className="mt-2 flex flex-col">
-          <ul>
-            {menuItems.map((item, index) => {
-              return (
-                <li
-                  key={index}
-                  className="px-3 py-4 text-darkBlue text-sm hover:border-orange font-semibold"
-                >
-                  <Link href={item.href}>
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </Modal>
-    </>
+    <CustomModal
+      isOpen={navigationModalOpen}
+      contentStyles={{
+        width: "100%",
+        height: "100%",
+        maxWidth: "100%",
+        padding: "12px",
+        borderRadius: "0",
+      }}
+    >
+      <div className="flex justify-end m-2 p-1">
+        <RxCross2 size={20} onClick={handleNavigationModal} />
+      </div>
+      <hr className="border border-gray-200 my-2" />
+      <div className="mt-2 flex flex-col">
+        <ul>
+          {menuItems.map((item, index) => {
+            return (
+              <li
+                key={index}
+                className="px-3 py-4 text-darkBlue text-sm hover:border-orange font-semibold"
+              >
+                <Link href={item.href}>
+                  <span>{item.label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </CustomModal>
   );
 };
 

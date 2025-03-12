@@ -11,6 +11,7 @@ const Homepage: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 ) => {
   const { data } = props;
   const products = data?.products ?? [];
+
   return (
     <>
       <HeroImage />

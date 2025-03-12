@@ -20,7 +20,7 @@ import { useProductContext } from "@/app/contexts/ProductContext";
 
 type ProductDetailPropTypes = {
   product: Product | null;
-  isItemInWishList?: boolean
+  isItemInWishList?: boolean;
 };
 
 // const imageSlides: string[] = [
@@ -58,18 +58,18 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
   }, [productId]);
 
   const handleWishList = useCallback(async () => {
-    toggleProductsFromWishList(SKU ?? '');
+    toggleProductsFromWishList(SKU ?? "");
     let response: ServerResponseType<"">;
     if (isItemInWishList) {
-      response = await removeItemFromWishList(productId);
+      [response] = await removeItemFromWishList(productId);
     } else {
-      response = await addToWishlist(productId);
+      [response] = await addToWishlist(productId);
     }
-    if (response.success) {
+    if (response?.success) {
       toast.success(response?.message ?? "");
     } else {
-      toast.error("Something went wrong. Please try after sometime");
-      toggleProductsFromWishList(SKU ?? '');
+      toast.error("Please login in order to add products to your wishlist");
+      toggleProductsFromWishList(SKU ?? "");
     }
   }, [productId, SKU, toggleProductsFromWishList, isItemInWishList]);
 
@@ -98,7 +98,11 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
                 >
                   <FiHeart
                     className={`w-5 h-5 text-darkGreen
-                             ${isItemInWishList ? "fill-darkGreen" : "fill-offWhite"} 
+                             ${
+                               isItemInWishList
+                                 ? "fill-darkGreen"
+                                 : "fill-offWhite"
+                             } 
                              hover:fill-darkGreen`}
                   />
                 </button>

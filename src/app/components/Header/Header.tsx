@@ -16,7 +16,7 @@ import { useUserContext } from "context/UserContext";
 import { performUserLogout } from "@/app/data/user";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-// import { Product } from "@/types/productType";
+import { useMediaQuery } from "react-responsive";
 
 const Header = () => {
   const { isLoggedIn, handleUserLoggedInState } = useUserContext();
@@ -24,6 +24,7 @@ const Header = () => {
   const [navigationModalOpen, setNavigationModalOpen] =
     useState<boolean>(false);
   const router = useRouter();
+  const isMobile = useMediaQuery({ maxWidth: 1023 });
 
   const handleSearchModal = () => {
     setSearchModalOpen(!searchModalOpen);
@@ -82,21 +83,24 @@ const Header = () => {
               <FiShoppingCart size={24} className="hover:fill-darkGreen" />
             </Link>
 
-            <FiMenu
-              size={24}
-              className="cursor-pointer lg:hidden xl:hidden 2xl:hidden 3xl:hidden hover:text-orange hover:fill-orange"
-              onClick={handleNavigationModal}
-            />
+            <button onClick={handleNavigationModal} type="button">
+              <FiMenu
+                size={24}
+                className="cursor-pointer lg:hidden xl:hidden 2xl:hidden 3xl:hidden hover:fill-blackShade"
+              />
+            </button>
           </div>
         </div>
         <SearchModal
           searchModalOpen={searchModalOpen}
           handleSearchModal={handleSearchModal}
         />
-        <NavigationModal
-          navigationModalOpen={navigationModalOpen}
-          handleNavigationModal={handleNavigationModal}
-        />
+        {isMobile ? (
+          <NavigationModal
+            navigationModalOpen={navigationModalOpen}
+            handleNavigationModal={handleNavigationModal}
+          />
+        ) : null}
       </header>
     </>
   );

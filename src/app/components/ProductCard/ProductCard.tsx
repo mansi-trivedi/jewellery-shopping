@@ -44,14 +44,14 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
     toggleProductsFromWishList(sku);
     let response: ServerResponseType<"">;
     if (isItemInWishList) {
-      response = await removeItemFromWishList(productId);
+      [response] = await removeItemFromWishList(productId);
     } else {
-      response = await addToWishlist(productId);
+      [response] = await addToWishlist(productId);
     }
-    if (response.success) {
+    if (response?.success) {
       toast.success(response?.message ?? "");
     } else {
-      toast.error("Something went wrong. Please try after sometime");
+      toast.error("Please login in order to add products to your wishlist");
       toggleProductsFromWishList(sku);
     }
   }, [productId, sku, toggleProductsFromWishList, isItemInWishList]);
@@ -71,7 +71,7 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
         />
       </div>
 
-      <div className="product-info-wrapper flex flex-1 items-center justify-between gap-4 p-4">
+      <div className="product-info-wrapper flex flex-1 items-center justify-between gap-4 p-4 flex-wrap">
         <Link
           href={{
             pathname: `/product/${sku}`,

@@ -10,9 +10,9 @@ export default {
   theme: {
     container: {
       padding: {
-        DEFAULT: "35px",
-        sm: "35px",
-        md: "45px",
+        DEFAULT: "25px",
+        sm: "25px",
+        md: "35px",
         lg: "45px",
         xl: "56px",
         "2xl": "72px",

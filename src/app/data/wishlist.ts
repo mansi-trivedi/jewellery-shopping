@@ -7,7 +7,7 @@ import { resolvePromise } from "../utils/apiUtils";
 
 const addToWishlist = async (
   productId: string
-): Promise<ServerResponseType<"">> => {
+): Promise<[ServerResponseType<"">, AxiosError]> => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/wishlist`,
     method: "POST",
@@ -15,8 +15,8 @@ const addToWishlist = async (
       productId,
     }),
   };
-  const response = await axios.request(requestConfig);
-  return response?.data;
+  const [response, error] = await resolvePromise(axios.request(requestConfig));
+  return [response?.data, error];
 };
 
 const getWishList = async (): Promise<
@@ -32,13 +32,13 @@ const getWishList = async (): Promise<
 
 const removeItemFromWishList = async (
   productId: string
-): Promise<ServerResponseType<"">> => {
+): Promise<[ServerResponseType<"">, AxiosError]> => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/wishlist?product_id=${productId}`,
     method: "delete",
   };
-  const response = await axios.request(requestConfig);
-  return response?.data;
+  const [response, error] = await resolvePromise(axios.request(requestConfig));
+  return [response?.data, error];
 };
 
 export { addToWishlist, getWishList, removeItemFromWishList };
