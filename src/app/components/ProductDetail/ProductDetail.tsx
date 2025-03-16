@@ -17,6 +17,7 @@ import { addToWishlist, removeItemFromWishList } from "@/app/data/wishlist";
 import { ServerResponseType } from "types/global";
 import { FiHeart } from "react-icons/fi";
 import { useProductContext } from "@/app/contexts/ProductContext";
+import SimilarProduct from "../SimilarProduct/SimilarProduct";
 
 type ProductDetailPropTypes = {
   product: Product | null;
@@ -35,8 +36,9 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
     price,
     productId = "",
     name,
-    SKU,
+    SKU = "",
     images,
+    categoryId = ""
   } = product ?? {};
   const { toggleProductsFromWishList } = useProductContext();
   // const [similarProducts, setSimilarProducts] = useState<Product>([]);
@@ -98,11 +100,10 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
                 >
                   <FiHeart
                     className={`w-5 h-5 text-darkGreen
-                             ${
-                               isItemInWishList
-                                 ? "fill-darkGreen"
-                                 : "fill-offWhite"
-                             } 
+                             ${isItemInWishList
+                        ? "fill-darkGreen"
+                        : "fill-offWhite"
+                      } 
                              hover:fill-darkGreen`}
                   />
                 </button>
@@ -153,8 +154,10 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
           </div>
         </div>
       </FullWidthContainer>
+      <hr className="border border-gray-300 my-1" />
       <Review isReviewPage={false} sku={SKU} />
-      {/* <SimilarProduct /> */}
+      <hr className="border border-gray-300 my-1" />
+      <SimilarProduct categoryId={categoryId} />
     </>
   );
 };

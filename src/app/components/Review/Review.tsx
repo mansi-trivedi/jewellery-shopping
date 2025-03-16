@@ -1,64 +1,69 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Rating from "components/Rating/Ratings";
-import Sort from "components/Sort/Sort";
-import { RxCross2 } from "react-icons/rx";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ProductReviewType } from "types/review";
+import { getProductReview } from "@/app/data/review";
+import WriteReview from "./writeReview";
 
-const customersReviews = [
-  {
-    user: "Mansi Trivedi",
-    review:
-      "✨ Beautiful & Elegant! ✨ These earrings are lightweight, stylish, and well-crafted—perfect for any occasion! They sparkle beautifully, feel comfortable, and have received many compliments. A must-have for any jewelry lover! 💖",
-    date: "January 29, 2025",
-    rating: 4,
-  },
-  {
-    user: "Mansi Trivedi",
-    review:
-      "✨ Gorgeous & Elegant Necklace! ✨ This necklace is stunning, with a delicate design that adds the perfect touch of elegance! It's lightweight, well-crafted, and sparkles beautifully—great for any occasion. A true must-have for jewelry lovers! 💖",
-    date: "January 29, 2025",
-    rating: 3,
-  },
-];
 
 interface ReviewProps {
   isReviewPage: boolean;
-  sku?: string;
+  sku: string;
 }
 
 const Review: React.FC<ReviewProps> = ({ isReviewPage, sku }) => {
-  const router = useRouter();
+  const [productReview, setProductReview] = useState<ProductReviewType[]>([]);
+  const [reviewModal, setReviewModal] = useState<boolean>(false)
+
+  useEffect(() => {
+    (async () => {
+      const [reviewResp, reviewErr] = await getProductReview(sku ?? "");
+      if (reviewErr) {
+        return;
+      }
+      if (reviewResp?.success) {
+        setProductReview(
+          reviewResp?.data && isReviewPage ? reviewResp.data : reviewResp?.data?.slice(0, 3) || []
+        );
+      }
+    })();
+  }, [isReviewPage, setProductReview, sku]);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  };
+
+  const getInitials = (name: string) => {
+    const words = name.split(" ");
+    return words.length > 1
+      ? words.map(word => word.charAt(0).toUpperCase()).join("")
+      : name.charAt(0).toUpperCase();
+  };
+
+  const handleReviewModal = () => {
+    setReviewModal(!reviewModal)
+  }
+
   return (
-    <div className="my-8">
-      {isReviewPage && (
-        <>
-          <div className="w-full flex justify-end">
-            <RxCross2
-              size={20}
-              className="cursor-pointer"
-              onClick={() => router.back()}
-            />
-          </div>
-          <hr className="border border-gray-300 my-1" />
-        </>
-      )}
+    <div className="my-5">
       <div className="flex justify-between">
         <h2 className="text-lg font-bold text-darkBlue mb-4">
           Customer Reviews
         </h2>
-        {isReviewPage && <Sort />}
       </div>
       <div>
         <button
           type="button"
           className="bg-darkGreen text-white py-2 px-4 rounded-md"
+          onClick={handleReviewModal}
         >
           Write a Review
         </button>
-        <ul className="flex flex-col gap-4 my-8">
-          {customersReviews.map((review, key) => {
+        <WriteReview reviewModal={reviewModal} handleReviewModal={handleReviewModal} sku={sku} />
+        <ul className="flex flex-col gap-4 my-3">
+          {productReview.map((review, key) => {
             return (
               <li
                 key={key}
@@ -66,20 +71,20 @@ const Review: React.FC<ReviewProps> = ({ isReviewPage, sku }) => {
               >
                 <div className="flex items-start">
                   <div className="bg-darkGreen p-3 text-white font-semibold rounded-full">
-                    MT
+                    {getInitials(review.username ?? "Unknown User")}
                   </div>
                   <div className="ml-6">
                     <div className="flex items-center">
                       <Rating isEditable={false} rating={review.rating} />
                     </div>
-                    <p className="mt-5 text-base text-blackShade">
+                    <p className="mt-2 text-base text-blackShade">
                       {review.review}
                     </p>
-                    <p className="mt-5 text-sm font-bold text-blackShade">
-                      {review.user}
+                    <p className="mt-3 text-sm font-bold text-blackShade">
+                      {review.username ?? "Unknown User"}
                     </p>
                     <p className="mt-1 text-sm text-blackShade">
-                      {review.date}
+                      {formatDate(review.dateCreated)}
                     </p>
                   </div>
                 </div>
@@ -87,9 +92,9 @@ const Review: React.FC<ReviewProps> = ({ isReviewPage, sku }) => {
             );
           })}
         </ul>
-        <Link href={`/product/${sku}/Reviews`}>
+        {!isReviewPage && <Link href={`/product/${sku}/review`}>
           <p className="font-semibold underline">See All reviews</p>
-        </Link>
+        </Link>}
       </div>
     </div>
   );

@@ -55,9 +55,24 @@ const getSimilarProducts = async (
   return [response?.data, error];
 };
 
+/** Gets product based on given categoryID */
+const getProductByCategoryId = async (
+  categoryId: string
+): Promise<[ProductSkuAPIServerSidePropTypes | undefined, AxiosError]> => {
+  const requestConfig: AxiosRequestConfig = {
+    url: `${BASE_URL}/api/similarProduct/${categoryId}`,
+  };
+  const [response, error] = await resolvePromise(
+    axios.request<ProductSkuAPIServerSidePropTypes>(requestConfig)
+  );
+
+  return [response?.data, error];
+};
+
 export {
   getProductsByCategory,
   getAllProduct,
   getProductBySku,
   getSimilarProducts,
+  getProductByCategoryId
 };

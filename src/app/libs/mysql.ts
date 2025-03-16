@@ -6,11 +6,11 @@ let pool: Pool | null = null;
 const getPool = async () => {
   if (!pool) {
     pool = mysql.createPool({
-      host: process.env.NEXT_PUBLIC_HOST,
-      user: process.env.NEXT_PUBLIC_USER,
-      port: Number(process.env.NEXT_PUBLIC_DATABASE_PORT),
-      password: process.env.NEXT_PUBLIC_PASSWORD,
-      database: process.env.NEXT_PUBLIC_DATABASE_NAME,
+      host: "localhost", //process.env.NEXT_PUBLIC_HOST,
+      user: "root", //process.env.NEXT_PUBLIC_USER,
+      port: Number(3306), //Number(process.env.NEXT_PUBLIC_DATABASE_PORT),
+      password: "1234", // process.env.NEXT_PUBLIC_PASSWORD,
+      database: "jewellery_new", //process.env.NEXT_PUBLIC_DATABASE_NAME,
       waitForConnections: true,
     });
   }

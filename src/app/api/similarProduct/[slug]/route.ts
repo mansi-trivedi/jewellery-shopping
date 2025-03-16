@@ -8,13 +8,14 @@ export async function GET(
 ) {
   try {
     const slug = (await params).slug;
-    const rows = await executeQuery("call getSimilarProducts(?)", [slug]);
-    const products = rows[0];
+    const [rows] = await executeQuery("call getSimilarProducts(?)", [slug]);
+    const products = rows;
     return serverResponse({
       success: true,
       data: products,
     });
   } catch (error: unknown) {
+    console.log("error", error)
     return serverResponse({
       success: false,
       message: "Internal Server Error",

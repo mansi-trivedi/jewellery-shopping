@@ -1,13 +1,32 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { getProductByCategoryId } from "@/app/data/product";
+import React, { FC, useEffect, useState } from "react";
 import { BsArrowRight, BsArrowLeft } from "react-icons/bs";
-// import ProductCard from "components/ProductCard/ProductCard";
-// import { Product } from "@/app/types/productType";
+import { Product } from "types/product";
+import ProductCard from "../ProductCard/ProductCard";
+import { useProductContext } from "@/app/contexts/ProductContext";
 
-const SimilarProduct = () => {
-  const [startIndex, setStartIndex] = useState(0);
-  const [productsPerView, setProductsPerView] = useState(3);
-  const [similarProducts] = useState([]);
+type SimilarProductDetailPropTypes = {
+  categoryId: string;
+};
+
+const SimilarProduct: FC<SimilarProductDetailPropTypes> = ({ categoryId }) => {
+  const [startIndex, setStartIndex] = useState<number>(0);
+  const [productsPerView, setProductsPerView] = useState<number>(3);
+  const [similarProducts, setSimilarProduct] = useState<Product[]>([]);
+  const { wishListProductsSkuIds } = useProductContext();
+
+  useEffect(() => {
+    (async () => {
+      const [productResp, productErr] = await getProductByCategoryId(categoryId);
+      if (productErr) {
+        return;
+      }
+      if (productResp?.success) {
+        setSimilarProduct(productResp?.data);
+      }
+    })();
+  }, [categoryId]);
 
   useEffect(() => {
     const updateImagesPerView = () => {
@@ -39,26 +58,22 @@ const SimilarProduct = () => {
   };
 
   return (
-    <div className="my-4 mx-4">
-      <h2 className="text-lg font-bold text-darkBlue my-3">
+    <div className="my-5">
+      <h2 className="text-lg font-bold text-darkBlue mb-4">
         You May Also Like
       </h2>
       <div className="">
-        {/* <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-6 3xl:grid-cols-6 md:gap-6 lg:gap-6 xl:gap-6 2xl:gap-6 3xl:gap-6 gap-3">
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-6 3xl:grid-cols-6 md:gap-6 lg:gap-6 xl:gap-6 2xl:gap-6 3xl:gap-6 gap-3">
           {similarProducts
             .slice(startIndex, startIndex + productsPerView)
             .map((product, key) => (
               <ProductCard
                 key={key}
-                image={product.images}
-                price={String(product.price)}
-                name={product.name}
-                wishlist={false}
-                sku={product.SKU}
-                productId={product.productId}
+                product={product}
+                isItemInWishList={wishListProductsSkuIds.has(product.SKU)}
               />
             ))}
-        </div> */}
+        </div>
         <div className="flex w-full justify-end gap-2 py-3">
           {startIndex !== 0 && (
             <button
