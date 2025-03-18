@@ -64,7 +64,7 @@ const CustomModal: React.FC<ModalProps> = ({
         closeTimeoutMS={MODAL_ANIMATION_SPEED}
         shouldCloseOnEsc={true}
         shouldCloseOnOverlayClick={true}
-        portalClassName="BMCModalComponent"
+        portalClassName="ModalComponent"
         contentLabel={contentLabel}
         style={{
           content: { ...customStyles.content, ...contentStyles },
