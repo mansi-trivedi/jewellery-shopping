@@ -1,21 +1,24 @@
 import { executeQuery } from "@/app/libs/mysql";
 import { NextRequest } from "next/server";
 import serverResponse from "@/app/utils/nextServerResponse";
+import { NextResponse } from "next/server";
+import { Product, ProductSkuAPIServerSidePropTypes } from "types/product";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
-) {
+): Promise<NextResponse<ProductSkuAPIServerSidePropTypes>> {
   try {
     const slug = (await params).slug;
     const [rows] = await executeQuery("call getSimilarProducts(?)", [slug]);
-    const products = rows;
+    const products = rows as Product[];
     return serverResponse({
       success: true,
-      data: products,
+      data: {
+        products: products,
+      },
     });
   } catch (error: unknown) {
-    console.log("error", error)
     return serverResponse({
       success: false,
       message: "Internal Server Error",
