@@ -1,4 +1,4 @@
-import Review from "@/app/components/Review/ReviewLayout";
+import Review from "components/Review";
 import { useParams } from "next/navigation";
 import React, { FC } from "react";
 
