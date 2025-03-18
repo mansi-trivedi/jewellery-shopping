@@ -149,7 +149,6 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
           </div>
         </div>
       </FullWidthContainer>
-      <hr className="border border-gray-300 my-1" />
       <SimilarProduct categoryId={categoryId} />
       {isLoggedIn ? <Review isReviewPage={false} sku={SKU} /> : null}
     </>

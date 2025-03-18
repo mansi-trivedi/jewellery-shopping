@@ -64,7 +64,7 @@ const SimilarProduct: FC<SimilarProductDetailPropTypes> = ({ categoryId }) => {
   }
 
   return (
-    <div className="my-5">
+    <div className="relative">
       <h2 className="text-lg font-bold text-darkBlue mb-4">
         You May Also Like
       </h2>
