@@ -1,9 +1,7 @@
-"use client";
-
 import React, { FC, useCallback, useMemo } from "react";
 import ImageSlider from "components/ImageSlider/ImageSlider";
 import Rating from "components/Rating/Ratings";
-import Review from "components/Review/Review";
+import Review from "components/Review";
 import { addToCart } from "@/app/data/cart";
 import { Product } from "@/app/types/productType";
 import toast from "react-hot-toast";
@@ -18,16 +16,12 @@ import { ServerResponseType } from "types/global";
 import { FiHeart } from "react-icons/fi";
 import { useProductContext } from "@/app/contexts/ProductContext";
 import SimilarProduct from "../SimilarProduct/SimilarProduct";
+import { useUserContext } from "@/app/contexts/UserContext";
 
 type ProductDetailPropTypes = {
   product: Product | null;
   isItemInWishList?: boolean;
 };
-
-// const imageSlides: string[] = [
-//   "https://images.unsplash.com/photo-1722410180644-5955f83ec8b1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-//   "https://images.unsplash.com/photo-1722410180644-ff76ef805092?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-// ];
 
 const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
   const { product, isItemInWishList = false } = props;
@@ -38,10 +32,10 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
     name,
     SKU = "",
     images,
-    categoryId = ""
+    categoryId = "",
   } = product ?? {};
   const { toggleProductsFromWishList } = useProductContext();
-  // const [similarProducts, setSimilarProducts] = useState<Product>([]);
+  const { isLoggedIn } = useUserContext();
 
   const imageSlides = useMemo(() => {
     if (!images) {
@@ -100,10 +94,11 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
                 >
                   <FiHeart
                     className={`w-5 h-5 text-darkGreen
-                             ${isItemInWishList
-                        ? "fill-darkGreen"
-                        : "fill-offWhite"
-                      } 
+                             ${
+                               isItemInWishList
+                                 ? "fill-darkGreen"
+                                 : "fill-offWhite"
+                             } 
                              hover:fill-darkGreen`}
                   />
                 </button>
@@ -154,10 +149,8 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
           </div>
         </div>
       </FullWidthContainer>
-      <hr className="border border-gray-300 my-1" />
-      <Review isReviewPage={false} sku={SKU} />
-      <hr className="border border-gray-300 my-1" />
       <SimilarProduct categoryId={categoryId} />
+      {isLoggedIn ? <Review isReviewPage={false} sku={SKU} /> : null}
     </>
   );
 };

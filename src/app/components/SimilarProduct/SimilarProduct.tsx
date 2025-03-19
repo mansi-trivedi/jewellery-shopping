@@ -18,12 +18,14 @@ const SimilarProduct: FC<SimilarProductDetailPropTypes> = ({ categoryId }) => {
 
   useEffect(() => {
     (async () => {
-      const [productResp, productErr] = await getProductByCategoryId(categoryId);
+      const [productResp, productErr] = await getProductByCategoryId(
+        categoryId
+      );
       if (productErr) {
         return;
       }
       if (productResp?.success) {
-        setSimilarProduct(productResp?.data);
+        setSimilarProduct(productResp?.data?.products ?? []);
       }
     })();
   }, [categoryId]);
@@ -57,16 +59,20 @@ const SimilarProduct: FC<SimilarProductDetailPropTypes> = ({ categoryId }) => {
     );
   };
 
+  if (!similarProducts?.length) {
+    return;
+  }
+
   return (
-    <div className="my-5">
+    <div className="relative">
       <h2 className="text-lg font-bold text-darkBlue mb-4">
         You May Also Like
       </h2>
       <div className="">
         <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-6 3xl:grid-cols-6 md:gap-6 lg:gap-6 xl:gap-6 2xl:gap-6 3xl:gap-6 gap-3">
           {similarProducts
-            .slice(startIndex, startIndex + productsPerView)
-            .map((product, key) => (
+            ?.slice(startIndex, startIndex + productsPerView)
+            ?.map((product, key) => (
               <ProductCard
                 key={key}
                 product={product}
