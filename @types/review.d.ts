@@ -1,12 +1,10 @@
 type ProductReviewType = {
-    reviewId: string,
-    review: string,
-    rating: number
-    images: string | null,
-    username: string | null,
-    dateCreated: string
-}
+  reviewId: string;
+  review: string;
+  rating: number;
+  images: string | null;
+  username: string | null;
+  dateCreated: string;
+};
 
-export type {
-    ProductReviewType,
-}
+export type { ProductReviewType };

@@ -2,8 +2,8 @@ import React from "react";
 
 const CartTotal = () => {
   return (
-    <div className="relative">
-      <table className="w-full border-collapse border border-gray-200">
+    <div className="relative py-2">
+      <table className="w-full border-collapse border border-gray-200 bg-cloudGray">
         <tbody>
           <tr>
             <td className="py-2 px-4 text-lg text-darkBlue">Subtotal</td>

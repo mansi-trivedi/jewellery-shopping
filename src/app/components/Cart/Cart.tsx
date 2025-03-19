@@ -7,6 +7,7 @@ import CartTotal from "components/Cart/CartTotal";
 import Button from "../ui/Button/Button";
 import { getCartItems } from "@/app/data/cart";
 import { useCartContext } from "context/CartContext";
+import AddressCard from "../Address/AddressCard";
 
 const Cart: FC = () => {
   const { setCartItemsHandler, cartItems } = useCartContext();
@@ -30,9 +31,10 @@ const Cart: FC = () => {
           return <CartItem key={index} cartItem={cartItem} />;
         })}
       </div>
-      <div className="cart-summary-container sticky top-8 self-start w-full bg-cloudGray">
+      <div className="cart-summary-container sticky top-8 self-start w-full">
+        <AddressCard />
         <CartTotal />
-        <div className="mt-6 text-center">
+        <div className="text-center">
           <Button type="button" className="w-full">
             Checkout
           </Button>
