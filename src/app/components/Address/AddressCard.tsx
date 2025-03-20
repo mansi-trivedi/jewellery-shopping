@@ -1,10 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectAddressModal from "./AddressModal";
 import { AddressType } from "types/address";
+import { getAddresses } from "@/app/data/address";
 
 const AddressCard = () => {
     const [addressModal, setAddressModal] = useState<boolean>(false);
+    const [addresses, setAddresses] = useState<AddressType[]>([]);
     const [selectedAddress, setSelectedAddress] = useState<AddressType>();
+
+    useEffect(() => {
+        (async () => {
+            const [addressResp, addressErr] = await getAddresses();
+            if (addressErr) {
+                return;
+            }
+            if (addressResp?.success) {
+                console.log("addressResp?.data", addressResp?.data)
+                setAddresses(addressResp?.data ?? []);
+                setSelectedAddress(addressResp?.data?.[0])
+            }
+        })();
+    }, []);
 
     const handleAddressModal = () => {
         setAddressModal(!addressModal);
@@ -39,6 +55,7 @@ const AddressCard = () => {
                 addressModal={addressModal}
                 handleAddressModal={handleAddressModal}
                 setSelectedAddress={setSelectedAddress}
+                addresses={addresses}
             />
         </div>
     );

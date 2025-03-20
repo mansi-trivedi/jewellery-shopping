@@ -6,8 +6,13 @@ export async function POST(request: Request) {
   try {
     const res = await request.json();
     const userPassword = await hashPassword(res.password);
-    const query = "call register(?, ?)";
-    await executeQuery(query, [res.email, userPassword]);
+    const query = "call register(?, ?, ?, ?)";
+    await executeQuery(query, [
+      res.firstname,
+      res.lastname,
+      res.email,
+      userPassword,
+    ]);
     return serverResponse({
       success: true,
       message: "User Registered Successfully",

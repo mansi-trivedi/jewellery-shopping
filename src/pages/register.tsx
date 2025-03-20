@@ -12,6 +12,8 @@ type RegisterErrorProps = {
   email?: string;
   password?: string;
   confirmPassword?: string;
+  firstname?: string;
+  lastname?: string;
 };
 
 const Register: FC = () => {
@@ -21,11 +23,19 @@ const Register: FC = () => {
   const router = useRouter();
 
   const validateForm = useCallback(
-    (email: string, password: string, cPassword: string) => {
+    (email: string, password: string, cPassword: string, firstname: string, lastname: string) => {
       const formErrors: RegisterErrorProps = {};
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const passwordRegex =
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+      if (!firstname) {
+        formErrors.firstname = "Firstname is required";
+      }
+
+      if (!lastname) {
+        formErrors.lastname = "Lastname is required";
+      }
 
       if (!email) {
         formErrors.email = "Email is required";
@@ -63,13 +73,15 @@ const Register: FC = () => {
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
         const cPassword = formData.get("confirm-password") as string;
-        const isFormValid = validateForm(email, password, cPassword);
+        const firstname = formData.get("firstname") as string;
+        const lastname = formData.get("lastname") as string;
+        const isFormValid = validateForm(email, password, cPassword, firstname, lastname);
         if (!isFormValid) {
           toast.error("Please check form fields and try again");
           setIsLoading(false);
           return;
         }
-        const [, err] = await performUserRegistration(email, password);
+        const [, err] = await performUserRegistration(email, password, lastname, firstname);
         if (err) {
           toast.error(
             err.response
@@ -113,6 +125,46 @@ const Register: FC = () => {
                 onSubmit={handleOnFormSubmit}
                 className="flex flex-col gap-4"
               >
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="firstname"
+                    className="mb-2 capitalize text-fluid-micro-guided leading-fluid-micro-guided font-medium"
+                  >
+                    Firstname
+                  </label>
+                  <input
+                    id="firstname"
+                    type="text"
+                    name="firstname"
+                    placeholder="Enter your firstname"
+                    className="py-2 px-4 border border-blackShade"
+                    required
+                  />
+                  {errors.firstname && (
+                    <p className="text-red-500">{errors.firstname}</p>
+                  )}
+                </div>
+
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="lastname"
+                    className="mb-2 capitalize text-fluid-micro-guided leading-fluid-micro-guided font-medium"
+                  >
+                    Lastname
+                  </label>
+                  <input
+                    id="lastname"
+                    type="text"
+                    name="lastname"
+                    placeholder="Enter your lastname"
+                    className="py-2 px-4 border border-blackShade"
+                    required
+                  />
+                  {errors.lastname && (
+                    <p className="text-red-500">{errors.lastname}</p>
+                  )}
+                </div>
+
                 <div className="flex flex-col">
                   <label
                     htmlFor="email"

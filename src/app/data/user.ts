@@ -32,7 +32,9 @@ const performLoginOperation = async (
 /** Registers user */
 const performUserRegistration = async (
   email: string,
-  password: string
+  password: string,
+  lastname: string,
+  firstname: string
 ): Promise<
   [
     ServerResponseType<""> | undefined,
@@ -47,6 +49,8 @@ const performUserRegistration = async (
     data: JSON.stringify({
       email: email,
       password: password,
+      lastname: lastname,
+      firstname: firstname,
     }),
   };
   const [response, error] = await resolvePromise(axios.request(requestConfig));
