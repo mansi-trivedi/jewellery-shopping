@@ -1,13 +1,16 @@
-"use client";
-
-import React, { FC, ReactNode, ButtonHTMLAttributes, memo } from "react";
+import React, {
+  ReactNode,
+  ButtonHTMLAttributes,
+  memo,
+  forwardRef,
+} from "react";
 
 type ButtonPropsTypes = {
   children: ReactNode;
   outline?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const Button: FC<ButtonPropsTypes> = (props) => {
+const Button = forwardRef<HTMLButtonElement, ButtonPropsTypes>((props, ref) => {
   const { children, className, outline, ...restProps } = props;
   const classes = outline
     ? "bg-transparent text-darkGreen border-darkGreen hover:bg-darkGreen hover:text-white"
@@ -15,6 +18,7 @@ const Button: FC<ButtonPropsTypes> = (props) => {
 
   return (
     <button
+      ref={ref}
       className={`font-bold min-w-28 rounded-sm overflow-hidden border-2 text-fluid-micro-guided leading-fluid-micro-guided transition-all duration-200 py-3 px-7 ${classes} ${
         className ?? ""
       }`}
@@ -25,6 +29,8 @@ const Button: FC<ButtonPropsTypes> = (props) => {
       </span>
     </button>
   );
-};
+});
+
+Button.displayName = "Button";
 
 export default memo(Button);

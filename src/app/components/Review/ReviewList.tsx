@@ -31,13 +31,13 @@ const ReviewList: FC<ReviewListPropTypes> = (props) => {
                 <div className="flex items-center">
                   <Rating isEditable={false} rating={review.rating} />
                 </div>
-                <p className="mt-2 text-base text-blackShade">
+                <p className="mt-2 text-fluid-micro-guided leading-fluid-micro-guided text-blackShade font-medium">
                   {review.review}
                 </p>
-                <p className="mt-3 text-sm font-bold text-blackShade">
+                <p className="mt-3 text-fluid-base leading-fluid-base font-bold text-blackShade">
                   {review.username ?? "Unknown User"}
                 </p>
-                <p className="mt-1 text-sm text-blackShade">
+                <p className="mt-1 text-fluid-base leading-fluid-base text-blackShade">
                   {formatDate(review.dateCreated)}
                 </p>
               </div>
