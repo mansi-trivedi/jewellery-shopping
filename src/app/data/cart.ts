@@ -71,4 +71,23 @@ const updateItemQuantity = async (productId: string, quantity: number) => {
   return [response?.data, error];
 };
 
-export { addToCart, getCartItems, removeItemFromCart, updateItemQuantity };
+const getCart = async (): Promise<
+  [CartAPIProps["getCartResponse"] | undefined, AxiosError]
+> => {
+  const requestConfig: AxiosRequestConfig = {
+    method: "get",
+    url: `${BASE_URL}/api/cart/total`,
+  };
+  const [response, error] = await resolvePromise(
+    axios.request<CartAPIProps["getCartResponse"]>(requestConfig)
+  );
+  return [response?.data, error];
+};
+
+export {
+  addToCart,
+  getCartItems,
+  removeItemFromCart,
+  updateItemQuantity,
+  getCart,
+};

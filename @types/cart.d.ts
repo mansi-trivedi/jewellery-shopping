@@ -10,9 +10,16 @@ type CartItemData = {
   subtotal: string;
 };
 
+type CartData = {
+  cartId: string;
+  total: number;
+  userId: string;
+};
+
 type GetCartItemsResponse = ServerResponseType<Array<CartItem>>;
 type AddCartItemResponse = ServerResponseType<void>;
 type DeleteCartItemResponse = ServerResponseType<void>;
+type GetCartResponse = ServerResponseType<cart>;
 
 type CartAPIProps = {
   cartItem: CartItemData;
@@ -20,6 +27,8 @@ type CartAPIProps = {
   addCartItemResponse: AddCartItemResponse;
   deleteCartItemResponse: DeleteCartItemResponse;
   getServerSideProps: never;
+  cart: CartData;
+  getCartResponse: GetCartResponse;
 };
 
 export type { CartAPIProps };
