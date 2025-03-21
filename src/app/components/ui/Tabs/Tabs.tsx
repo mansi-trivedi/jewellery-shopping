@@ -17,6 +17,7 @@ type TabsProps = {
   defaultActiveKey?: string;
   id?: string;
   className?: string;
+  prefix: string;
 };
 
 type TabProps = {
@@ -45,7 +46,13 @@ function isTabElement(element: ReactNode): element is ReactElement<TabProps> {
 
 const Tabs: FC<TabsProps> = (props) => {
   let initialActiveKey: string | undefined;
-  const { defaultActiveKey, id = "tabs", className = "", children } = props;
+  const {
+    defaultActiveKey,
+    id = "tabs",
+    className = "",
+    children,
+    prefix,
+  } = props;
   const childrenArray = Children.toArray(children);
   if (childrenArray.length > 0) {
     const firstChild = childrenArray[0];
@@ -113,7 +120,7 @@ const Tabs: FC<TabsProps> = (props) => {
   );
 
   return (
-    <div role="tablist" id={id} className={className}>
+    <div role="tablist" className={className}>
       <div className="tab-pills-container">
         {Children.map(children, (child) => {
           if (isTabElement(child)) {
@@ -128,8 +135,8 @@ const Tabs: FC<TabsProps> = (props) => {
               },
               role: "tab",
               "aria-selected": activeKey === child.props.eventKey,
-              "aria-controls": `${id}-tabpanel-${child.props.eventKey}`,
-              id: `${id}-tab-${child.props.eventKey}`,
+              "aria-controls": `${prefix}-${id}-tabpanel-${child.props.eventKey}`,
+              id: `${prefix}-${id}-tab-${child.props.eventKey}`,
             });
           }
           return null;
@@ -140,9 +147,9 @@ const Tabs: FC<TabsProps> = (props) => {
           return (
             <div
               key={child.props.eventKey}
-              id={`${id}-tabpanel-${child.props.eventKey}`}
+              id={`${prefix}-${id}-tabpanel-${child.props.eventKey}`}
               role="tabpanel"
-              aria-labelledby={`${id}-tab-${child.props.eventKey}`}
+              aria-labelledby={`${prefix}-${id}-tab-${child.props.eventKey}`}
               hidden={activeKey !== child.props.eventKey}
             >
               {child.props.children}
@@ -156,11 +163,12 @@ const Tabs: FC<TabsProps> = (props) => {
 };
 
 const Tab = forwardRef<HTMLButtonElement, TabProps>((props, ref) => {
-  const { title, disabled = false, className, ...restProps } = props;
+  const { title, disabled = false, className, eventKey, ...restProps } = props;
   return (
     <button
       {...restProps}
       disabled={disabled}
+      data-event-key={eventKey}
       ref={ref}
       className={`font-bold min-w-28 text-fluid-micro-guided leading-fluid-micro-guided transition-all duration-200 py-3 px-7 ${className} ${
         props["aria-selected"] ? "active" : ""

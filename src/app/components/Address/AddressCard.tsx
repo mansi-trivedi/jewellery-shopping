@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
-import SelectAddressModal from "./AddressModal";
 import { AddressType } from "types/address";
 import { getAddresses } from "@/app/data/address";
 import toast from "react-hot-toast";
+import CustomModal from "components/Modal/Modal";
+import { RxCross2 } from "react-icons/rx";
+import AddressDetails from "./AddressDetails";
 
 const AddressCard = () => {
   const [addressModal, setAddressModal] = useState<boolean>(false);
@@ -55,12 +57,38 @@ const AddressCard = () => {
       >
         {selectedAddress ? "change" : "select"}
       </p>
-      <SelectAddressModal
-        addressModal={addressModal}
-        handleAddressModal={handleAddressModal}
-        setSelectedAddress={setSelectedAddress}
-        addresses={addresses}
-      />
+      <CustomModal
+        isOpen={addressModal}
+        contentLabel="add or select address"
+        contentStyles={{
+          width: "100%",
+          maxWidth: "650px",
+          padding: 0,
+          borderRadius: 0,
+        }}
+      >
+        <div className="modal-content">
+          <div className="modal-header px-4 py-3 lg:px-8 lg:py-6 border-b border-b-blackShade border-opacity-20 relative">
+            <button
+              className="absolute top-0 right-4 lg:right-6 bottom-0"
+              type="button"
+              onClick={handleAddressModal}
+              aria-label="close modal"
+            >
+              <RxCross2 className="fill-blackShade" size={20} />
+            </button>
+            <p className="text-fluid-body-5 leading-fluid-body-5 font-semibold capitalize">
+              Find your address
+            </p>
+          </div>
+          <AddressDetails
+            addressModal={addressModal}
+            handleAddressModal={handleAddressModal}
+            setSelectedAddress={setSelectedAddress}
+            addresses={addresses}
+          />
+        </div>
+      </CustomModal>
     </div>
   );
 };
