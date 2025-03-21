@@ -35,26 +35,28 @@ const Products: React.FC<ProductsPropTypes> = (props) => {
 
   return (
     <div className="relative pb-10">
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-8">
-        {products?.length ? (
-          products.map((product, key) => (
-            <ProductCard
-              key={key}
-              product={product}
-              isItemInWishList={wishListProductsSkuIds.has(product.SKU)}
-            />
-          ))
-        ) : (
-          <div>No Product</div>
-        )}
-      </div>
+      {products?.length ? (
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-8">
+          {
+            products.map((product, key) => (
+              <ProductCard
+                key={key}
+                product={product}
+                isItemInWishList={wishListProductsSkuIds.has(product.SKU)}
+              />
+            ))
+          }
+        </div>
+      ) : (
+        <div className="text-lg text-darkBlue text-center py-4 font-semiboldS">No Product Found</div>
+      )}
       {/* <Pagination
         onPageClick={() => alert("hello")}
         itemsPerPage={20}
         totalItems={200}
         currentPage={1}
       /> */}
-    </div>
+    </div >
   );
 };
 

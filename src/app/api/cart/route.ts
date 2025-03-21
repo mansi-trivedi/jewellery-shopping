@@ -59,11 +59,11 @@ export async function DELETE(
   request: Request
 ): Promise<NextResponse<CartAPIProps["deleteCartItemResponse"]>> {
   try {
-    const payload = (await decodeAndGetUserInfo()) ?? {};
+    // const payload = (await decodeAndGetUserInfo()) ?? {};
     const { searchParams } = new URL(request.url);
     const cartItemId = searchParams.get("cart_item_id");
-    await executeQuery("call RemoveCartItem(?, ?)", [
-      payload.userId,
+    await executeQuery("call RemoveCartItem(?)", [
+      // payload.userId,
       cartItemId,
     ]);
     return serverResponse({

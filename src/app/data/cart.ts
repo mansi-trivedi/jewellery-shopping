@@ -53,4 +53,22 @@ const removeItemFromCart = async (cartItemId: string) => {
   return [response?.data, error];
 };
 
-export { addToCart, getCartItems, removeItemFromCart };
+const updateItemQuantity = async (productId: string, quantity: number) => {
+  /** Getting cart details */
+  const requestData = {
+    productId,
+    quantity,
+  };
+  const requestConfig: AxiosRequestConfig = {
+    url: `${BASE_URL}/api/cart/cartitems`,
+    method: "post",
+    data: JSON.stringify(requestData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const [response, error] = await resolvePromise(axios.request(requestConfig));
+  return [response?.data, error];
+};
+
+export { addToCart, getCartItems, removeItemFromCart, updateItemQuantity };

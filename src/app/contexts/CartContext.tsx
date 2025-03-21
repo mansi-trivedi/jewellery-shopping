@@ -15,6 +15,7 @@ import {
   getCartItems,
   addToCart as addToCartAPI,
   removeItemFromCart,
+  updateItemQuantity,
 } from "../data/cart";
 import { CartAPIProps } from "types/cart";
 import toast from "react-hot-toast";
@@ -39,15 +40,17 @@ type CartContextType = {
   addToCart: (productId: string, quantity: number) => Promise<void>;
   removeFromCart: (cartItemId: string) => Promise<RemoveCartItemResult>;
   getCartItemStatus: (productId: string) => CartItemStatus;
+  updateCartItemQuantity: (productId: string, quantity: number) => Promise<void>;
 };
 
 const DEFAULT_VALUE: CartContextType = {
   cartItems: [],
   setCartItemsHandler: () => null,
   isItemExistInCart: () => false,
-  addToCart: async () => {},
+  addToCart: async () => { },
   removeFromCart: async () => ({ success: false, error: null }),
   getCartItemStatus: () => ({ inCart: false, cartItemId: null }),
+  updateCartItemQuantity: async () => { },
 };
 
 const CartContext = createContext(DEFAULT_VALUE);
@@ -138,6 +141,27 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
     []
   );
 
+  const updateCartItemQuantity = useCallback(
+    async (productId: string, quantity: number) => {
+      if (!isLoggedIn) return;
+      const [resp, err] = await updateItemQuantity(productId, quantity);
+      if (err) {
+        toast.error("Something went wrong, Please try again after sometime");
+        console.error("Failed to add to cart:", err);
+        return;
+      }
+      if (resp?.success) {
+        // toast.success("Item  successfully added to the cart");
+        const [updatedCartResp, updatedCartErr] = await getCartItems();
+        if (updatedCartErr) return;
+        if (updatedCartResp?.success) {
+          setCartItems(updatedCartResp.data ?? []);
+        }
+      }
+    },
+    [isLoggedIn]
+  );
+
   /** Effects */
 
   useEffect(() => {
@@ -171,6 +195,7 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
       addToCart,
       removeFromCart,
       getCartItemStatus,
+      updateCartItemQuantity
     }),
     [
       cartItems,
@@ -179,6 +204,7 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
       addToCart,
       removeFromCart,
       getCartItemStatus,
+      updateCartItemQuantity
     ] // update dependency as per requirement
   );
 
