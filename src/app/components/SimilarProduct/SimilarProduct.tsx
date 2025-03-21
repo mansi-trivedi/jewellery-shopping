@@ -69,7 +69,7 @@ const SimilarProduct: FC<SimilarProductDetailPropTypes> = ({ categoryId }) => {
         You May Also Like
       </h2>
       <div className="">
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-6 3xl:grid-cols-6 md:gap-6 lg:gap-6 xl:gap-6 2xl:gap-6 3xl:gap-6 gap-3">
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 3xl:grid-cols-4 md:gap-6 lg:gap-6 xl:gap-6 2xl:gap-6 3xl:gap-6 gap-3">
           {similarProducts
             ?.slice(startIndex, startIndex + productsPerView)
             ?.map((product, key) => (
@@ -84,14 +84,14 @@ const SimilarProduct: FC<SimilarProductDetailPropTypes> = ({ categoryId }) => {
           {startIndex !== 0 && (
             <button
               onClick={prevImages}
-              className="bg-lightBlue hover:bg-darkBlue p-2 text-white rounded-full"
+              className="bg-darkGreen border-2 border-darkGreen hover:bg-transparent p-2 text-white rounded-full [&>svg]:hover:fill-darkGreen"
             >
               <BsArrowLeft size={20} />
             </button>
           )}
           <button
             onClick={nextImages}
-            className="bg-lightBlue hover:bg-darkBlue p-2 text-white rounded-full"
+            className="bg-darkGreen hover:bg-transparent p-2 text-white rounded-full border-2 border-darkGreen [&>svg]:hover:fill-darkGreen"
           >
             <BsArrowRight size={20} />
           </button>

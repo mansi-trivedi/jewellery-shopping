@@ -23,7 +23,13 @@ const Register: FC = () => {
   const router = useRouter();
 
   const validateForm = useCallback(
-    (email: string, password: string, cPassword: string, firstname: string, lastname: string) => {
+    (
+      email: string,
+      password: string,
+      cPassword: string,
+      firstname: string,
+      lastname: string
+    ) => {
       const formErrors: RegisterErrorProps = {};
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const passwordRegex =
@@ -73,15 +79,26 @@ const Register: FC = () => {
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
         const cPassword = formData.get("confirm-password") as string;
-        const firstname = formData.get("firstname") as string;
-        const lastname = formData.get("lastname") as string;
-        const isFormValid = validateForm(email, password, cPassword, firstname, lastname);
+        const firstName = formData.get("firstname") as string;
+        const lastName = formData.get("lastname") as string;
+        const isFormValid = validateForm(
+          email,
+          password,
+          cPassword,
+          firstName,
+          lastName
+        );
         if (!isFormValid) {
           toast.error("Please check form fields and try again");
           setIsLoading(false);
           return;
         }
-        const [, err] = await performUserRegistration(email, password, lastname, firstname);
+        const [, err] = await performUserRegistration(
+          email,
+          password,
+          lastName,
+          firstName
+        );
         if (err) {
           toast.error(
             err.response

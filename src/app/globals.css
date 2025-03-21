@@ -7,3 +7,15 @@ body {
   font-family: var(--font-quickSand), var(--open-sans), var(--roboto),
     "sans-serif";
 }
+
+.global-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.global-scrollbar::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.global-scrollbar::-webkit-scrollbar-thumb {
+  background: #516559;
+}

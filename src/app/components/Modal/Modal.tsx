@@ -19,7 +19,7 @@ export interface ModalProps {
 
 export const customStyles: Modal.Styles = {
   content: {
-    padding: "40px",
+    padding: "12px",
     border: "0",
     borderRadius: "8px",
     background: "#FFFFFF",
