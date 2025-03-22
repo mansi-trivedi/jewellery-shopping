@@ -12,4 +12,6 @@ type AddressType = {
   userId: string;
 };
 
-export type { AddressType };
+type AddAddressResponse = ServerResponseType<Array<AddressType>>;
+
+export type { AddressType, AddAddressResponse };

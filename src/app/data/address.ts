@@ -1,9 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { BASE_URL } from "@/app/constants/api";
 import { APIResponse } from "types/api";
-import { ServerResponseType } from "types/global";
 import { resolvePromise } from "../utils/apiUtils";
-import { AddressType } from "types/address";
+import { AddAddressResponse, AddressType } from "types/address";
 
 const addNewAddress = async (
   name: string,
@@ -17,7 +16,7 @@ const addNewAddress = async (
   postalcode: string
 ): Promise<
   [
-    ServerResponseType<"">,
+    AddAddressResponse,
     AxiosError<{
       error: string;
     }>
@@ -38,7 +37,9 @@ const addNewAddress = async (
       name,
     }),
   };
-  const [response, error] = await resolvePromise(axios.request(requestConfig));
+  const [response, error] = await resolvePromise(
+    axios.request<AddAddressResponse>(requestConfig)
+  );
   return [response?.data, error];
 };
 

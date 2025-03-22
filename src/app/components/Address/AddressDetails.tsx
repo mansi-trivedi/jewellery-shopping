@@ -16,7 +16,7 @@ type SelectAddressProps = {
   addresses: AddressType[];
 };
 
-type AddressPropsType = {
+export type AddressPropsType = {
   name?: string;
   phone?: string;
   addressline?: string;
@@ -35,6 +35,8 @@ const AddressDetails: React.FC<SelectAddressProps> = (props) => {
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [errors, setErrors] = useState<AddressPropsType>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [allAddresses, setAllAddresses] =
+    useState<SelectAddressProps["addresses"]>(addresses);
 
   const handleAddNew = useCallback(() => {
     setIsAddingNew(!isAddingNew);
@@ -133,7 +135,7 @@ const AddressDetails: React.FC<SelectAddressProps> = (props) => {
           setIsLoading(false);
           return;
         }
-        const [, err] = await addNewAddress(
+        const [apiResp, err] = await addNewAddress(
           name,
           phone,
           addressline,
@@ -152,6 +154,9 @@ const AddressDetails: React.FC<SelectAddressProps> = (props) => {
           );
           setIsLoading(false);
           return;
+        }
+        if (apiResp?.success) {
+          setAllAddresses(apiResp?.data ?? []);
         }
         setIsLoading(false);
         toast.success("Address Added successfully", {
@@ -369,7 +374,7 @@ const AddressDetails: React.FC<SelectAddressProps> = (props) => {
         >
           <div className="max-h-[350px] overflow-auto global-scrollbar">
             <div className="p-4 lg:p-8 [&>:not(:nth-last-child(-n+1))]:mb-4">
-              {addresses?.map((addr) => (
+              {allAddresses?.map((addr) => (
                 <div
                   className="flex gap-4 justify-between"
                   key={addr.addressId}

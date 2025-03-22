@@ -1,3 +1,4 @@
+import { AddressPropsType } from "@/app/components/Address/AddressDetails";
 import { executeQuery } from "@/app/libs/mysql";
 import { decodeAndGetUserInfo } from "@/app/utils/getAuthToken";
 import serverResponse from "@/app/utils/nextServerResponse";
@@ -43,22 +44,26 @@ export async function POST(request: Request) {
       });
     }
     const requestBody = await request.json();
-    await executeQuery("call AddAddress(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
-      requestBody.addressline,
-      requestBody.area,
-      requestBody.landmark,
-      requestBody.city,
-      requestBody.state,
-      requestBody.country,
-      requestBody.postalcode,
-      requestBody.phone,
-      requestBody.name,
-      payload?.userId,
-    ]);
+    const [rows] = await executeQuery(
+      "call AddAddress(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        requestBody.addressline,
+        requestBody.area,
+        requestBody.landmark,
+        requestBody.city,
+        requestBody.state,
+        requestBody.country,
+        requestBody.postalcode,
+        requestBody.phone,
+        requestBody.name,
+        payload?.userId,
+      ]
+    );
+    const addresses = rows as Array<AddressPropsType>;
     return serverResponse({
       success: true,
       message: "Address Added Successfully",
-      data: "",
+      data: addresses,
     });
   } catch (error) {
     return serverResponse({
