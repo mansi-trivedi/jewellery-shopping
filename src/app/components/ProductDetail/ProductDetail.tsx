@@ -16,7 +16,6 @@ import { ServerResponseType } from "types/global";
 import { FiHeart } from "react-icons/fi";
 import { useProductContext } from "@/app/contexts/ProductContext";
 import SimilarProduct from "../SimilarProduct/SimilarProduct";
-import { useUserContext } from "@/app/contexts/UserContext";
 
 type ProductDetailPropTypes = {
   product: Product | null;
@@ -35,7 +34,6 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
     categoryId = "",
   } = product ?? {};
   const { toggleProductsFromWishList } = useProductContext();
-  const { isLoggedIn } = useUserContext();
 
   const imageSlides = useMemo(() => {
     if (!images) {
@@ -150,7 +148,7 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
         </div>
       </FullWidthContainer>
       <SimilarProduct categoryId={categoryId} />
-      {isLoggedIn ? <Review isReviewPage={false} sku={SKU} /> : null}
+      <Review isReviewPage={false} sku={SKU} />
     </>
   );
 };
