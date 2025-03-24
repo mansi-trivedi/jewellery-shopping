@@ -4,6 +4,7 @@ type CartItemData = {
   cartItemId: string;
   description: string;
   name: string;
+  images: string;
   price: string;
   productId: string;
   quantity: number;
