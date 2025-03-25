@@ -1,9 +1,11 @@
+import { useCartContext } from "@/app/contexts/CartContext";
 import { getCart } from "@/app/data/cart";
-import React, { useEffect, useState } from "react";
-import { CartAPIProps } from "types/cart";
+import React, { useEffect } from "react";
 
 const CartTotal = () => {
-  const [userCart, setUserCart] = useState<CartAPIProps["cart"]>();
+  const { cart, setCart } = useCartContext();
+  const { Total } = cart ?? {};
+
   useEffect(() => {
     (async () => {
       const [cartResp, cartErr] = await getCart();
@@ -11,11 +13,11 @@ const CartTotal = () => {
         return;
       }
       if (cartResp?.success) {
-        console.log("cartResp?.data", cartResp?.data?.[0])
-        setUserCart(cartResp?.data?.[0] ?? {});
+        setCart(cartResp?.data ?? null);
       }
     })();
-  }, [setUserCart]);
+  }, [setCart]);
+
   return (
     <div className="relative py-2">
       <table className="w-full border-collapse border border-gray-200 bg-cloudGray">
@@ -23,7 +25,7 @@ const CartTotal = () => {
           <tr>
             <td className="py-2 px-4 text-lg text-darkBlue">Subtotal</td>
             <td className="py-2 px-4 text-lg font-semibold text-darkBlue text-right">
-              Rs. {userCart?.total}
+              Rs. {Total}
             </td>
           </tr>
 
@@ -41,7 +43,7 @@ const CartTotal = () => {
               Total
             </td>
             <td className="py-2 px-4 text-2xl font-semibold text-darkBlue text-right">
-              Rs. {userCart?.total ?? 0 + 8.00}
+              Rs. {Total ?? 0 + 8.0}
             </td>
           </tr>
         </tbody>

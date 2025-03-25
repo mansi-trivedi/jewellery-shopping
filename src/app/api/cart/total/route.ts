@@ -11,8 +11,8 @@ export async function GET(): Promise<
 > {
   const payload = (await decodeAndGetUserInfo()) ?? {};
   try {
-    const rows = await executeQuery("call GetCart(?)", [payload?.userId]);
-    const cart = rows[0] as Array<CartAPIProps["cart"]>;
+    const [rows] = await executeQuery("call GetCart(?)", [payload?.userId]);
+    const cart = rows[0] as CartAPIProps["cart"];
     return serverResponse({
       data: cart,
       status: 200,

@@ -7,7 +7,7 @@ type ServerResponseType<T> = {
   success: boolean;
   message?: string | undefined;
   error?: string | undefined | ValidationError[];
-  data?: T | undefined;
+  data?: T | null;
   status?: number | undefined;
 };
 

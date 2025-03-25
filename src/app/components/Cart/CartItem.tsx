@@ -1,9 +1,9 @@
-import React, { useState, useCallback, ChangeEvent, useMemo } from "react";
+import React, { useState, useCallback, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
 import { FaTrashCan } from "react-icons/fa6";
 import { CartAPIProps } from "types/cart";
 import { useCartContext } from "context/CartContext";
-import { fetchProductImages } from "@/app/utils/imageUtils";
+// import { fetchProductImages } from "@/app/utils/imageUtils";
 
 type CartItemPropsTypes = {
   cartItem: CartAPIProps["cartItem"];
@@ -11,17 +11,17 @@ type CartItemPropsTypes = {
 
 const CartItem: React.FC<CartItemPropsTypes> = (props) => {
   const { cartItem } = props;
-  const { name, description, quantity, productId, price, cartItemId, images } =
+  const { name, description, quantity, productId, price, cartItemId } =
     cartItem ?? {};
   const [itemQuantity, setItemQuantity] = useState<number>(quantity);
   const { updateCartItemQuantity, removeFromCart } = useCartContext();
 
-  const productImage = useMemo(() => {
-    if (!images) {
-      return [];
-    }
-    return fetchProductImages(images);
-  }, [images]);
+  // const productImage = useMemo(() => {
+  //   if (!images) {
+  //     return [];
+  //   }
+  //   return fetchProductImages(images);
+  // }, [images]);
 
   const handleOnIncreaseQtyBtn = useCallback(async () => {
     const updatedQuantity = itemQuantity + 1;
@@ -46,6 +46,10 @@ const CartItem: React.FC<CartItemPropsTypes> = (props) => {
   const handleRemoveCartItem = useCallback(async () => {
     await removeFromCart(cartItemId);
   }, [cartItemId, removeFromCart]);
+
+  useEffect(() => {
+    setItemQuantity(quantity);
+  }, [quantity]);
 
   return (
     <div className="px-2 bg-cloudGray relative p-2">

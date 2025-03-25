@@ -1,4 +1,5 @@
 import type { ServerResponseType } from "types/global";
+import { APIResponse } from "./api";
 
 type CartItemData = {
   cartItemId: string;
@@ -12,15 +13,14 @@ type CartItemData = {
 };
 
 type CartData = {
+  Total: string;
   cartId: string;
-  total: number;
-  userId: string;
 };
 
-type GetCartItemsResponse = ServerResponseType<Array<CartItem>>;
+type GetCartItemsResponse = APIResponse<Array<CartItemData>>;
 type AddCartItemResponse = ServerResponseType<void>;
 type DeleteCartItemResponse = ServerResponseType<void>;
-type GetCartResponse = ServerResponseType<cart>;
+type GetCartResponse = APIResponse<CartData>;
 
 type CartAPIProps = {
   cartItem: CartItemData;

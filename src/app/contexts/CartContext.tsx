@@ -13,9 +13,10 @@ import {
 import { useUserContext } from "./UserContext";
 import {
   getCartItems,
-  addToCart as addToCartAPI,
   removeItemFromCart,
   updateItemQuantity,
+  getCart,
+  addToCart as addItemToCart,
 } from "../data/cart";
 import { CartAPIProps } from "types/cart";
 import toast from "react-hot-toast";
@@ -40,17 +41,24 @@ type CartContextType = {
   addToCart: (productId: string, quantity: number) => Promise<void>;
   removeFromCart: (cartItemId: string) => Promise<RemoveCartItemResult>;
   getCartItemStatus: (productId: string) => CartItemStatus;
-  updateCartItemQuantity: (productId: string, quantity: number) => Promise<void>;
+  updateCartItemQuantity: (
+    productId: string,
+    quantity: number
+  ) => Promise<void>;
+  cart: CartAPIProps["cart"] | null;
+  setCart: React.Dispatch<React.SetStateAction<CartAPIProps["cart"] | null>>;
 };
 
 const DEFAULT_VALUE: CartContextType = {
   cartItems: [],
   setCartItemsHandler: () => null,
   isItemExistInCart: () => false,
-  addToCart: async () => { },
+  addToCart: async () => {},
   removeFromCart: async () => ({ success: false, error: null }),
   getCartItemStatus: () => ({ inCart: false, cartItemId: null }),
-  updateCartItemQuantity: async () => { },
+  updateCartItemQuantity: async () => {},
+  cart: null,
+  setCart: () => null,
 };
 
 const CartContext = createContext(DEFAULT_VALUE);
@@ -62,25 +70,20 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
     new Set<string>()
   );
   const [, setCartError] = useState<Error | null>(null);
+  const [cart, setCart] = useState<CartContextType["cart"]>(null);
 
   /** Handlers */
 
   const addToCart = useCallback(
     async (productId: string, quantity: number) => {
       if (!isLoggedIn) return;
-      const [resp, err] = await addToCartAPI(productId, quantity);
+      const [resp, err] = await addItemToCart(productId, quantity);
       if (err) {
         toast.error("Something went wrong, Please try again after sometime");
-        console.error("Failed to add to cart:", err);
         return;
       }
       if (resp?.success) {
         toast.success("Item successfully added to the cart");
-        const [updatedCartResp, updatedCartErr] = await getCartItems();
-        if (updatedCartErr) return;
-        if (updatedCartResp?.success) {
-          setCartItems(updatedCartResp.data ?? []);
-        }
       }
     },
     [isLoggedIn]
@@ -123,6 +126,7 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
     [isLoggedIn]
   );
 
+  /** Checks item status whether it exists in the cart or not */
   const getCartItemStatus = useCallback(
     (productId: string): CartItemStatus => {
       const foundItem = cartItems.find((item) => item.productId === productId);
@@ -134,6 +138,7 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
     [cartItems]
   );
 
+  /** Sets cart items */
   const setCartItemsHandler = useCallback(
     (cartItems: CartContextType["cartItems"]) => {
       setCartItems(cartItems);
@@ -141,43 +146,35 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
     []
   );
 
+  /** Update cart and updates details for cart and cartItems */
   const updateCartItemQuantity = useCallback(
     async (productId: string, quantity: number) => {
       if (!isLoggedIn) return;
       const [resp, err] = await updateItemQuantity(productId, quantity);
       if (err) {
         toast.error("Something went wrong, Please try again after sometime");
-        console.error("Failed to add to cart:", err);
         return;
       }
       if (resp?.success) {
-        // toast.success("Item  successfully added to the cart");
         const [updatedCartResp, updatedCartErr] = await getCartItems();
         if (updatedCartErr) return;
         if (updatedCartResp?.success) {
           setCartItems(updatedCartResp.data ?? []);
+          // getting updated cart details
+          const [cartResp, cartErr] = await getCart();
+          if (cartErr) {
+            toast.error("Not able to update cart details at this moment");
+            return;
+          }
+          if (cartResp?.success) {
+            toast.success("Item quantity has been updated successfully");
+            setCart(cartResp?.data ?? null);
+          }
         }
       }
     },
     [isLoggedIn]
   );
-
-  /** Effects */
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      return;
-    }
-    (async () => {
-      const [cartResp, cartErr] = await getCartItems();
-      if (cartErr) {
-        return;
-      }
-      if (cartResp?.success) {
-        setCartItems(cartResp?.data ?? []);
-      }
-    })();
-  }, [isLoggedIn]);
 
   useEffect(() => {
     const productIds = cartItems.map((cart) => cart.productId);
@@ -195,7 +192,9 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
       addToCart,
       removeFromCart,
       getCartItemStatus,
-      updateCartItemQuantity
+      updateCartItemQuantity,
+      cart,
+      setCart,
     }),
     [
       cartItems,
@@ -204,7 +203,8 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
       addToCart,
       removeFromCart,
       getCartItemStatus,
-      updateCartItemQuantity
+      updateCartItemQuantity,
+      cart,
     ] // update dependency as per requirement
   );
 
