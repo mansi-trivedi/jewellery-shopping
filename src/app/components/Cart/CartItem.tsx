@@ -30,9 +30,11 @@ const CartItem: React.FC<CartItemPropsTypes> = (props) => {
   }, [itemQuantity, updateCartItemQuantity, productId]);
 
   const handleOnDecreaseQtyBtn = useCallback(async () => {
-    const updatedQuantity = itemQuantity - 1;
-    setItemQuantity(updatedQuantity);
-    await updateCartItemQuantity(productId, updatedQuantity);
+    if (itemQuantity > 1) {
+      const updatedQuantity = itemQuantity - 1;
+      setItemQuantity(updatedQuantity);
+      await updateCartItemQuantity(productId, updatedQuantity);
+    }
   }, [itemQuantity, updateCartItemQuantity, productId]);
 
   const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {

@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 
 const CartTotal = () => {
   const { cart, setCart } = useCartContext();
-  const { Total } = cart ?? {};
+  const { total } = cart ?? {};
 
   useEffect(() => {
     (async () => {
@@ -25,7 +25,7 @@ const CartTotal = () => {
           <tr>
             <td className="py-2 px-4 text-lg text-darkBlue">Subtotal</td>
             <td className="py-2 px-4 text-lg font-semibold text-darkBlue text-right">
-              Rs. {Total}
+              Rs. {total}
             </td>
           </tr>
 
@@ -43,7 +43,7 @@ const CartTotal = () => {
               Total
             </td>
             <td className="py-2 px-4 text-2xl font-semibold text-darkBlue text-right">
-              Rs. {Total ?? 0 + 8.0}
+              Rs. {total ?? 0 + 8.0}
             </td>
           </tr>
         </tbody>

@@ -13,7 +13,7 @@ type CartItemData = {
 };
 
 type CartData = {
-  Total: string;
+  total: string;
   cartId: string;
 };
 

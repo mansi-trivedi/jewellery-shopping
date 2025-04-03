@@ -92,11 +92,10 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
                 >
                   <FiHeart
                     className={`w-5 h-5 text-darkGreen
-                             ${
-                               isItemInWishList
-                                 ? "fill-darkGreen"
-                                 : "fill-offWhite"
-                             } 
+                             ${isItemInWishList
+                        ? "fill-darkGreen"
+                        : "fill-offWhite"
+                      } 
                              hover:fill-darkGreen`}
                   />
                 </button>
@@ -147,8 +146,10 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
           </div>
         </div>
       </FullWidthContainer>
-      <SimilarProduct categoryId={categoryId} />
+      <hr className="border border-gray-200 my-2" />
       <Review isReviewPage={false} sku={SKU} />
+      <hr className="border border-gray-200 my-2" />
+      <SimilarProduct categoryId={categoryId} />
     </>
   );
 };
