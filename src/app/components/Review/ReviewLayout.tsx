@@ -12,13 +12,10 @@ type ReviewPropTypes = {
 const ReviewLayout: FC<ReviewPropTypes> = (props) => {
   const { sku, isReviewPage } = props;
   const { handleReviewModal, productReviews } = useReviewContext();
-
-  if (!productReviews?.length) {
-    return null;
-  }
+  const reviews = isReviewPage ? productReviews : productReviews.slice(0, 5);
 
   return (
-    <div className="relative">
+    <div className="relative pb-5">
       <div className="flex justify-between">
         <h2 className="text-lg font-bold text-darkBlue mb-4">
           Customer Reviews
@@ -32,12 +29,12 @@ const ReviewLayout: FC<ReviewPropTypes> = (props) => {
         >
           Write a Review
         </button>
-        <ReviewList reviews={productReviews} />
-        {!isReviewPage && (
+        <ReviewList reviews={reviews} />
+        {reviews?.length && !isReviewPage ? (
           <Link href={`/product/${sku}/review`}>
             <p className="font-semibold underline">See All reviews</p>
           </Link>
-        )}
+        ) : null}
       </div>
     </div>
   );
