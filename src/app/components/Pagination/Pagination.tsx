@@ -14,7 +14,7 @@ const Pagination: React.FC<PaginationProps> = (props) => {
   const { currentPage, itemsPerPage, totalItems, onPageClick } = props;
 
   // if page index start from 0 add 1
-  const startIndex = 1;
+  const startIndex = 0;
 
   const handlePageCount = useCallback(
     (pageNumber: number) => () => {
@@ -37,6 +37,7 @@ const Pagination: React.FC<PaginationProps> = (props) => {
   const lastPage =
     (pageData?.[paginationRangeLength - 1] as number) - startIndex;
   const isLastPage = currentPage === lastPage;
+  const isFirstPage = currentPage - 1 === 0;
 
   // const pageButtonLabel = useMemo(() => "", []);
 
@@ -46,14 +47,14 @@ const Pagination: React.FC<PaginationProps> = (props) => {
 
   return (
     <div className="relative flex justify-between flex-col overflow-auto my-4 items-center 2xl:flex-row 2xl:my-8 2xl:justify-center font-quickSand font-semibold">
-      <ul className="flex list-none mt-4 p-0 2xl:m-0 items-center px-2">
+      <ul className="flex gap-2 list-none mt-4 p-0 2xl:m-0 items-center px-2">
         {/*  Left Navigation arrow */}
         <li className="min-w-8 flex items-center justify-center">
           <button
             data-testid="Pagination_PreviousPageButton"
             aria-label={"previous page label"}
             onClick={handlePageCount(currentPage - 1)}
-            disabled={currentPage === 0}
+            disabled={isFirstPage}
           >
             <SlArrowLeft className={`w-4 h-4 fill-darkBlue`} />
           </button>
@@ -85,7 +86,9 @@ const Pagination: React.FC<PaginationProps> = (props) => {
                 onClick={handlePageCount((pageNumber as number) - startIndex)}
                 aria-label={"page button label"}
                 style={{ borderRadius: "4px" }}
-                className="w-full h-full p-2 hover:bg-darkBlue hover:text-white"
+                className={`w-full h-full p-2 ${
+                  isSelected ? "bg-darkBlue text-white" : ""
+                } hover:bg-darkBlue hover:text-white`}
               >
                 <span className="text-fluid-micro-guided leading-fluid-micro-guided">
                   {pageNumber}

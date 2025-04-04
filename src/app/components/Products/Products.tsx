@@ -1,62 +1,62 @@
 "use client";
 
 import React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ProductCard from "components/ProductCard/ProductCard";
 import { Product } from "types/product";
 import { useProductContext } from "context/ProductContext";
+import Pagination from "../Pagination/Pagination";
+import { productsPerPage } from "@/pages";
+import { getAllProduct } from "@/app/data/product";
+import toast from "react-hot-toast";
 
 type ProductsPropTypes = {
   wishlist: boolean;
-  products: Product[];
+  products: Product[] | [];
+  totalProducts: number;
+  currentPage?: number | null | undefined;
 };
 
-const productsPerPage = 20;
-
 const Products: React.FC<ProductsPropTypes> = (props) => {
-  const { products } = props;
-  const [currentPage] = useState<number>(1);
-  const [, setTotalPages] = useState<number>(1);
-  const [, setCurrentProducts] = useState<Product[]>([]);
+  const { products, currentPage: current = 0, totalProducts } = props;
+  const [currentPage, setCurrentPage] = useState<number>(current as number);
+  const [currentProducts, setCurrentProducts] = useState<Product[]>(products);
   const { wishListProductsSkuIds } = useProductContext();
 
-  useEffect(() => {
-    setTotalPages(Math.ceil(products.length / productsPerPage));
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    setCurrentProducts(
-      products?.slice(indexOfFirstProduct, indexOfLastProduct)
-    );
-  }, [currentPage, products]);
-
-  // const handlePageChange = (page: number) => {
-  //   setCurrentPage(page);
-  // };
+  const handlePageChange = async (pageNumber: number) => {
+    const [response, err] = await getAllProduct(productsPerPage, pageNumber);
+    setCurrentProducts(response?.data?.products ?? []);
+    if (err) {
+      toast.error("Not able to fetch products");
+      return;
+    }
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div className="relative pb-10">
-      {products?.length ? (
+      {currentProducts?.length ? (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-8">
-          {
-            products.map((product, key) => (
-              <ProductCard
-                key={key}
-                product={product}
-                isItemInWishList={wishListProductsSkuIds.has(product.SKU)}
-              />
-            ))
-          }
+          {currentProducts.map((product, key) => (
+            <ProductCard
+              key={key}
+              product={product}
+              isItemInWishList={wishListProductsSkuIds.has(product.SKU)}
+            />
+          ))}
         </div>
       ) : (
-        <div className="text-lg text-darkBlue text-center py-4 font-semiboldS">No Product Found</div>
+        <div className="text-lg text-darkBlue text-center py-4 font-semiboldS">
+          No Product Found
+        </div>
       )}
-      {/* <Pagination
-        onPageClick={() => alert("hello")}
-        itemsPerPage={20}
-        totalItems={200}
-        currentPage={1}
-      /> */}
-    </div >
+      <Pagination
+        onPageClick={handlePageChange}
+        itemsPerPage={productsPerPage}
+        totalItems={totalProducts}
+        currentPage={currentPage}
+      />
+    </div>
   );
 };
 
