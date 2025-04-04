@@ -53,10 +53,10 @@ const DEFAULT_VALUE: CartContextType = {
   cartItems: [],
   setCartItemsHandler: () => null,
   isItemExistInCart: () => false,
-  addToCart: async () => {},
+  addToCart: async () => { },
   removeFromCart: async () => ({ success: false, error: null }),
   getCartItemStatus: () => ({ inCart: false, cartItemId: null }),
-  updateCartItemQuantity: async () => {},
+  updateCartItemQuantity: async () => { },
   cart: null,
   setCart: () => null,
 };
@@ -76,7 +76,10 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
 
   const addToCart = useCallback(
     async (productId: string, quantity: number) => {
-      if (!isLoggedIn) return;
+      if (!isLoggedIn) {
+        toast.error("Please login in order to add products to your cart");
+        return
+      };
       const [resp, err] = await addItemToCart(productId, quantity);
       if (err) {
         toast.error("Something went wrong, Please try again after sometime");

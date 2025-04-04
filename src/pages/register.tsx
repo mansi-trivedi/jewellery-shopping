@@ -32,8 +32,6 @@ const Register: FC = () => {
     ) => {
       const formErrors: RegisterErrorProps = {};
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const passwordRegex =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
       if (!firstname) {
         formErrors.firstname = "Firstname is required";
@@ -51,15 +49,15 @@ const Register: FC = () => {
 
       if (!password) {
         formErrors.password = "Password is required";
-      } else if (passwordRegex.test(password)) {
+      } else if (password.length < 8) {
         formErrors.password =
-          "password must contain at least one uppercase letter, one lowercase, one special character and contain at least 8 character";
+          "password must contain at least 8 character";
       }
 
       if (!cPassword) {
         formErrors.confirmPassword = "Confirm Password is required";
       } else if (password !== cPassword) {
-        formErrors.password = "Password and confirm Password must be equal";
+        formErrors.confirmPassword = "Password and confirm Password must be equal";
       }
       setErrors(formErrors);
       if (Object.keys(formErrors).length !== 0) {

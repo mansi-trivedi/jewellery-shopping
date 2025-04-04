@@ -43,7 +43,7 @@ const CartTotal = () => {
               Total
             </td>
             <td className="py-2 px-4 text-2xl font-semibold text-darkBlue text-right">
-              Rs. {total ?? 0 + 8.0}
+              Rs. {+(total ?? 0) + 8.0}
             </td>
           </tr>
         </tbody>

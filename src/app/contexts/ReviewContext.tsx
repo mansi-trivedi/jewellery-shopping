@@ -11,6 +11,8 @@ import {
 import { ProductReviewType } from "types/review";
 import { addProductReview, getProductReview } from "../data/review";
 import toast from "react-hot-toast";
+import { useUserContext } from "./UserContext";
+import { useRouter } from "next/router";
 
 type ReviewProviderPropTypes = {
   children: ReactNode;
@@ -33,8 +35,8 @@ const DEFAULT_VALUE: ReviewContextType = {
   reviewModal: false,
   getInitials: () => "",
   formatDate: () => "",
-  handleReviewModal: () => {},
-  updateProductReviews: () => {},
+  handleReviewModal: () => { },
+  updateProductReviews: () => { },
   createProductReview: () => Promise.resolve(),
   getAndSetReviewsList: () => Promise.resolve(),
 };
@@ -47,6 +49,8 @@ const ReviewProvider: FC<ReviewProviderPropTypes> = (props) => {
     ReviewContextType["productReviews"]
   >([]);
   const [reviewModal, setReviewModal] = useState<boolean>(false);
+  const { isLoggedIn } = useUserContext();
+  const router = useRouter();
 
   /** Handlers */
 
@@ -67,8 +71,13 @@ const ReviewProvider: FC<ReviewProviderPropTypes> = (props) => {
   }, []);
 
   const handleReviewModal = useCallback(() => {
-    setReviewModal((prev) => !prev);
-  }, []);
+    if (isLoggedIn) {
+      setReviewModal((prev) => !prev);
+    }
+    else {
+      router.push("/login");
+    }
+  }, [isLoggedIn, router]);
 
   const updateProductReviews = useCallback((reviews: ProductReviewType[]) => {
     setProductReviews(reviews);
