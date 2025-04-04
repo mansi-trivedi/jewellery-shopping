@@ -17,10 +17,11 @@ const getProductsByCategory = async (categoryName: string) => {
 
 /** Gets all products with pagination */
 const getAllProduct = async (
-  pageSize: number = 10
+  pageSize: number = 10,
+  pageNumber: number = 1
 ): Promise<[ProductAPIServerSidePropsTypes | undefined, AxiosError]> => {
   const requestConfig: AxiosRequestConfig = {
-    url: `${BASE_URL}/api/product?page_size=${pageSize}`,
+    url: `${BASE_URL}/api/product?page_size=${pageSize}&page_number=${pageNumber}`,
   };
   const [response, error] = await resolvePromise(
     axios.request<ProductAPIServerSidePropsTypes>(requestConfig)
@@ -74,5 +75,5 @@ export {
   getAllProduct,
   getProductBySku,
   getSimilarProducts,
-  getProductByCategoryId
+  getProductByCategoryId,
 };

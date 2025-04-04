@@ -14,7 +14,7 @@ type Product = {
 };
 
 type ProductAPIResponse = Partial<{
-  products: Product[];
+  products: Product[] | [] | undefined;
   totalProducts: number | null;
   currentPage: number | null;
 }>;
