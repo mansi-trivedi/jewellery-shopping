@@ -13,7 +13,6 @@ const Homepage: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 ) => {
   const { data } = props;
   const { currentPage, products, totalProducts } = data ?? {};
-  console.log(props, "props");
 
   return (
     <>
