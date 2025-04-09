@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 
 import CartItem from "components/Cart/CartItem";
 import CartTotal from "components/Cart/CartTotal";
@@ -6,9 +6,15 @@ import Button from "../ui/Button/Button";
 import { useCartContext } from "context/CartContext";
 import AddressCard from "../Address/AddressCard";
 import { getCartItems } from "@/app/data/cart";
+import toast from "react-hot-toast";
+import { createOrder } from "@/app/data/paypal";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
+import { useRouter } from "next/router";
 
 const Cart: FC = () => {
   const { cartItems, setCartItemsHandler } = useCartContext();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -35,6 +41,24 @@ const Cart: FC = () => {
   //   );
   // }
 
+  const handlePaymentSubmit = async () => {
+    setIsLoading(true);
+    const [, err] = await createOrder();
+    if (err) {
+      toast.error(
+        err.response
+          ? err.response.data?.error
+          : "Not able to register at this moment. Please try again later"
+      );
+      setIsLoading(false);
+      return;
+    }
+    setIsLoading(false);
+    toast.success("User registered successfully", {
+      duration: 1000,
+    });
+    router.push(`/paymentPage?amount=1`);
+  };
   return (
     <>
       <div className="flex content-center justify-between mt-4">
@@ -52,7 +76,7 @@ const Cart: FC = () => {
               <AddressCard />
               <CartTotal />
               <div className="text-center">
-                <Button type="button" className="w-full">
+                <Button type="button" className="w-full" onClick={handlePaymentSubmit}>
                   Checkout
                 </Button>
               </div>
@@ -64,6 +88,7 @@ const Cart: FC = () => {
           </div>
         )
       }
+      <LoadingSpinner isLoading={isLoading} />
     </>
   );
 };
