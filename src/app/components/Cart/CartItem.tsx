@@ -1,9 +1,9 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { FaTrashCan } from "react-icons/fa6";
 import { CartAPIProps } from "types/cart";
 import { useCartContext } from "context/CartContext";
-// import { fetchProductImages } from "@/app/utils/imageUtils";
+import { fetchProductImages } from "@/app/utils/imageUtils";
 
 type CartItemPropsTypes = {
   cartItem: CartAPIProps["cartItem"];
@@ -11,18 +11,18 @@ type CartItemPropsTypes = {
 
 const CartItem: React.FC<CartItemPropsTypes> = (props) => {
   const { cartItem } = props;
-  const { name, description, quantity, productId, price, cartItemId } =
+  const { name, description, quantity, productId, price, cartItemId, images } =
     cartItem ?? {};
   const [itemQuantity, setItemQuantity] = useState<number>(quantity);
   // const [inputValue, setInputValue] = useState<number>(quantity);
   const { updateCartItemQuantity, removeFromCart } = useCartContext();
 
-  // const productImage = useMemo(() => {
-  //   if (!images) {
-  //     return [];
-  //   }
-  //   return fetchProductImages(images);
-  // }, [images]);
+  const productImage = useMemo(() => {
+    if (!images) {
+      return [];
+    }
+    return fetchProductImages(images);
+  }, [images]);
 
   const handleOnIncreaseQtyBtn = useCallback(async () => {
     const updatedQuantity = itemQuantity + 1;
@@ -69,14 +69,23 @@ const CartItem: React.FC<CartItemPropsTypes> = (props) => {
     <div className="px-2 bg-cloudGray relative p-2">
       <div className="grid lg:grid-cols-[40%_55%] xl:grid-cols-[40%_55%] 2xl:grid-cols-[40%_55%] 3xl:grid-cols-[40%_55%]p-2 items-center">
         <div className="flex flex-col lg:flex-row xl:flex-row 2xl:flex-row 3xl:flex-row">
-          <Image
+          {/* <Image
             className="max-w-full rounded-lg object-cover m-2"
-            src="https://shop.southindiajewels.com/wp-content/uploads/2024/04/219.a.jpg"
-            // src={productImage[0]}
+            // src="https://shop.southindiajewels.com/wp-content/uploads/2024/04/219.a.jpg"
+            src={productImage[0]}
             width={80}
             height={80}
             alt="Product Image"
-          />
+          /> */}
+          <div className="w-20 h-20 relative m-2">
+            <Image
+              src={productImage[0]}
+              className="rounded-lg"
+              alt="Product Image"
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
           <div className="product-information px-2 my-2">
             <p className="font-semibold text-darkBlue">{name}</p>
             <p className="mx-0 mt-1 mb-0 text-sm text-darkBlue">

@@ -116,6 +116,15 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
         }
         if (updatedCartResp?.success) {
           setCartItems(updatedCartResp.data ?? []);
+          const [cartResp, cartErr] = await getCart();
+          if (cartErr) {
+            toast.error("Not able to update cart details at this moment");
+            return { success: false, error: cartErr };
+          }
+          if (cartResp?.success) {
+            toast.success("Item quantity has been updated successfully");
+            setCart(cartResp?.data ?? null);
+          }
           return { success: true, error: null };
         } else {
           setCartError(new Error("Failed to get updated cart"));
