@@ -75,7 +75,7 @@ const Login: FC = () => {
           toast.success("User successfully logged in", {
             duration: 1000,
           });
-          router.push("/");
+          router.replace("/");
         }
       }
     },

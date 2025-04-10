@@ -5,6 +5,9 @@ export async function middleware(req: NextRequest) {
   const token = req.cookies.get("authToken")?.value || "";
   const secret = new TextEncoder().encode(process.env.ACCESS_TOKEN);
   try {
+    if (token && req.nextUrl.pathname.endsWith("/login")) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
     const { payload } = (await jwtVerify(token, secret)) as JWTVerifyResult;
     req.headers.set("User", JSON.stringify(payload));
     return NextResponse.next();
@@ -24,5 +27,6 @@ export const config = {
     "/cart",
     "/api/wishlist",
     "/wishlist",
+    "/login",
   ],
 };
