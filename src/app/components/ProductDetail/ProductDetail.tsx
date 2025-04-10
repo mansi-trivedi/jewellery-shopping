@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import ImageSlider from "components/ImageSlider/ImageSlider";
 import Rating from "components/Rating/Ratings";
 import Review from "components/Review";
@@ -16,10 +16,16 @@ import { ServerResponseType } from "types/global";
 import { FiHeart } from "react-icons/fi";
 import { useProductContext } from "@/app/contexts/ProductContext";
 import SimilarProduct from "../SimilarProduct/SimilarProduct";
+import { getProductAvgReview } from "@/app/data/review";
 
 type ProductDetailPropTypes = {
   product: Product | null;
   isItemInWishList?: boolean;
+};
+
+type AvgReviewPropTypes = {
+  avgReview: number;
+  totalReviews: number;
 };
 
 const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
@@ -34,6 +40,17 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
     categoryId = "",
   } = product ?? {};
   const { toggleProductsFromWishList } = useProductContext();
+  const [avgReviews, setAvgReview] = useState<AvgReviewPropTypes>()
+
+  useEffect(() => {
+    (async () => {
+      const [addressResp] = await getProductAvgReview(SKU);
+      console.log("addressResp?.data", addressResp?.data?.[0])
+      if (addressResp?.success) {
+        setAvgReview(addressResp?.data?.[0]);
+      }
+    })();
+  }, [SKU]);
 
   const imageSlides = useMemo(() => {
     if (!images) {
@@ -77,8 +94,8 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
             </div>
             <div className="container max-w-none flex flex-col gap-2 lg:gap-4 py-10 lg:px-10 2xl:px-24">
               <div className="flex items-center gap-2">
-                <Rating isEditable={false} rating={4} />
-                <p className="font-semibold capitalize">0 reviews</p>
+                <Rating isEditable={false} rating={avgReviews?.avgReview ?? 0} />
+                <p className="font-semibold capitalize">{avgReviews?.totalReviews ?? 0} reviews</p>
               </div>
               <div className="flex">
                 <h1 className="font-semibold text-blackShade text-fluid-body-2 leading-fluid-body-2">

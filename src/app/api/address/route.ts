@@ -74,3 +74,30 @@ export async function POST(request: Request) {
     });
   }
 }
+
+export async function DELETE(request: Request) {
+  const payload = (await decodeAndGetUserInfo()) ?? {};
+  const { searchParams } = new URL(request.url);
+  const addressId = searchParams.get("address_id");
+  try {
+    if (!payload?.userId) {
+      return serverResponse({
+        success: false,
+        message: "unauthorized request",
+        status: 401,
+      });
+    }
+    await executeQuery("call DeleteAddress(?)", [addressId]);
+    return serverResponse({
+      success: true,
+      message: "Address removed successfully from your list",
+    });
+  } catch (error) {
+    return serverResponse({
+      success: false,
+      message: "Internal Server Error",
+      error: error instanceof Error ? error.message : undefined,
+      status: 500,
+    });
+  }
+}

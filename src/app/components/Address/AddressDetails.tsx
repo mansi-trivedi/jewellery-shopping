@@ -3,7 +3,7 @@ import { RiDeleteBin6Fill } from "react-icons/ri";
 import Button from "../ui/Button/Button";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import toast from "react-hot-toast";
-import { addNewAddress } from "@/app/data/address";
+import { addNewAddress, deleteAddresses } from "@/app/data/address";
 import { AddressType } from "types/address";
 import { Tab, Tabs } from "../ui/Tabs/Tabs";
 
@@ -14,6 +14,7 @@ type SelectAddressProps = {
     React.SetStateAction<AddressType | undefined>
   >;
   addresses: AddressType[];
+  selectedAddress: AddressType | undefined
 };
 
 export type AddressPropsType = {
@@ -29,9 +30,9 @@ export type AddressPropsType = {
 };
 
 const AddressDetails: React.FC<SelectAddressProps> = (props) => {
-  const { handleAddressModal, setSelectedAddress, addresses } = props;
+  const { handleAddressModal, setSelectedAddress, addresses, selectedAddress } = props;
   const formRef = useRef<HTMLFormElement>(null);
-  const [selectAddress, setSelectAddress] = useState<string>("");
+  const [selectAddress, setSelectAddress] = useState<string>(selectedAddress?.addressId ?? "");
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [errors, setErrors] = useState<AddressPropsType>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -167,6 +168,18 @@ const AddressDetails: React.FC<SelectAddressProps> = (props) => {
     },
     [handleAddNew, validateForm]
   );
+
+  const removeAddress = useCallback(async (addressId: string) => {
+    const tempAddresses = allAddresses
+    setAllAddresses(allAddresses.filter(item => item.addressId !== addressId))
+    const [addResp, addErr] = await deleteAddresses(addressId);
+    if (addErr) {
+      toast.error("Something went wrong, Please try again later");
+      setAllAddresses(tempAddresses)
+      return;
+    }
+    toast.success(addResp?.message ?? "");
+  }, [allAddresses]);
 
   return (
     <div className="tab-container">
@@ -403,7 +416,7 @@ const AddressDetails: React.FC<SelectAddressProps> = (props) => {
                       </p>
                     </div>
                   </label>
-                  <button onClick={undefined} aria-label="remove address">
+                  <button onClick={() => removeAddress(addr.addressId)} aria-label="remove address">
                     <RiDeleteBin6Fill className="fill-darkGreen" size={20} />
                   </button>
                 </div>

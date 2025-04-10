@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ChangeEvent, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { FaTrashCan } from "react-icons/fa6";
 import { CartAPIProps } from "types/cart";
@@ -14,6 +14,7 @@ const CartItem: React.FC<CartItemPropsTypes> = (props) => {
   const { name, description, quantity, productId, price, cartItemId } =
     cartItem ?? {};
   const [itemQuantity, setItemQuantity] = useState<number>(quantity);
+  // const [inputValue, setInputValue] = useState<number>(quantity);
   const { updateCartItemQuantity, removeFromCart } = useCartContext();
 
   // const productImage = useMemo(() => {
@@ -37,13 +38,24 @@ const CartItem: React.FC<CartItemPropsTypes> = (props) => {
     }
   }, [itemQuantity, updateCartItemQuantity, productId]);
 
-  const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setItemQuantity(Number(e.target.value));
-  }, []);
+  // const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  //   const val = e.target.value;
 
-  const handleOnBlur = useCallback(async () => {
-    await updateCartItemQuantity(productId, itemQuantity);
-  }, [productId, updateCartItemQuantity, itemQuantity]);
+  //   // Allow only numeric input
+  //   if (/^\d*$/.test(val)) {
+  //     setInputValue(+val);
+  //   }
+  //   // setItemQuantity(+e.target.value);
+  // }, []);
+
+  // const handleOnBlur = useCallback(async () => {
+  //   if (isNaN(inputValue) || inputValue <= 0) {
+  //     // Reset to previous valid quantity if input is empty or invalid
+  //     setInputValue(itemQuantity);
+  //   } else {
+  //     await updateCartItemQuantity(productId, itemQuantity);
+  //   }
+  // }, [inputValue, itemQuantity, updateCartItemQuantity, productId]);
 
   const handleRemoveCartItem = useCallback(async () => {
     await removeFromCart(cartItemId);
@@ -92,8 +104,9 @@ const CartItem: React.FC<CartItemPropsTypes> = (props) => {
               name="quantity"
               value={itemQuantity}
               className="w-10 bg-badgeShade font-semibold text-center border-darkGreen border"
-              onChange={handleOnChange}
-              onBlur={handleOnBlur}
+              readOnly
+            // onChange={handleOnChange}
+            // onBlur={handleOnBlur}
             />
             <button
               className="flex items-center justify-center !rounded-none bg-darkGreen px-3 text-white font-semibold"

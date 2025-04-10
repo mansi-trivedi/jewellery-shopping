@@ -59,4 +59,22 @@ const getAddresses = async (): Promise<
   return [response?.data, error];
 };
 
-export { addNewAddress, getAddresses };
+const deleteAddresses = async (
+  addressId: string
+): Promise<
+  [
+    APIResponse<AddressType[]> | undefined,
+    AxiosError<{
+      error: string;
+    }>
+  ]
+> => {
+  const requestConfig: AxiosRequestConfig = {
+    url: `${BASE_URL}/api/address?address_id=${addressId}`,
+    method: "delete",
+  };
+  const [response, error] = await resolvePromise(axios.request(requestConfig));
+  return [response?.data, error];
+};
+
+export { addNewAddress, getAddresses, deleteAddresses };

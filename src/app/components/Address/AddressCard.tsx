@@ -86,6 +86,7 @@ const AddressCard = () => {
             handleAddressModal={handleAddressModal}
             setSelectedAddress={setSelectedAddress}
             addresses={addresses}
+            selectedAddress={selectedAddress}
           />
         </div>
       </CustomModal>
