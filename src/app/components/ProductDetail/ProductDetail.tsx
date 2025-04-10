@@ -17,6 +17,8 @@ import { FiHeart } from "react-icons/fi";
 import { useProductContext } from "@/app/contexts/ProductContext";
 import SimilarProduct from "../SimilarProduct/SimilarProduct";
 import { getProductAvgReview } from "@/app/data/review";
+import { useUserContext } from "@/app/contexts/UserContext";
+import { useRouter } from "next/router";
 
 type ProductDetailPropTypes = {
   product: Product | null;
@@ -41,6 +43,8 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
   } = product ?? {};
   const { toggleProductsFromWishList } = useProductContext();
   const [avgReviews, setAvgReview] = useState<AvgReviewPropTypes>()
+  const { isLoggedIn } = useUserContext();
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -69,6 +73,11 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
   }, [productId]);
 
   const handleWishList = useCallback(async () => {
+    if (!isLoggedIn) {
+      toast.error("Please log in to add products to your wishlist")
+      router.push("/login")
+      return
+    }
     toggleProductsFromWishList(SKU ?? "");
     let response: ServerResponseType<"">;
     if (isItemInWishList) {
@@ -79,10 +88,10 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
     if (response?.success) {
       toast.success(response?.message ?? "");
     } else {
-      toast.error("Please login in order to add products to your wishlist");
+      toast.error("Something went wrong. Please try again");
       toggleProductsFromWishList(SKU ?? "");
     }
-  }, [productId, SKU, toggleProductsFromWishList, isItemInWishList]);
+  }, [isLoggedIn, toggleProductsFromWishList, SKU, isItemInWishList, router, productId]);
 
   return (
     <>

@@ -75,6 +75,7 @@ const ReviewProvider: FC<ReviewProviderPropTypes> = (props) => {
       setReviewModal((prev) => !prev);
     }
     else {
+      toast.error("Please log in to add a review.")
       router.push("/login");
     }
   }, [isLoggedIn, router]);

@@ -12,6 +12,8 @@ import { ServerResponseType } from "types/global";
 import { PiShoppingCartSimpleBold } from "react-icons/pi";
 import { useCartContext } from "context/CartContext";
 import { fetchProductImages } from "@/app/utils/imageUtils";
+import { useUserContext } from "@/app/contexts/UserContext";
+import { useRouter } from "next/router";
 
 type ProductCardPropTypes = {
   product: Product;
@@ -27,6 +29,8 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
   /** Contexts */
   const { toggleProductsFromWishList } = useProductContext();
   const { addToCart } = useCartContext();
+  const { isLoggedIn } = useUserContext();
+  const router = useRouter();
 
   /** Memorized values */
 
@@ -41,6 +45,11 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
 
   /** Adds and remove items from wishlist */
   const handleWishList = useCallback(async () => {
+    if (!isLoggedIn) {
+      toast.error("Please log in to add products to your wishlist")
+      router.push("/login")
+      return
+    }
     toggleProductsFromWishList(sku);
     let response: ServerResponseType<"">;
     if (isItemInWishList) {
@@ -51,10 +60,10 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
     if (response?.success) {
       toast.success(response?.message ?? "");
     } else {
-      toast.error("Please login in order to add products to your wishlist");
+      toast.error("Something went wrong. Please try again");
       toggleProductsFromWishList(sku);
     }
-  }, [productId, sku, toggleProductsFromWishList, isItemInWishList]);
+  }, [isLoggedIn, toggleProductsFromWishList, sku, isItemInWishList, router, productId]);
 
   const handleOnAddToCartBtnClick = useCallback(async () => {
     await addToCart(productId, 1);

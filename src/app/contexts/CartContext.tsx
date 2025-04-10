@@ -20,6 +20,7 @@ import {
 } from "../data/cart";
 import { CartAPIProps } from "types/cart";
 import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 type CartProviderPropTypes = {
   children: ReactNode;
@@ -71,13 +72,15 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
   );
   const [, setCartError] = useState<Error | null>(null);
   const [cart, setCart] = useState<CartContextType["cart"]>(null);
+  const router = useRouter()
 
   /** Handlers */
 
   const addToCart = useCallback(
     async (productId: string, quantity: number) => {
       if (!isLoggedIn) {
-        toast.error("Please login in order to add products to your cart");
+        toast.error("Please log in to add products to your cart");
+        router.push("/login")
         return
       };
       const [resp, err] = await addItemToCart(productId, quantity);
@@ -89,7 +92,7 @@ const CartProvider: FC<CartProviderPropTypes> = ({ children }) => {
         toast.success("Item successfully added to the cart");
       }
     },
-    [isLoggedIn]
+    [isLoggedIn, router]
   );
 
   /** Removes item and gets and sets updated cart */
