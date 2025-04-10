@@ -9,17 +9,24 @@ export async function GET(
   request: Request
 ): Promise<NextResponse<ProductAPIServerSidePropsTypes>> {
   const { searchParams } = new URL(request.url);
+  const pageNumber = searchParams.get("page_number");
+  const pageSize = searchParams.get("page_size");
   const categoryName = searchParams.get("category_name");
 
   try {
-    const rows = await executeQuery("call GetProductsByCategory(?)", [
+    const rows = await executeQuery("call GetProductsByCategory(?, ?, ?)", [
+      pageNumber,
+      pageSize,
       categoryName,
     ]);
     const products = rows[0] as Product[];
+    const paginationInfo = rows[1]?.[0] || {};
     return serverResponse({
       success: true,
       data: {
         products: products,
+        totalProducts: paginationInfo?.totalProducts ?? null,
+        currentPage: paginationInfo?.currentPage ?? null,
       },
     });
   } catch (error) {

@@ -1,6 +1,4 @@
-"use client";
-
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import ProductCard from "components/ProductCard/ProductCard";
 import { Product } from "types/product";
@@ -13,7 +11,7 @@ import toast from "react-hot-toast";
 type ProductsPropTypes = {
   wishlist: boolean;
   products: Product[] | [];
-  totalProducts: number;
+  totalProducts?: number | null | undefined;
   currentPage?: number | null | undefined;
 };
 
@@ -32,6 +30,10 @@ const Products: React.FC<ProductsPropTypes> = (props) => {
     }
     setCurrentPage(pageNumber);
   };
+
+  useEffect(() => {
+    setCurrentProducts(products);
+  }, [products]);
 
   return (
     <div className="relative pb-10">
@@ -53,7 +55,7 @@ const Products: React.FC<ProductsPropTypes> = (props) => {
       <Pagination
         onPageClick={handlePageChange}
         itemsPerPage={productsPerPage}
-        totalItems={totalProducts}
+        totalItems={totalProducts as number}
         currentPage={currentPage}
       />
     </div>

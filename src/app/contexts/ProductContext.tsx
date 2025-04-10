@@ -11,6 +11,8 @@ import {
   useEffect,
 } from "react";
 import { getWishList } from "@/app/data/wishlist";
+import { Product } from "types/product";
+import { useRouter } from "next/router";
 
 type ProductProviderPropTypes = {
   children: ReactNode;
@@ -21,6 +23,10 @@ type ProductContextType = {
   toggleProductsFromWishList: (productSkuId: string) => void;
   addProductToWishList: (productSkuId: string) => void;
   RemoveProductFromWishList: (productSkuId: string) => void;
+  products: Product[];
+  setProducts: (products: Product[]) => void;
+  setSearchedTerm: (searchTerm: string) => void;
+  searchedTerm: string;
 };
 
 const DEFAULT_VALUE: ProductContextType = {
@@ -28,14 +34,25 @@ const DEFAULT_VALUE: ProductContextType = {
   toggleProductsFromWishList: () => null,
   addProductToWishList: () => null,
   RemoveProductFromWishList: () => null,
+  products: [],
+  setProducts: () => null,
+  setSearchedTerm: () => null,
+  searchedTerm: "",
 };
 
 const ProductContext = createContext(DEFAULT_VALUE);
 
 const ProductProvider: FC<ProductProviderPropTypes> = ({ children }) => {
+  const router = useRouter();
   const [wishListProductsSkuIds, setWishListProductsSkuIds] = useState<
-    typeof DEFAULT_VALUE.wishListProductsSkuIds
+    ProductContextType["wishListProductsSkuIds"]
   >(DEFAULT_VALUE.wishListProductsSkuIds);
+  const [products, setProducts] = useState<ProductContextType["products"]>(
+    DEFAULT_VALUE.products
+  );
+  const [searchedTerm, setSearchedTerm] = useState<
+    ProductContextType["searchedTerm"]
+  >(router.query?.search_term as string);
 
   /** Handlers */
 
@@ -92,12 +109,18 @@ const ProductProvider: FC<ProductProviderPropTypes> = ({ children }) => {
       toggleProductsFromWishList,
       addProductToWishList,
       RemoveProductFromWishList,
+      products,
+      setProducts: (products) => setProducts(products),
+      setSearchedTerm: (searchTerm) => setSearchedTerm(searchTerm),
+      searchedTerm,
     }),
     [
       wishListProductsSkuIds,
       toggleProductsFromWishList,
       addProductToWishList,
       RemoveProductFromWishList,
+      products,
+      searchedTerm,
     ] // update dependency as per requirement
   );
 

@@ -7,9 +7,13 @@ import { BASE_URL } from "@/app/constants/api";
 import { resolvePromise } from "../utils/apiUtils";
 
 /** Gets all products with given category name */
-const getProductsByCategory = async (categoryName: string) => {
+const getProductsByCategory = async (
+  pageNumber: number,
+  pageSize: number,
+  categoryName: string
+): Promise<[ProductAPIServerSidePropsTypes | undefined, AxiosError]> => {
   const requestConfig: AxiosRequestConfig = {
-    url: `${BASE_URL}/api/collections?category_name=${categoryName}`,
+    url: `${BASE_URL}/api/collections?page_number=${pageNumber}&page_size=${pageSize}&category_name=${categoryName}`,
   };
   const [response, error] = await resolvePromise(axios.request(requestConfig));
   return [response?.data, error];
@@ -70,10 +74,24 @@ const getProductByCategoryId = async (
   return [response?.data, error];
 };
 
+/** Gets products based on given string */
+const getProductsBySearchTerm = async (
+  searchTerm: string
+): Promise<[ProductSkuAPIServerSidePropTypes | undefined, AxiosError]> => {
+  const requestConfig: AxiosRequestConfig = {
+    url: `${BASE_URL}/api/product/search?search_term=${searchTerm}`,
+  };
+  const [response, error] = await resolvePromise(
+    axios.request<ProductSkuAPIServerSidePropTypes>(requestConfig)
+  );
+  return [response?.data, error];
+};
+
 export {
   getProductsByCategory,
   getAllProduct,
   getProductBySku,
   getSimilarProducts,
   getProductByCategoryId,
+  getProductsBySearchTerm,
 };

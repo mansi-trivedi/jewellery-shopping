@@ -41,7 +41,7 @@ const Collection: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   props
 ) => {
   const { data, collectionName } = props;
-  const products = data?.products ?? [];
+  const { currentPage, products, totalProducts } = data ?? {};
   const collectionImg =
     COLLECTION_IMG_MAPPING[
       (collectionName as keyof CollectionImgType) ?? "earrings"
@@ -72,7 +72,12 @@ const Collection: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
         title={`${collectionName} collection`}
         description={`small description about ${collectionName}`}
       />
-      <Products wishlist={false} products={products} />
+      <Products
+        wishlist={false}
+        products={products}
+        totalProducts={totalProducts}
+        currentPage={currentPage}
+      />
     </>
   );
 };
@@ -80,7 +85,7 @@ const Collection: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 const getServerSideProps = (async (ctx: GetServerSidePropsContext) => {
   const { query } = ctx;
   const collectionName = query["categoryName"] as string;
-  const [resp] = await getProductsByCategory(collectionName);
+  const [resp] = await getProductsByCategory(1, 10, collectionName);
   const { success, data, error, message, status } = resp ?? {};
   return {
     props: {
