@@ -4,7 +4,6 @@ import Button from "@/app/components/ui/Button/Button";
 import Link from "next/link";
 import { performLoginOperation } from "@/app/data/user";
 import toast from "react-hot-toast";
-import { useRouter } from "next/router";
 import necklaceImg from "@/app/assets/necklaces.jpg";
 import LoadingSpinner from "@/app/components/LoadingSpinner/LoadingSpinner";
 import { useUserContext } from "context/UserContext";
@@ -19,7 +18,6 @@ const Login: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<LoginErrorProps>({});
   const formRef = useRef<HTMLFormElement>(null);
-  const router = useRouter();
 
   const validateForm = useCallback((email: string, password: string) => {
     const formErrors: LoginErrorProps = {};
@@ -75,11 +73,11 @@ const Login: FC = () => {
           toast.success("User successfully logged in", {
             duration: 1000,
           });
-          router.replace("/");
+          history.go(-1);
         }
       }
     },
-    [router, handleUserLoggedInState, validateForm]
+    [handleUserLoggedInState, validateForm]
   );
 
   return (
