@@ -8,15 +8,26 @@ export async function middleware(req: NextRequest) {
     if (token && req.nextUrl.pathname.endsWith("/login")) {
       return NextResponse.redirect(new URL("/", req.url));
     }
-    const { payload } = (await jwtVerify(token, secret)) as JWTVerifyResult;
-    req.headers.set("User", JSON.stringify(payload));
-    return NextResponse.next();
+
+    if (token) {
+      const { payload } = (await jwtVerify(token, secret)) as JWTVerifyResult;
+      req.headers.set("User", JSON.stringify(payload));
+      return NextResponse.next();
+    }
+
+    // If no token is present and it's a protected non-API route, redirect to login
+    if (
+      !req.nextUrl.pathname.startsWith("/api/") &&
+      req.nextUrl.pathname !== "/login"
+    ) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+    return NextResponse.next(); // Allow access to public pages or API routes without a token
   } catch (error) {
     console.error("Token verification failed:", error);
     if (req.nextUrl.pathname.startsWith("/api/")) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-    return NextResponse.redirect(new URL("/login", req.url));
   }
 }
 
