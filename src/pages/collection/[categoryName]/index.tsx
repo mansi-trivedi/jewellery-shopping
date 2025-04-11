@@ -5,8 +5,8 @@ import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from "next";
-import { FC } from "react";
-import { ProductAPIServerSidePropsTypes } from "types/product";
+import { FC, useState } from "react";
+import { Product, ProductAPIServerSidePropsTypes } from "types/product";
 import { StaticImageData } from "next/image";
 import Products from "@/app/components/Products/Products";
 import SectionHeading from "@/app/components/SectionHeading/SectionHeading";
@@ -18,6 +18,10 @@ import necklaceImg from "@/app/assets/necklaces.jpg";
 import bangles from "@/app/assets/bangles.jpg";
 import bracelet from "@/app/assets/bracelet.jpg";
 import anklet from "@/app/assets/anklet.jpg";
+import Pagination from "@/app/components/Pagination/Pagination";
+import toast from "react-hot-toast";
+
+export const ITEMS_PER_PAGE = 10;
 
 type CollectionImgType = {
   earrings: StaticImageData;
@@ -41,11 +45,15 @@ const Collection: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   props
 ) => {
   const { data, collectionName } = props;
-  const { currentPage, products, totalProducts } = data ?? {};
+  const { currentPage: current = 0, products, totalProducts } = data ?? {};
   const collectionImg =
     COLLECTION_IMG_MAPPING[
       (collectionName as keyof CollectionImgType) ?? "earrings"
     ];
+  const [currentProducts, setCurrentProducts] = useState<Product[]>(
+    products ?? []
+  );
+  const [currentPage, setCurrentPage] = useState<number>(current as number);
 
   if (!products?.length) {
     return (
@@ -60,6 +68,20 @@ const Collection: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
     );
   }
 
+  const handlePageChange = async (pageNumber: number) => {
+    const [response, err] = await getProductsByCategory(
+      pageNumber,
+      ITEMS_PER_PAGE,
+      collectionName
+    );
+    setCurrentProducts(response?.data?.products ?? []);
+    if (err) {
+      toast.error("Not able to fetch products");
+      return;
+    }
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <>
       <div className="relative">
@@ -72,11 +94,12 @@ const Collection: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
         title={`${collectionName} collection`}
         description={`small description about ${collectionName}`}
       />
-      <Products
-        wishlist={false}
-        products={products}
-        totalProducts={totalProducts}
-        currentPage={currentPage}
+      <Products products={currentProducts} />
+      <Pagination
+        onPageClick={handlePageChange}
+        itemsPerPage={ITEMS_PER_PAGE}
+        totalItems={totalProducts as number}
+        currentPage={currentPage as number}
       />
     </>
   );
@@ -85,7 +108,7 @@ const Collection: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 const getServerSideProps = (async (ctx: GetServerSidePropsContext) => {
   const { query } = ctx;
   const collectionName = query["categoryName"] as string;
-  const [resp] = await getProductsByCategory(1, 10, collectionName);
+  const [resp] = await getProductsByCategory(1, ITEMS_PER_PAGE, collectionName);
   const { success, data, error, message, status } = resp ?? {};
   return {
     props: {

@@ -15,7 +15,7 @@ const SearchPage: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 
   return (
     <div className="wrapper py-10">
-      <Products wishlist={false} products={data?.products ?? []} />
+      <Products products={data?.products ?? []} />
     </div>
   );
 };
