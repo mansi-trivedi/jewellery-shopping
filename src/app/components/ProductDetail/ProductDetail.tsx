@@ -42,14 +42,14 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
     categoryId = "",
   } = product ?? {};
   const { toggleProductsFromWishList } = useProductContext();
-  const [avgReviews, setAvgReview] = useState<AvgReviewPropTypes>()
+  const [avgReviews, setAvgReview] = useState<AvgReviewPropTypes>();
   const { isLoggedIn } = useUserContext();
   const router = useRouter();
 
   useEffect(() => {
     (async () => {
       const [addressResp] = await getProductAvgReview(SKU);
-      console.log("addressResp?.data", addressResp?.data?.[0])
+      console.log("addressResp?.data", addressResp?.data?.[0]);
       if (addressResp?.success) {
         setAvgReview(addressResp?.data?.[0]);
       }
@@ -74,9 +74,9 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
 
   const handleWishList = useCallback(async () => {
     if (!isLoggedIn) {
-      toast.error("Please log in to add products to your wishlist")
-      router.push("/login")
-      return
+      toast.error("Please log in to add products to your wishlist");
+      router.push("/login");
+      return;
     }
     toggleProductsFromWishList(SKU ?? "");
     let response: ServerResponseType<"">;
@@ -91,7 +91,14 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
       toast.error("Something went wrong. Please try again");
       toggleProductsFromWishList(SKU ?? "");
     }
-  }, [isLoggedIn, toggleProductsFromWishList, SKU, isItemInWishList, router, productId]);
+  }, [
+    isLoggedIn,
+    toggleProductsFromWishList,
+    SKU,
+    isItemInWishList,
+    router,
+    productId,
+  ]);
 
   return (
     <>
@@ -103,8 +110,13 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
             </div>
             <div className="container max-w-none flex flex-col gap-2 lg:gap-4 py-10 lg:px-10 2xl:px-24">
               <div className="flex items-center gap-2">
-                <Rating isEditable={false} rating={avgReviews?.avgReview ?? 0} />
-                <p className="font-semibold capitalize">{avgReviews?.totalReviews ?? 0} reviews</p>
+                <Rating
+                  isEditable={false}
+                  rating={avgReviews?.avgReview ?? 0}
+                />
+                <p className="font-semibold capitalize">
+                  {avgReviews?.totalReviews ?? 0} reviews
+                </p>
               </div>
               <div className="flex">
                 <h1 className="font-semibold text-blackShade text-fluid-body-2 leading-fluid-body-2">
@@ -118,10 +130,11 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
                 >
                   <FiHeart
                     className={`w-5 h-5 text-darkGreen
-                             ${isItemInWishList
-                        ? "fill-darkGreen"
-                        : "fill-offWhite"
-                      } 
+                             ${
+                               isItemInWishList
+                                 ? "fill-darkGreen"
+                                 : "fill-offWhite"
+                             } 
                              hover:fill-darkGreen`}
                   />
                 </button>
@@ -175,7 +188,9 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
       <hr className="border border-gray-200 my-2" />
       <Review isReviewPage={false} sku={SKU} />
       <hr className="border border-gray-200 my-2" />
-      <SimilarProduct categoryId={categoryId} />
+      <div className="my-5">
+        <SimilarProduct categoryId={categoryId} />
+      </div>
     </>
   );
 };

@@ -46,9 +46,9 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
   /** Adds and remove items from wishlist */
   const handleWishList = useCallback(async () => {
     if (!isLoggedIn) {
-      toast.error("Please log in to add products to your wishlist")
-      router.push("/login")
-      return
+      toast.error("Please log in to add products to your wishlist");
+      router.push("/login");
+      return;
     }
     toggleProductsFromWishList(sku);
     let response: ServerResponseType<"">;
@@ -63,14 +63,21 @@ const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
       toast.error("Something went wrong. Please try again");
       toggleProductsFromWishList(sku);
     }
-  }, [isLoggedIn, toggleProductsFromWishList, sku, isItemInWishList, router, productId]);
+  }, [
+    isLoggedIn,
+    toggleProductsFromWishList,
+    sku,
+    isItemInWishList,
+    router,
+    productId,
+  ]);
 
   const handleOnAddToCartBtnClick = useCallback(async () => {
     await addToCart(productId, 1);
   }, [addToCart, productId]);
 
   return (
-    <div className="relative shadow-lg flex flex-col bg-offWhite rounded-lg overflow-hidden">
+    <div className="relative shadow-lg flex flex-col bg-offWhite rounded-lg overflow-hidden h-full">
       <div className="imageBlock w-full relative overflow-hidden before:content-[''] before:block before:pt-[calc(50%*16/9)]">
         <Image
           className="w-full border object-cover"

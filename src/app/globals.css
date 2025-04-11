@@ -19,3 +19,13 @@ body {
 .global-scrollbar::-webkit-scrollbar-thumb {
   background: #516559;
 }
+
+/* globals.css or a similar global stylesheet */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
