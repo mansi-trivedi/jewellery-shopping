@@ -12,6 +12,7 @@ const CartTotal = () => {
       if (cartErr) {
         return;
       }
+      console.log(cartResp);
       if (cartResp?.success) {
         setCart(cartResp?.data ?? null);
       }

@@ -38,25 +38,6 @@ const CartItem: React.FC<CartItemPropsTypes> = (props) => {
     }
   }, [itemQuantity, updateCartItemQuantity, productId]);
 
-  // const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-  //   const val = e.target.value;
-
-  //   // Allow only numeric input
-  //   if (/^\d*$/.test(val)) {
-  //     setInputValue(+val);
-  //   }
-  //   // setItemQuantity(+e.target.value);
-  // }, []);
-
-  // const handleOnBlur = useCallback(async () => {
-  //   if (isNaN(inputValue) || inputValue <= 0) {
-  //     // Reset to previous valid quantity if input is empty or invalid
-  //     setInputValue(itemQuantity);
-  //   } else {
-  //     await updateCartItemQuantity(productId, itemQuantity);
-  //   }
-  // }, [inputValue, itemQuantity, updateCartItemQuantity, productId]);
-
   const handleRemoveCartItem = useCallback(async () => {
     await removeFromCart(cartItemId);
   }, [cartItemId, removeFromCart]);
@@ -69,14 +50,6 @@ const CartItem: React.FC<CartItemPropsTypes> = (props) => {
     <div className="px-2 bg-cloudGray relative p-2">
       <div className="grid lg:grid-cols-[40%_55%] xl:grid-cols-[40%_55%] 2xl:grid-cols-[40%_55%] 3xl:grid-cols-[40%_55%]p-2 items-center">
         <div className="flex flex-col lg:flex-row xl:flex-row 2xl:flex-row 3xl:flex-row">
-          {/* <Image
-            className="max-w-full rounded-lg object-cover m-2"
-            // src="https://shop.southindiajewels.com/wp-content/uploads/2024/04/219.a.jpg"
-            src={productImage[0]}
-            width={80}
-            height={80}
-            alt="Product Image"
-          /> */}
           <div className="w-20 h-20 relative m-2">
             <Image
               src={productImage[0]}
@@ -114,8 +87,6 @@ const CartItem: React.FC<CartItemPropsTypes> = (props) => {
               value={itemQuantity}
               className="w-10 bg-badgeShade font-semibold text-center border-darkGreen border"
               readOnly
-            // onChange={handleOnChange}
-            // onBlur={handleOnBlur}
             />
             <button
               className="flex items-center justify-center !rounded-none bg-darkGreen px-3 text-white font-semibold"

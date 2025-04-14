@@ -143,7 +143,9 @@ const Login: FC = () => {
                 </div>
 
                 <div className="flex flex-col">
-                  <Button type="submit">Login</Button>
+                  <Button type="submit" disabled={isLoading}>
+                    Login
+                  </Button>
                 </div>
               </form>
             </fieldset>

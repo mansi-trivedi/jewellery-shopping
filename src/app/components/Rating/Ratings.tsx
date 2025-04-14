@@ -44,8 +44,9 @@ const Rating: React.FC<RatingProps> = ({
         onMouseEnter={() => hoverHandle(idx + 1)}
         onMouseLeave={() => hoverHandle(rating)}
         onClick={() => clickHandle(idx + 1)}
-        className={`${isEditable ? "cursor-pointer focus:outline-none" : ""} ${className || ""
-          }`}
+        className={`${isEditable ? "cursor-pointer focus:outline-none" : ""} ${
+          className || ""
+        }`}
         tabIndex={isEditable ? 0 : -1}
         onKeyDown={(e: KeyboardEvent<HTMLSpanElement>) =>
           handleKeyDown(e, idx + 1)

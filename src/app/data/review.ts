@@ -3,7 +3,7 @@ import { BASE_URL } from "@/app/constants/api";
 import { APIResponse } from "types/api";
 import { ServerResponseType } from "types/global";
 import { resolvePromise } from "../utils/apiUtils";
-import { ProductReviewType } from "types/review";
+import { GetAverageReviewResponse, ProductReviewType } from "types/review";
 
 const addProductReview = async (
   productSku: string,
@@ -45,12 +45,14 @@ const getProductReview = async (
 
 const getProductAvgReview = async (
   productSku: string
-): Promise<[APIResponse<ProductReviewType[]> | undefined, AxiosError]> => {
+): Promise<[GetAverageReviewResponse | undefined, AxiosError]> => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/review/average?product_sku=${productSku}`,
     method: "get",
   };
-  const [response, error] = await resolvePromise(axios.request(requestConfig));
+  const [response, error] = await resolvePromise(
+    axios.request<GetAverageReviewResponse>(requestConfig)
+  );
   return [response?.data, error];
 };
 export { getProductReview, addProductReview, getProductAvgReview };

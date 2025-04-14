@@ -46,7 +46,7 @@ const MainContent: FC<ProductProps> = ({ products }) => {
         </div>
       </div>
       <div>
-        <Products wishlist={false} products={products} />
+        <Products products={products} />
       </div>
     </div>
   );

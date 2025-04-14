@@ -1,3 +1,5 @@
+import { APIResponse } from "./api";
+
 type ProductReviewType = {
   reviewId: string;
   review: string;
@@ -7,4 +9,17 @@ type ProductReviewType = {
   dateCreated: string;
 };
 
-export type { ProductReviewType };
+type AverageReviewType = {
+  avgReview: number;
+  totalReviews: number;
+} | null;
+
+type GetReviewResponse = APIResponse<Array<ProductReviewType>>;
+type GetAverageReviewResponse = APIResponse<AverageReviewType>;
+
+export type {
+  ProductReviewType,
+  GetReviewResponse,
+  GetAverageReviewResponse,
+  AverageReviewType,
+};

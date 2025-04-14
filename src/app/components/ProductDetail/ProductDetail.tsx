@@ -19,15 +19,11 @@ import SimilarProduct from "../SimilarProduct/SimilarProduct";
 import { getProductAvgReview } from "@/app/data/review";
 import { useUserContext } from "@/app/contexts/UserContext";
 import { useRouter } from "next/router";
+import { AverageReviewType } from "types/review";
 
 type ProductDetailPropTypes = {
   product: Product | null;
   isItemInWishList?: boolean;
-};
-
-type AvgReviewPropTypes = {
-  avgReview: number;
-  totalReviews: number;
 };
 
 const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
@@ -42,16 +38,15 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
     categoryId = "",
   } = product ?? {};
   const { toggleProductsFromWishList } = useProductContext();
-  const [avgReviews, setAvgReview] = useState<AvgReviewPropTypes>();
+  const [avgReviews, setAvgReview] = useState<AverageReviewType>(null);
   const { isLoggedIn } = useUserContext();
   const router = useRouter();
 
   useEffect(() => {
     (async () => {
       const [addressResp] = await getProductAvgReview(SKU);
-      console.log("addressResp?.data", addressResp?.data?.[0]);
       if (addressResp?.success) {
-        setAvgReview(addressResp?.data?.[0]);
+        setAvgReview(addressResp?.data ?? null);
       }
     })();
   }, [SKU]);

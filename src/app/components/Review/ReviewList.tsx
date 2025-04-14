@@ -11,10 +11,6 @@ const ReviewList: FC<ReviewListPropTypes> = (props) => {
   const { reviews } = props;
   const { getInitials, formatDate } = useReviewContext();
 
-  // if (!reviews?.length) {
-  //   return null;
-  // }
-
   return (
     <>
       {reviews?.length ? (
@@ -49,9 +45,7 @@ const ReviewList: FC<ReviewListPropTypes> = (props) => {
           })}
         </ul>
       ) : (
-        <div className="m-2 p-2 text-center">
-          No Review Yet
-        </div>
+        <div className="m-2 p-2 text-center">No Review Yet</div>
       )}
     </>
   );

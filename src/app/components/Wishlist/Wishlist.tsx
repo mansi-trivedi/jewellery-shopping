@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import Products from "../Products/Products";
 import { getWishList } from "@/app/data/wishlist";
@@ -9,8 +7,7 @@ import { useProductContext } from "context/ProductContext";
 
 const Wishlist = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const { addProductToWishList, wishListProductsSkuIds } = useProductContext();
-  console.log(wishListProductsSkuIds);
+  const { addProductToWishList } = useProductContext();
 
   useEffect(() => {
     async function fetchData() {
@@ -33,7 +30,7 @@ const Wishlist = () => {
         <h1 className="text-xl font-bold text-darkBlue">My Wishlist</h1>
       </div>
       <div className="my-4">
-        <Products wishlist={true} products={products} />
+        <Products products={products} />
       </div>
     </div>
   );

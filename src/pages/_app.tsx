@@ -9,6 +9,7 @@ import { quickSand, openSans, robFont } from "@/app/constants/fonts";
 import { parseCookies } from "@/app/utils/cookie";
 import { NextPageContext } from "next";
 import { CartProvider } from "context/CartContext";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 type MyAppPropsTypes = {
   isAuthenticated: boolean;
@@ -19,55 +20,61 @@ const MyApp = (props: MyAppPropsTypes) => {
 
   return (
     <>
-      <style jsx global>{`
+      <style>{`
         html {
           font-family: ${quickSand.style.fontFamily},
             ${openSans.style.fontFamily}, ${robFont.style.fontFamily},
             "sans-serif";
         }
       `}</style>
-      <GlobalContextProvider>
-        <UserProvider
-          value={{
-            isAuthenticated: isAuthenticated,
-          }}
-        >
-          <CartProvider>
-            <ProductProvider>
-              <Layout>
-                <Component {...pageProps} />
-                <Toaster
-                  position="top-right"
-                  toastOptions={{
-                    success: {
-                      iconTheme: {
-                        primary: "#516559",
-                        secondary: "white",
+      <PayPalScriptProvider
+        options={{
+          clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
+        }}
+      >
+        <GlobalContextProvider>
+          <UserProvider
+            value={{
+              isAuthenticated: isAuthenticated,
+            }}
+          >
+            <CartProvider>
+              <ProductProvider>
+                <Layout>
+                  <Component {...pageProps} />
+                  <Toaster
+                    position="top-right"
+                    toastOptions={{
+                      success: {
+                        iconTheme: {
+                          primary: "#516559",
+                          secondary: "white",
+                        },
+                        style: {
+                          background: "#516559",
+                          color: "white",
+                          padding: "10px",
+                          borderRadius: "0",
+                          fontSize: "16px",
+                          fontWeight: "500",
+                        },
                       },
-                      style: {
-                        background: "#516559",
-                        color: "white",
-                        padding: "10px",
-                        borderRadius: "0",
-                        fontSize: "16px",
-                        fontWeight: "500",
+                      error: {
+                        style: {
+                          background: "red",
+                          color: "white",
+                          padding: "10px",
+                          borderRadius: "0",
+                        },
                       },
-                    },
-                    error: {
-                      style: {
-                        background: "red",
-                        color: "white",
-                        padding: "10px",
-                        borderRadius: "0",
-                      },
-                    },
-                  }}
-                />
-              </Layout>
-            </ProductProvider>
-          </CartProvider>
-        </UserProvider>
-      </GlobalContextProvider>
+                    }}
+                  />
+                </Layout>
+              </ProductProvider>
+            </CartProvider>
+          </UserProvider>
+        </GlobalContextProvider>
+      </PayPalScriptProvider>
     </>
   );
 };
