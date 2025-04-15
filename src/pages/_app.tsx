@@ -30,6 +30,8 @@ const MyApp = (props: MyAppPropsTypes) => {
       <PayPalScriptProvider
         options={{
           clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
+          intent: "capture",
+          currency: "USD",
         }}
       >
         <GlobalContextProvider>

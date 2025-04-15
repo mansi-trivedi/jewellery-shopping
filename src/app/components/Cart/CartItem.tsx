@@ -51,13 +51,15 @@ const CartItem: React.FC<CartItemPropsTypes> = (props) => {
       <div className="grid lg:grid-cols-[40%_55%] xl:grid-cols-[40%_55%] 2xl:grid-cols-[40%_55%] 3xl:grid-cols-[40%_55%]p-2 items-center">
         <div className="flex flex-col lg:flex-row xl:flex-row 2xl:flex-row 3xl:flex-row">
           <div className="w-20 h-20 relative m-2">
-            <Image
-              src={productImage[0]}
-              className="rounded-lg"
-              alt="Product Image"
-              layout="fill"
-              objectFit="cover"
-            />
+            {productImage[0] && (
+              <Image
+                src={productImage[0]}
+                className="rounded-lg"
+                alt="Product Image"
+                layout="fill"
+                objectFit="cover"
+              />
+            )}
           </div>
           <div className="product-information px-2 my-2">
             <p className="font-semibold text-darkBlue">{name}</p>

@@ -1,20 +1,13 @@
-import React, { FC, useEffect, useState } from "react";
-
+import React, { FC, useEffect } from "react";
 import CartItem from "components/Cart/CartItem";
 import CartTotal from "components/Cart/CartTotal";
-import Button from "../ui/Button/Button";
 import { useCartContext } from "context/CartContext";
 import AddressCard from "../Address/AddressCard";
 import { getCartItems } from "@/app/data/cart";
-import toast from "react-hot-toast";
-import { createOrder } from "@/app/data/paypal";
-import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
-import { useRouter } from "next/router";
+import { PayPalButtons } from "@paypal/react-paypal-js";
 
 const Cart: FC = () => {
-  const { cartItems, setCartItemsHandler } = useCartContext();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter();
+  const { cartItems, setCartItemsHandler, cart } = useCartContext();
 
   useEffect(() => {
     (async () => {
@@ -27,25 +20,6 @@ const Cart: FC = () => {
       }
     })();
   }, [setCartItemsHandler]);
-
-  const handlePaymentSubmit = async () => {
-    setIsLoading(true);
-    const [, err] = await createOrder();
-    if (err) {
-      toast.error(
-        err.response
-          ? err.response.data?.error
-          : "Not able to register at this moment. Please try again later"
-      );
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(false);
-    toast.success("User registered successfully", {
-      duration: 1000,
-    });
-    router.push(`/paymentPage?amount=1`);
-  };
 
   if (!cartItems?.length) {
     return (
@@ -76,14 +50,47 @@ const Cart: FC = () => {
             <AddressCard />
             <CartTotal />
             <div className="text-center">
-              <Button
-                type="button"
-                className="w-full"
-                onClick={handlePaymentSubmit}
-                disabled={isLoading}
-              >
-                Checkout
-              </Button>
+              <PayPalButtons
+                style={{
+                  color: "gold",
+                  shape: "rect",
+                  label: "pay",
+                  height: 50,
+                }}
+                createOrder={async () => {
+                  const response = await fetch(
+                    "http://localhost:3000/api/paypal/create-order",
+                    {
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      method: "POST",
+                      body: JSON.stringify({
+                        order_price: Number(cart?.total ?? 0),
+                      }),
+                    }
+                  );
+                  const responseData = await response.json();
+                  return responseData?.data?.id + "";
+                }}
+                onApprove={async (data) => {
+                  await fetch(
+                    "http://localhost:3000/api/paypal/capture-order",
+                    {
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      method: "POST",
+                      body: JSON.stringify({
+                        orderID: data.orderID,
+                      }),
+                    }
+                  )
+                    .then((response) => response.json())
+                    .then((orderData) => console.log(orderData))
+                    .catch((e) => console.error(e));
+                }}
+              />
             </div>
           </div>
         </div>
@@ -92,7 +99,6 @@ const Cart: FC = () => {
           Empty Cart
         </div>
       )}
-      <LoadingSpinner isLoading={isLoading} />
     </>
   );
 };
