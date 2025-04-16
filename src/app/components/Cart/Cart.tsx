@@ -87,7 +87,7 @@ const Cart: FC = () => {
                     }
                   )
                     .then((response) => response.json())
-                    .then((orderData) => console.log(orderData))
+                    .then(() => console.log(""))
                     .catch((e) => console.error(e));
                 }}
               />

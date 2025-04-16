@@ -33,8 +33,11 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
+    "/api/order",
     "/api/cart",
     "/api/cart/:slug",
+    "/api/paypal/capture-order",
+    "/api/paypal/create-order",
     "/cart",
     "/api/wishlist",
     "/wishlist",

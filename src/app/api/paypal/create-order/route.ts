@@ -1,3 +1,4 @@
+import { insertOrder } from "@/app/data/order";
 import { decodeAndGetUserInfo } from "@/app/utils/getAuthToken";
 import client from "@/app/utils/paypal/index";
 import paypal from "@paypal/checkout-server-sdk";
@@ -5,8 +6,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const req = await request.json();
+  const { order_price } = req;
   const payload = (await decodeAndGetUserInfo()) ?? {};
-  if (!req.order_price || !payload?.userId)
+  if (!order_price || !payload?.userId)
     return NextResponse.json(
       {
         success: false,
@@ -36,6 +38,24 @@ export async function POST(request: Request) {
         {
           success: false,
           message: "Some Error occurred at backend",
+        },
+        { status: 500 }
+      );
+    }
+
+    /** if order created successfully we will store it in the database */
+    const [, orderErr] = await insertOrder({
+      paypalOrderId: response.result.id,
+      totalPrice: order_price,
+      userId: (payload?.userId ?? "") as string,
+      paymentStatus: response.result.status,
+    });
+
+    if (orderErr) {
+      console.error(orderErr);
+      return NextResponse.json(
+        {
+          success: false,
         },
         { status: 500 }
       );

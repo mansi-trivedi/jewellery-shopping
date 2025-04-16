@@ -18,12 +18,13 @@ export async function POST(request: Request) {
     );
   }
 
+  let response;
   try {
     //Capture order to complete payment
     const orderID = req.orderID;
     const paypalClient = client();
     const capturedRequest = new paypal.orders.OrdersCaptureRequest(orderID);
-    const response = await paypalClient.execute(capturedRequest);
+    response = await paypalClient.execute(capturedRequest);
     if (!response) {
       return NextResponse.json(
         {
@@ -42,6 +43,7 @@ export async function POST(request: Request) {
   return NextResponse.json(
     {
       success: true,
+      approvedData: response,
     },
     { status: 200 }
   );
