@@ -1,7 +1,7 @@
 import { FC } from "react";
 import Products from "@/app/components/Products/Products";
 import { getProductsBySearchTerm } from "@/app/data/product";
-import { ProductSkuAPIServerSidePropTypes } from "types/product";
+import { ProductAPIProps } from "types/product";
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -35,7 +35,9 @@ const getServerSideProps = (async (context: GetServerSidePropsContext) => {
       status: status ?? 400,
     },
   };
-}) satisfies GetServerSideProps<ProductSkuAPIServerSidePropTypes>;
+}) satisfies GetServerSideProps<
+  ProductAPIProps["getProductCategoryApiResponse"]
+>;
 
 export default SearchPage;
 export { getServerSideProps };

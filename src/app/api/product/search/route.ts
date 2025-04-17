@@ -1,11 +1,11 @@
 import { executeQuery } from "@/app/libs/mysql";
 import serverResponse from "@/app/utils/nextServerResponse";
 import { NextResponse } from "next/server";
-import { Product, ProductSkuAPIServerSidePropTypes } from "types/product";
+import { ProductAPIProps } from "types/product";
 
 export async function GET(
   request: Request
-): Promise<NextResponse<ProductSkuAPIServerSidePropTypes>> {
+): Promise<NextResponse<ProductAPIProps["getProductCategoryApiResponse"]>> {
   const { searchParams } = new URL(request.url);
   const search_term = searchParams.get("search_term");
 
@@ -17,8 +17,8 @@ export async function GET(
 
   try {
     const [rows] = await executeQuery(query, values);
-    let products: Product[] = [];
-    products = rows as Product[];
+    let products: Array<ProductAPIProps["product"]> = [];
+    products = rows as Array<ProductAPIProps["product"]>;
 
     return serverResponse({
       success: true,

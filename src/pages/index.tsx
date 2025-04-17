@@ -1,7 +1,7 @@
 import { getAllProduct } from "@/app/data/product";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { FC, useState } from "react";
-import { Product, ProductAPIServerSidePropsTypes } from "types/product";
+import { ProductAPIProps } from "types/product";
 import HeroImage from "components/HeroImage/HeroImage";
 import SectionHeading from "@/app/components/SectionHeading/SectionHeading";
 import Products from "@/app/components/Products/Products";
@@ -15,9 +15,9 @@ const Homepage: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 ) => {
   const { data } = props;
   const { currentPage: current = 0, products, totalProducts } = data ?? {};
-  const [currentProducts, setCurrentProducts] = useState<Product[]>(
-    products ?? []
-  );
+  const [currentProducts, setCurrentProducts] = useState<
+    Array<ProductAPIProps["product"]>
+  >(products ?? []);
   const [currentPage, setCurrentPage] = useState<number>(current as number);
 
   const handlePageChange = async (pageNumber: number) => {
@@ -60,7 +60,7 @@ const getServerSideProps = (async () => {
       status: status ?? 400,
     },
   };
-}) satisfies GetServerSideProps<ProductAPIServerSidePropsTypes>;
+}) satisfies GetServerSideProps<ProductAPIProps["getAllProductApiResponse"]>;
 
 export default Homepage;
 export { getServerSideProps };

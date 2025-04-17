@@ -7,15 +7,19 @@ import {
   InferGetServerSidePropsType,
 } from "next";
 import React, { FC } from "react";
-import { ProductAPIServerSidePropsTypes } from "types/product";
+import { ProductAPIProps } from "types/product";
 
 const ProductDetailPage: FC<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = (props) => {
-  const { data } = props;
+  const { data: productData } = props;
   const { wishListProductsSkuIds } = useProductContext();
-  const productData = data?.products?.[0] ?? null;
-  return <ProductDetail product={productData} isItemInWishList={wishListProductsSkuIds.has(productData?.SKU ?? '')} />;
+  return (
+    <ProductDetail
+      product={productData}
+      isItemInWishList={wishListProductsSkuIds.has(productData?.SKU ?? "")}
+    />
+  );
 };
 
 const getServerSideProps = (async (ctx: GetServerSidePropsContext) => {
@@ -33,7 +37,9 @@ const getServerSideProps = (async (ctx: GetServerSidePropsContext) => {
       status: status ?? 400,
     },
   };
-}) satisfies GetServerSideProps<ProductAPIServerSidePropsTypes>;
+}) satisfies GetServerSideProps<
+  ProductAPIProps["getProductWithSkuOrIdResponse"]
+>;
 
 export default ProductDetailPage;
 export { getServerSideProps };

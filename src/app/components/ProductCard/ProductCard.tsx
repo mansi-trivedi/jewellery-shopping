@@ -5,7 +5,7 @@ import { memo, useCallback, useMemo } from "react";
 import { FiHeart } from "react-icons/fi";
 import { addToWishlist, removeItemFromWishList } from "@/app/data/wishlist";
 import Link from "next/link";
-import { Product } from "types/product";
+import { ProductAPIProps } from "types/product";
 import { useProductContext } from "@/app/contexts/ProductContext";
 import toast from "react-hot-toast";
 import { ServerResponseType } from "types/global";
@@ -16,7 +16,7 @@ import { useUserContext } from "@/app/contexts/UserContext";
 import { useRouter } from "next/router";
 
 type ProductCardPropTypes = {
-  product: Product;
+  product: ProductAPIProps["product"];
   isItemInWishList?: boolean;
   shouldShowAddToCart?: boolean;
 };
@@ -24,7 +24,13 @@ type ProductCardPropTypes = {
 const ProductCard: React.FC<ProductCardPropTypes> = (props) => {
   /** Derived props */
   const { product, isItemInWishList = false } = props;
-  const { images: image, price, name, SKU: sku, productId } = product ?? {};
+  const {
+    images: image,
+    price,
+    name,
+    SKU: sku = "",
+    productId = "",
+  } = product ?? {};
 
   /** Contexts */
   const { toggleProductsFromWishList } = useProductContext();

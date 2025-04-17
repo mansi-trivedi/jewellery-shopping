@@ -1,13 +1,15 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import CartItem from "components/Cart/CartItem";
 import CartTotal from "components/Cart/CartTotal";
 import { useCartContext } from "context/CartContext";
 import AddressCard from "../Address/AddressCard";
 import { getCartItems } from "@/app/data/cart";
 import { PayPalButtons } from "@paypal/react-paypal-js";
+import { completeOrderAndCreateItems, deleteOrder } from "@/app/data/order";
 
 const Cart: FC = () => {
   const { cartItems, setCartItemsHandler, cart } = useCartContext();
+  const [orderId, setOrderId] = useState<string>("");
 
   useEffect(() => {
     (async () => {
@@ -71,6 +73,7 @@ const Cart: FC = () => {
                     }
                   );
                   const responseData = await response.json();
+                  setOrderId(responseData.data.order_id);
                   return responseData?.data?.id + "";
                 }}
                 onApprove={async (data) => {
@@ -87,8 +90,25 @@ const Cart: FC = () => {
                     }
                   )
                     .then((response) => response.json())
-                    .then(() => console.log(""))
+                    .then((response) => {
+                      if (response.approvedData.result.status === "COMPLETED") {
+                        (async () => {
+                          await completeOrderAndCreateItems({
+                            orderId: orderId,
+                            paymentStatus: "COMPLETED",
+                            orderItems: cartItems,
+                          });
+                        })();
+                      }
+                    })
                     .catch((e) => console.error(e));
+                }}
+                onCancel={async () => {
+                  const [, cancelErr] = await deleteOrder(orderId);
+                  if (cancelErr) {
+                    console.log(cancelErr);
+                    return;
+                  }
                 }}
               />
             </div>

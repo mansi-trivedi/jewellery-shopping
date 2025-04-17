@@ -5,31 +5,26 @@ type Product = {
   SKU: string;
   description: string;
   stock: string;
-  price: string;
+  price: number;
   categoryId: string;
   name: string;
   warranty: string;
   discount: string;
   images: string;
+} | null;
+
+type ProductAPIProps = {
+  product: Product | null;
+  getCollectionResponse: APIResponse<ProductAPIResponse | null> | undefined;
+  getProductWithSkuOrIdResponse: APIResponse<Product | null>;
+  getAllProductApiResponse: APIResponse<{
+    products: Product[];
+    totalProducts: number;
+    currentPage: number;
+  }>;
+  getProductCategoryApiResponse: APIResponse<{
+    products: Array<Product>;
+  }>;
 };
 
-type ProductAPIResponse = Partial<{
-  products: Product[] | [] | undefined;
-  totalProducts: number | null;
-  currentPage: number | null;
-}>;
-
-type ProductAPIServerSidePropsTypes = APIResponse<ProductAPIResponse | null>;
-
-type SingleProductAPIResponse = {
-  products: Product[];
-};
-type ProductSkuAPIServerSidePropTypes =
-  APIResponse<SingleProductAPIResponse | null>;
-
-export type {
-  Product,
-  ProductAPIResponse,
-  ProductAPIServerSidePropsTypes,
-  ProductSkuAPIServerSidePropTypes,
-};
+export type { ProductAPIProps };

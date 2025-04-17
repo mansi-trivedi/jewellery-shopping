@@ -1,6 +1,6 @@
 import { getProductByCategoryId } from "@/app/data/product";
 import React, { FC, useEffect, useState } from "react";
-import { Product } from "types/product";
+import { ProductAPIProps } from "types/product";
 import ProductCard from "../ProductCard/ProductCard";
 import { useProductContext } from "@/app/contexts/ProductContext";
 import Carousel from "../ui/Carousel/Carousel";
@@ -10,7 +10,9 @@ type SimilarProductDetailPropTypes = {
 };
 
 const SimilarProduct: FC<SimilarProductDetailPropTypes> = ({ categoryId }) => {
-  const [similarProducts, setSimilarProduct] = useState<Product[]>([]);
+  const [similarProducts, setSimilarProduct] = useState<
+    Array<ProductAPIProps["product"]>
+  >([]);
   const { wishListProductsSkuIds } = useProductContext();
 
   useEffect(() => {
@@ -38,15 +40,13 @@ const SimilarProduct: FC<SimilarProductDetailPropTypes> = ({ categoryId }) => {
       </h2>
       <div className="">
         <Carousel itemsPerSlide={4}>
-          {[...similarProducts, ...similarProducts, ...similarProducts]?.map(
-            (product, key) => (
-              <ProductCard
-                key={key}
-                product={product}
-                isItemInWishList={wishListProductsSkuIds.has(product.SKU)}
-              />
-            )
-          )}
+          {similarProducts?.map((product, key) => (
+            <ProductCard
+              key={key}
+              product={product}
+              isItemInWishList={wishListProductsSkuIds.has(product?.SKU ?? "")}
+            />
+          ))}
         </Carousel>
       </div>
     </div>

@@ -14,4 +14,9 @@ type AddressType = {
 
 type AddAddressResponse = ServerResponseType<Array<AddressType>>;
 
-export type { AddressType, AddAddressResponse };
+type AddressAPIProps = {
+  addressType: AddressType;
+  addAddressResponse: AddAddressResponse;
+};
+
+export type { AddressAPIProps };

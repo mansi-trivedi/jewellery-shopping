@@ -6,7 +6,7 @@ import type {
   InferGetServerSidePropsType,
 } from "next";
 import { FC, useState } from "react";
-import { Product, ProductAPIServerSidePropsTypes } from "types/product";
+import { ProductAPIProps } from "types/product";
 import { StaticImageData } from "next/image";
 import Products from "@/app/components/Products/Products";
 import SectionHeading from "@/app/components/SectionHeading/SectionHeading";
@@ -50,9 +50,9 @@ const Collection: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = (
     COLLECTION_IMG_MAPPING[
       (collectionName as keyof CollectionImgType) ?? "earrings"
     ];
-  const [currentProducts, setCurrentProducts] = useState<Product[]>(
-    products ?? []
-  );
+  const [currentProducts, setCurrentProducts] = useState<
+    Array<ProductAPIProps["product"]>
+  >(products ?? []);
   const [currentPage, setCurrentPage] = useState<number>(current as number);
 
   if (!products?.length) {
@@ -121,7 +121,7 @@ const getServerSideProps = (async (ctx: GetServerSidePropsContext) => {
     },
   };
 }) satisfies GetServerSideProps<
-  ProductAPIServerSidePropsTypes & {
+  ProductAPIProps["getAllProductApiResponse"] & {
     collectionName: string;
   }
 >;

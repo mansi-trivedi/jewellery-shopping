@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Products from "../Products/Products";
 import { getWishList } from "@/app/data/wishlist";
-import { Product } from "@/app/types/productType";
 import toast from "react-hot-toast";
 import { useProductContext } from "context/ProductContext";
+import { ProductAPIProps } from "types/product";
 
 const Wishlist = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Array<ProductAPIProps["product"]>>(
+    []
+  );
   const { addProductToWishList } = useProductContext();
 
   useEffect(() => {
@@ -18,7 +20,9 @@ const Wishlist = () => {
         );
         return null;
       }
-      response?.data?.forEach((product) => addProductToWishList(product.SKU));
+      response?.data?.forEach((product) =>
+        addProductToWishList(product?.SKU ?? "")
+      );
       setProducts(response?.data ?? []);
     }
     fetchData();

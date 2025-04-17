@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { BASE_URL } from "@/app/constants/api";
 import { APIResponse } from "types/api";
 import { resolvePromise } from "../utils/apiUtils";
-import { AddAddressResponse, AddressType } from "types/address";
+import { AddressAPIProps } from "types/address";
 
 const addNewAddress = async (
   name: string,
@@ -16,7 +16,7 @@ const addNewAddress = async (
   postalcode: string
 ): Promise<
   [
-    AddAddressResponse,
+    AddressAPIProps["addAddressResponse"],
     AxiosError<{
       error: string;
     }>
@@ -38,14 +38,14 @@ const addNewAddress = async (
     }),
   };
   const [response, error] = await resolvePromise(
-    axios.request<AddAddressResponse>(requestConfig)
+    axios.request<AddressAPIProps["addAddressResponse"]>(requestConfig)
   );
   return [response?.data, error];
 };
 
 const getAddresses = async (): Promise<
   [
-    APIResponse<AddressType[]> | undefined,
+    APIResponse<Array<AddressAPIProps["addressType"]>> | undefined,
     AxiosError<{
       error: string;
     }>
@@ -63,7 +63,7 @@ const deleteAddresses = async (
   addressId: string
 ): Promise<
   [
-    APIResponse<AddressType[]> | undefined,
+    APIResponse<Array<AddressAPIProps["addressType"]>> | undefined,
     AxiosError<{
       error: string;
     }>

@@ -3,7 +3,6 @@ import ImageSlider from "components/ImageSlider/ImageSlider";
 import Rating from "components/Rating/Ratings";
 import Review from "components/Review";
 import { addToCart } from "@/app/data/cart";
-import { Product } from "@/app/types/productType";
 import toast from "react-hot-toast";
 import Button from "../ui/Button/Button";
 import FullWidthContainer from "components/FullWidthContainer/FullWidthContainer";
@@ -20,9 +19,10 @@ import { getProductAvgReview } from "@/app/data/review";
 import { useUserContext } from "@/app/contexts/UserContext";
 import { useRouter } from "next/router";
 import { AverageReviewType } from "types/review";
+import { ProductAPIProps } from "types/product";
 
 type ProductDetailPropTypes = {
-  product: Product | null;
+  product: ProductAPIProps["product"];
   isItemInWishList?: boolean;
 };
 

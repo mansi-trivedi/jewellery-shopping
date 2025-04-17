@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { BASE_URL } from "@/app/constants/api";
 import { APIResponse } from "types/api";
-import { Product } from "types/product";
+import { ProductAPIProps } from "types/product";
 import { ServerResponseType } from "types/global";
 import { resolvePromise } from "../utils/apiUtils";
 
@@ -20,7 +20,7 @@ const addToWishlist = async (
 };
 
 const getWishList = async (): Promise<
-  [APIResponse<Product[]> | undefined, AxiosError]
+  [APIResponse<Array<ProductAPIProps["product"]>> | undefined, AxiosError]
 > => {
   const requestConfig: AxiosRequestConfig = {
     url: `${BASE_URL}/api/wishlist`,

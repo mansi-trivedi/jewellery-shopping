@@ -6,7 +6,7 @@ type CartItemData = {
   description: string;
   name: string;
   images: string;
-  price: string;
+  price: number;
   productId: string;
   quantity: number;
   subtotal: string;

@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     }
 
     /** if order created successfully we will store it in the database */
-    const [, orderErr] = await insertOrder({
+    const [orderResp, orderErr] = await insertOrder({
       paypalOrderId: response.result.id,
       totalPrice: order_price,
       userId: (payload?.userId ?? "") as string,
@@ -65,6 +65,7 @@ export async function POST(request: Request) {
       success: true,
       data: {
         ...response.result,
+        order_id: orderResp.data,
       },
     });
   } catch (e) {

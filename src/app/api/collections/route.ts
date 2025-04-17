@@ -1,13 +1,13 @@
 import { executeQuery } from "@/app/libs/mysql";
 import serverResponse from "@/app/utils/nextServerResponse";
 import { NextResponse } from "next/server";
-import { Product, ProductAPIServerSidePropsTypes } from "types/product";
+import { ProductAPIProps } from "types/product";
 
 export const revalidate = 0;
 
 export async function GET(
   request: Request
-): Promise<NextResponse<ProductAPIServerSidePropsTypes>> {
+): Promise<NextResponse<ProductAPIProps["getCollectionResponse"]>> {
   const { searchParams } = new URL(request.url);
   const pageNumber = searchParams.get("page_number");
   const pageSize = searchParams.get("page_size");
@@ -19,7 +19,7 @@ export async function GET(
       pageSize,
       categoryName,
     ]);
-    const products = rows[0] as Product[];
+    const products = rows[0] as Array<ProductAPIProps["product"]>;
     const paginationInfo = rows[1]?.[0] || {};
     return serverResponse({
       success: true,

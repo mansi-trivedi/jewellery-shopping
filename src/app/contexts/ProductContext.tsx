@@ -11,20 +11,22 @@ import {
   useEffect,
 } from "react";
 import { getWishList } from "@/app/data/wishlist";
-import { Product } from "types/product";
+import { ProductAPIProps } from "types/product";
 import { useRouter } from "next/router";
 
 type ProductProviderPropTypes = {
   children: ReactNode;
 };
 
+type Products = Array<ProductAPIProps["product"]>;
+
 type ProductContextType = {
   wishListProductsSkuIds: Set<string>;
   toggleProductsFromWishList: (productSkuId: string) => void;
   addProductToWishList: (productSkuId: string) => void;
   RemoveProductFromWishList: (productSkuId: string) => void;
-  products: Product[];
-  setProducts: (products: Product[]) => void;
+  products: Products;
+  setProducts: (products: Products) => void;
   setSearchedTerm: (searchTerm: string) => void;
   searchedTerm: string;
 };
@@ -95,7 +97,9 @@ const ProductProvider: FC<ProductProviderPropTypes> = ({ children }) => {
     (async () => {
       const [response] = await getWishList();
       if (response?.success) {
-        response?.data?.forEach((product) => addProductToWishList(product.SKU));
+        response?.data?.forEach((product) =>
+          addProductToWishList(product?.SKU ?? "")
+        );
       }
     })();
   }, [addProductToWishList]);

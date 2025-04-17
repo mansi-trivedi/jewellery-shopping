@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { AddressType } from "types/address";
+import { AddressAPIProps } from "types/address";
 import { getAddresses } from "@/app/data/address";
 import toast from "react-hot-toast";
 import CustomModal from "components/Modal/Modal";
@@ -8,8 +8,11 @@ import AddressDetails from "./AddressDetails";
 
 const AddressCard = () => {
   const [addressModal, setAddressModal] = useState<boolean>(false);
-  const [addresses, setAddresses] = useState<AddressType[]>([]);
-  const [selectedAddress, setSelectedAddress] = useState<AddressType>();
+  const [addresses, setAddresses] = useState<
+    Array<AddressAPIProps["addressType"]>
+  >([]);
+  const [selectedAddress, setSelectedAddress] =
+    useState<AddressAPIProps["addressType"]>();
 
   useEffect(() => {
     (async () => {

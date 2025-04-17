@@ -1,16 +1,17 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import ProductCard from "components/ProductCard/ProductCard";
-import { Product } from "types/product";
+import { ProductAPIProps } from "types/product";
 import { useProductContext } from "context/ProductContext";
 
 type ProductsPropTypes = {
-  products: Product[] | [];
+  products: Array<ProductAPIProps["product"]>;
 };
 
 const Products: React.FC<ProductsPropTypes> = (props) => {
   const { products } = props;
-  const [currentProducts, setCurrentProducts] = useState<Product[]>(products);
+  const [currentProducts, setCurrentProducts] =
+    useState<ProductsPropTypes["products"]>(products);
   const { wishListProductsSkuIds } = useProductContext();
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const Products: React.FC<ProductsPropTypes> = (props) => {
             <ProductCard
               key={key}
               product={product}
-              isItemInWishList={wishListProductsSkuIds.has(product.SKU)}
+              isItemInWishList={wishListProductsSkuIds.has(product?.SKU ?? "")}
             />
           ))}
         </div>

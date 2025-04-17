@@ -1,13 +1,18 @@
 import { executeQuery } from "@/app/libs/mysql";
 import serverResponse from "@/app/utils/nextServerResponse";
 import { NextResponse } from "next/server";
-import { Product, ProductAPIServerSidePropsTypes } from "types/product";
+import { ProductAPIProps } from "types/product";
 
 export const revalidate = 0;
 
 export async function GET(
   request: Request
-): Promise<NextResponse<ProductAPIServerSidePropsTypes>> {
+): Promise<
+  NextResponse<
+    | ProductAPIProps["getAllProductApiResponse"]
+    | ProductAPIProps["getProductWithSkuOrIdResponse"]
+  >
+> {
   const { searchParams } = new URL(request.url);
   const productId = searchParams.get("product_id");
   const skuId = searchParams.get("sku_id");
@@ -27,15 +32,13 @@ export async function GET(
 
   try {
     const rows = await executeQuery(query, values);
-    const products = rows[0] as Product[];
+    const products = rows[0] as Array<ProductAPIProps["product"]>;
     const paginationInfo = rows[1]?.[0] || {};
 
     if (productId || skuId) {
       return serverResponse({
         success: true,
-        data: {
-          products: products,
-        },
+        data: products?.[0] ?? null,
       });
     }
 
@@ -43,8 +46,8 @@ export async function GET(
       success: true,
       data: {
         products: products,
-        totalProducts: paginationInfo?.totalProducts ?? null,
-        currentPage: paginationInfo?.currentPage ?? null,
+        totalProducts: paginationInfo?.totalProducts ?? 0,
+        currentPage: paginationInfo?.currentPage ?? 0,
       },
     });
   } catch (error) {
@@ -53,6 +56,7 @@ export async function GET(
       message: "Internal Server Error",
       error: error instanceof Error ? error.message : undefined,
       status: 500,
+      data: null,
     });
   }
 }
