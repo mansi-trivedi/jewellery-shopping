@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { BASE_URL } from "@/app/constants/api";
+import { BASE_URL } from "constants/api";
 import { APIResponse } from "types/api";
 import { ServerResponseType } from "types/global";
 import { resolvePromise } from "../utils/apiUtils";

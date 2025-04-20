@@ -15,6 +15,7 @@ type CartItemData = {
 type CartData = {
   total: string;
   cartId: string;
+  price: number;
 };
 
 type GetCartItemsResponse = APIResponse<Array<CartItemData>>;

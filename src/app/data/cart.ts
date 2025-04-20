@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 import { CartAPIProps } from "types/cart";
-import { BASE_URL } from "@/app/constants/api";
+import { BASE_URL } from "constants/api";
 import { resolvePromise } from "../utils/apiUtils";
 
 const getCartItems = async (): Promise<

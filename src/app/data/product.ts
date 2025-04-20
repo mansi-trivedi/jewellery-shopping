@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { ProductAPIProps } from "types/product";
-import { BASE_URL } from "@/app/constants/api";
+import { BASE_URL } from "constants/api";
 import { resolvePromise } from "../utils/apiUtils";
 
 /** Gets all products with given category name */

@@ -1,4 +1,4 @@
-import { menuItems } from "@/app/constants/menuItems";
+import { menuItems } from "@/constants/menuItems";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";

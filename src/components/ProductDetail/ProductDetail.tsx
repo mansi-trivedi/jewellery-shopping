@@ -8,7 +8,7 @@ import Button from "../ui/Button/Button";
 import FullWidthContainer from "components/FullWidthContainer/FullWidthContainer";
 import { FaCircle } from "react-icons/fa";
 import Collapse from "../ui/Collapse/Collapse";
-import { DETAILS } from "@/app/constants/products";
+import { DETAILS } from "@/constants/products";
 import { fetchProductImages } from "@/app/utils/imageUtils";
 import { addToWishlist, removeItemFromWishList } from "@/app/data/wishlist";
 import { ServerResponseType } from "types/global";

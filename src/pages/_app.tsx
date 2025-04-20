@@ -5,7 +5,7 @@ import { GlobalContextProvider } from "context/GlobalContext";
 import { UserProvider } from "context/UserContext";
 import { AppProps } from "next/app";
 import { Toaster } from "react-hot-toast";
-import { quickSand, openSans, robFont } from "@/app/constants/fonts";
+import { quickSand, openSans, robFont } from "@/constants/fonts";
 import { parseCookies } from "@/app/utils/cookie";
 import { NextPageContext } from "next";
 import { CartProvider } from "context/CartContext";

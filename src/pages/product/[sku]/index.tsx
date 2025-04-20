@@ -1,4 +1,4 @@
-import ProductDetail from "@/app/components/ProductDetail/ProductDetail";
+import ProductDetail from "components/ProductDetail/ProductDetail";
 import { useProductContext } from "@/app/contexts/ProductContext";
 import { getProductBySku } from "@/app/data/product";
 import {

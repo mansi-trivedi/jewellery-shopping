@@ -1,4 +1,4 @@
-import Wishlist from "@/app/components/Wishlist/Wishlist";
+import Wishlist from "components/Wishlist/Wishlist";
 import { useUserContext } from "context/UserContext";
 
 const WishListPage = () => {

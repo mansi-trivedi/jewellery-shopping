@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { FC, FormEvent, useCallback, useRef, useState } from "react";
-import Button from "@/app/components/ui/Button/Button";
+import Button from "components/ui/Button/Button";
 import Link from "next/link";
 import { performLoginOperation } from "@/app/data/user";
 import toast from "react-hot-toast";
 import necklaceImg from "@/app/assets/necklaces.jpg";
-import LoadingSpinner from "@/app/components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import { useUserContext } from "context/UserContext";
 
 type LoginErrorProps = {

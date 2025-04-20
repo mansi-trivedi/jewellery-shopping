@@ -1,4 +1,4 @@
-import { AddressPropsType } from "@/app/components/Address/AddressDetails";
+import { AddressPropsType } from "components/Address/AddressDetails";
 import { executeQuery } from "@/app/libs/mysql";
 import { decodeAndGetUserInfo } from "@/app/utils/getAuthToken";
 import serverResponse from "@/app/utils/nextServerResponse";

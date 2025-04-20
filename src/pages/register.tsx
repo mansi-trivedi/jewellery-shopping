@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FC, FormEvent, useCallback, useRef, useState } from "react";
-import Button from "@/app/components/ui/Button/Button";
+import Button from "components/ui/Button/Button";
 import Link from "next/link";
 import { performUserRegistration } from "@/app/data/user";
 import toast from "react-hot-toast";
@@ -50,14 +50,14 @@ const Register: FC = () => {
       if (!password) {
         formErrors.password = "Password is required";
       } else if (password.length < 8) {
-        formErrors.password =
-          "password must contain at least 8 character";
+        formErrors.password = "password must contain at least 8 character";
       }
 
       if (!cPassword) {
         formErrors.confirmPassword = "Confirm Password is required";
       } else if (password !== cPassword) {
-        formErrors.confirmPassword = "Password and confirm Password must be equal";
+        formErrors.confirmPassword =
+          "Password and confirm Password must be equal";
       }
       setErrors(formErrors);
       if (Object.keys(formErrors).length !== 0) {

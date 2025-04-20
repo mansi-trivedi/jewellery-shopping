@@ -8,8 +8,8 @@ import type {
 import { FC, useState } from "react";
 import { ProductAPIProps } from "types/product";
 import { StaticImageData } from "next/image";
-import Products from "@/app/components/Products/Products";
-import SectionHeading from "@/app/components/SectionHeading/SectionHeading";
+import Products from "components/Products/Products";
+import SectionHeading from "components/SectionHeading/SectionHeading";
 
 /** images */
 import collectionImg from "@/app/assets/collection-banner-image.jpg";
@@ -18,7 +18,7 @@ import necklaceImg from "@/app/assets/necklaces.jpg";
 import bangles from "@/app/assets/bangles.jpg";
 import bracelet from "@/app/assets/bracelet.jpg";
 import anklet from "@/app/assets/anklet.jpg";
-import Pagination from "@/app/components/Pagination/Pagination";
+import Pagination from "components/Pagination/Pagination";
 import toast from "react-hot-toast";
 
 export const ITEMS_PER_PAGE = 10;

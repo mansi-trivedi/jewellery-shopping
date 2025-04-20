@@ -3,9 +3,9 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { FC, useState } from "react";
 import { ProductAPIProps } from "types/product";
 import HeroImage from "components/HeroImage/HeroImage";
-import SectionHeading from "@/app/components/SectionHeading/SectionHeading";
-import Products from "@/app/components/Products/Products";
-import Pagination from "@/app/components/Pagination/Pagination";
+import SectionHeading from "components/SectionHeading/SectionHeading";
+import Products from "components/Products/Products";
+import Pagination from "components/Pagination/Pagination";
 import toast from "react-hot-toast";
 
 export const ITEMS_PER_PAGE = 5;

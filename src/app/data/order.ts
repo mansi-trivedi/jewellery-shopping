@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-import { BASE_URL } from "@/app/constants/api";
+import { BASE_URL } from "constants/api";
 import { resolvePromise } from "../utils/apiUtils";
 import { CartAPIProps } from "types/cart";
 
@@ -28,6 +28,10 @@ type CompleteOrderAndCreateItemsParams = {
   orderId: string;
   paymentStatus: string;
   orderItems: Array<CartAPIProps["cartItem"]>;
+  paymentId: string;
+  paymentDate: string;
+  paymentMethod: string;
+  amount: number;
 };
 
 const completeOrderAndCreateItems = async (
@@ -43,9 +47,15 @@ const completeOrderAndCreateItems = async (
       orderId: params.orderId,
       paymentStatus: params.paymentStatus,
       orderItems: params.orderItems,
+      paymentId: params.paymentId,
+      paymentDate: params.paymentDate,
+      paymentMethod: params.paymentMethod,
+      amount: params.amount,
     },
   };
   const [response, error] = await resolvePromise(axios.request(requestConfig));
+  console.log(response, "response");
+  console.log(error, "error");
   return [response?.data, error];
 };
 

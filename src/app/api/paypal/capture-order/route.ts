@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "Some Error Occured at backend",
+          message: "Some Error occurred at backend",
         },
         {
           status: 500,

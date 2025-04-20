@@ -2,10 +2,14 @@ import React, { FC, useEffect, useState } from "react";
 import CartItem from "components/Cart/CartItem";
 import CartTotal from "components/Cart/CartTotal";
 import { useCartContext } from "context/CartContext";
-import AddressCard from "../Address/AddressCard";
+// import AddressCard from "../Address/AddressCard";
 import { getCartItems } from "@/app/data/cart";
 import { PayPalButtons } from "@paypal/react-paypal-js";
-import { completeOrderAndCreateItems, deleteOrder } from "@/app/data/order";
+import {
+  completeOrderAndCreateItems,
+  CompleteOrderAndCreateItemsParams,
+  deleteOrder,
+} from "@/app/data/order";
 
 const Cart: FC = () => {
   const { cartItems, setCartItemsHandler, cart } = useCartContext();
@@ -49,7 +53,7 @@ const Cart: FC = () => {
             })}
           </div>
           <div className="cart-summary-container sticky top-8 self-start w-full">
-            <AddressCard />
+            {/* <AddressCard /> */}
             <CartTotal />
             <div className="text-center">
               <PayPalButtons
@@ -92,12 +96,35 @@ const Cart: FC = () => {
                     .then((response) => response.json())
                     .then((response) => {
                       if (response.approvedData.result.status === "COMPLETED") {
+                        // 1. Extract the necessary data from the PayPal response
+                        const paypalResult = response.approvedData.result;
+                        const paymentStatus = paypalResult.status;
+
+                        const paymentId =
+                          paypalResult.purchase_units[0]?.payments?.captures[0]
+                            ?.id;
+                        const paymentDate =
+                          paypalResult.purchase_units[0]?.payments?.captures[0]
+                            ?.create_time;
+                        const paymentMethod = "PayPal";
+                        const amount = parseFloat(
+                          paypalResult.purchase_units[0]?.payments?.captures[0]
+                            ?.amount?.value
+                        );
+
+                        // 2. Construct the parameters object
+                        const params: CompleteOrderAndCreateItemsParams = {
+                          orderId,
+                          paymentStatus,
+                          orderItems: cartItems,
+                          paymentId,
+                          paymentDate,
+                          paymentMethod,
+                          amount,
+                        };
+
                         (async () => {
-                          await completeOrderAndCreateItems({
-                            orderId: orderId,
-                            paymentStatus: "COMPLETED",
-                            orderItems: cartItems,
-                          });
+                          await completeOrderAndCreateItems(params);
                         })();
                       }
                     })

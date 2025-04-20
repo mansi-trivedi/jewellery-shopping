@@ -1,5 +1,5 @@
 import { FC } from "react";
-import Products from "@/app/components/Products/Products";
+import Products from "components/Products/Products";
 import { getProductsBySearchTerm } from "@/app/data/product";
 import { ProductAPIProps } from "types/product";
 import {
