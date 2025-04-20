@@ -54,8 +54,6 @@ const completeOrderAndCreateItems = async (
     },
   };
   const [response, error] = await resolvePromise(axios.request(requestConfig));
-  console.log(response, "response");
-  console.log(error, "error");
   return [response?.data, error];
 };
 
