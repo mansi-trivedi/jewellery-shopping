@@ -84,10 +84,23 @@ const getCart = async (): Promise<
   return [response?.data, error];
 };
 
+const removeCartAndCartItems = async (cartId: string) => {
+  const requestConfig: AxiosRequestConfig = {
+    url: `${BASE_URL}/api/cart/cartitems?cart_id=${cartId}`,
+    method: "delete",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const [response, error] = await resolvePromise(axios.request(requestConfig));
+  return [response?.data, error];
+};
+
 export {
   addToCart,
   getCartItems,
   removeItemFromCart,
   updateItemQuantity,
   getCart,
+  removeCartAndCartItems,
 };

@@ -3,17 +3,20 @@ import CartItem from "components/Cart/CartItem";
 import CartTotal from "components/Cart/CartTotal";
 import { useCartContext } from "context/CartContext";
 // import AddressCard from "../Address/AddressCard";
-import { getCartItems } from "@/app/data/cart";
+import { getCartItems, removeCartAndCartItems } from "@/app/data/cart";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import {
   completeOrderAndCreateItems,
   CompleteOrderAndCreateItemsParams,
   deleteOrder,
 } from "@/app/data/order";
+import { extractAddressDetails } from "@/utils/addressUtil";
+import { useRouter } from "next/router";
 
 const Cart: FC = () => {
   const { cartItems, setCartItemsHandler, cart } = useCartContext();
   const [orderId, setOrderId] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -42,8 +45,8 @@ const Cart: FC = () => {
 
   return (
     <>
-      <div className="flex content-center justify-between mt-4">
-        <h1 className="text-xl font-bold text-darkBlue">My Cart</h1>
+      <div className="flex content-center justify-between">
+        <h1 className="text-xl font-bold text-darkBlue mt-4">My Cart</h1>
       </div>
       {cartItems?.length ? (
         <div className="grid lg:grid-cols-[calc(70%-1rem)_calc(30%-1rem)] py-4 lg:py-8 relative min-h-screen w-full max-w-full gap-8">
@@ -111,6 +114,9 @@ const Cart: FC = () => {
                           paypalResult.purchase_units[0]?.payments?.captures[0]
                             ?.amount?.value
                         );
+                        const addressDetails = extractAddressDetails(
+                          response.approvedData.result
+                        );
 
                         // 2. Construct the parameters object
                         const params: CompleteOrderAndCreateItemsParams = {
@@ -121,11 +127,21 @@ const Cart: FC = () => {
                           paymentDate,
                           paymentMethod,
                           amount,
+                          addressLine1: addressDetails.address_line_1,
+                          addressLine2: addressDetails.address_line_2,
+                          adminAria1: addressDetails.admin_area_1,
+                          adminAria2: addressDetails.admin_area_2,
+                          countryCode: addressDetails.country_code,
+                          postalCode: addressDetails.postal_code,
+                          recipientName: addressDetails.recipient_name,
                         };
 
                         (async () => {
                           await completeOrderAndCreateItems(params);
+                          await removeCartAndCartItems(cart?.cartId ?? "");
                         })();
+
+                        router.reload();
                       }
                     })
                     .catch((e) => console.error(e));
@@ -142,7 +158,7 @@ const Cart: FC = () => {
           </div>
         </div>
       ) : (
-        <div className="text-xl text-darkBlue text-center my-20 font-semiboldS">
+        <div className="text-xl text-darkBlue text-center my-20 font-semibold">
           Empty Cart
         </div>
       )}

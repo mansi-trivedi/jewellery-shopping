@@ -32,6 +32,13 @@ type CompleteOrderAndCreateItemsParams = {
   paymentDate: string;
   paymentMethod: string;
   amount: number;
+  addressLine1: string;
+  addressLine2: string;
+  adminAria1: string;
+  adminAria2: string;
+  postalCode: string;
+  countryCode: string;
+  recipientName: string;
 };
 
 const completeOrderAndCreateItems = async (
@@ -51,6 +58,13 @@ const completeOrderAndCreateItems = async (
       paymentDate: params.paymentDate,
       paymentMethod: params.paymentMethod,
       amount: params.amount,
+      addressLine1: params.addressLine1,
+      addressLine2: params.addressLine2,
+      adminAria1: params.adminAria1,
+      adminAria2: params.adminAria2,
+      postalCode: params.postalCode,
+      countryCode: params.countryCode,
+      recipientName: params.recipientName,
     },
   };
   const [response, error] = await resolvePromise(axios.request(requestConfig));

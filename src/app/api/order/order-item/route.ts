@@ -16,6 +16,13 @@ export async function POST(request: Request) {
       paymentDate,
       paymentMethod,
       amount,
+      addressLine1,
+      addressLine2,
+      adminAria1,
+      adminAria2,
+      countryCode,
+      postalCode,
+      recipientName,
     } = requestBody ?? {};
 
     // 1. Validate the request body
@@ -48,7 +55,7 @@ export async function POST(request: Request) {
 
     // 3. Execute the stored procedure
     await executeQuery(
-      "CALL CompleteOrderAndCreateItems(?, ?, ?, ?, ?, ?, ?, ?)",
+      "CALL CompleteOrderAndCreateItems(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         orderId,
         paymentStatus,
@@ -58,6 +65,13 @@ export async function POST(request: Request) {
         paymentMethod,
         amount,
         payload.userId,
+        addressLine1,
+        addressLine2,
+        adminAria1,
+        adminAria2,
+        postalCode,
+        countryCode,
+        recipientName,
       ]
     );
 
