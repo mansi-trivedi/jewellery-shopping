@@ -139,9 +139,8 @@ const Cart: FC = () => {
                         (async () => {
                           await completeOrderAndCreateItems(params);
                           await removeCartAndCartItems(cart?.cartId ?? "");
+                          router.reload();
                         })();
-
-                        router.reload();
                       }
                     })
                     .catch((e) => console.error(e));
