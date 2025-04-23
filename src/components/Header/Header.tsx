@@ -50,7 +50,7 @@ const Header = () => {
   return (
     <>
       <header className="py-4 flex items-center justify-between">
-        <div className="container mx-auto max-w-none flex items-center flex-wrap justify-between">
+        <div className="container mx-auto max-w-none flex items-center flex-wrap justify-between gap-5">
           {/* Logo */}
           <div className="text-xl font-bold">Brand Logo</div>
 

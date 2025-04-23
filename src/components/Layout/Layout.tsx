@@ -10,7 +10,7 @@ type LayoutPropTypes = {
 
 const Layout: FC<LayoutPropTypes> = ({ children }) => {
   return (
-    <div>
+    <div className="max-w-screen-3xl mx-auto">
       <OfferHeader />
       <Header />
       <Navigation />
