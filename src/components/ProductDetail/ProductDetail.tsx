@@ -2,7 +2,6 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import ImageSlider from "components/ImageSlider/ImageSlider";
 import Rating from "components/Rating/Ratings";
 import Review from "components/Review";
-import { addToCart } from "@/app/data/cart";
 import toast from "react-hot-toast";
 import Button from "../ui/Button/Button";
 import FullWidthContainer from "components/FullWidthContainer/FullWidthContainer";
@@ -20,6 +19,7 @@ import { useUserContext } from "@/app/contexts/UserContext";
 import { useRouter } from "next/router";
 import { AverageReviewType } from "types/review";
 import { ProductAPIProps } from "types/product";
+import { useCartContext } from "@/app/contexts/CartContext";
 
 type ProductDetailPropTypes = {
   product: ProductAPIProps["product"];
@@ -40,6 +40,7 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
   const { toggleProductsFromWishList } = useProductContext();
   const [avgReviews, setAvgReview] = useState<AverageReviewType>(null);
   const { isLoggedIn } = useUserContext();
+  const { addToCart } = useCartContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -59,13 +60,8 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
   }, [images]);
 
   const handleOnAddToCart = useCallback(async () => {
-    const [atcResp, atcErr] = await addToCart(productId);
-    if (atcErr) {
-      toast.error("Something went wrong, Please try again later");
-      return;
-    }
-    toast.success(atcResp?.message ?? "");
-  }, [productId]);
+    await addToCart(productId, 1);
+  }, [addToCart, productId]);
 
   const handleWishList = useCallback(async () => {
     if (!isLoggedIn) {
@@ -125,11 +121,10 @@ const ProductDetail: FC<ProductDetailPropTypes> = (props) => {
                 >
                   <FiHeart
                     className={`w-5 h-5 text-darkGreen
-                             ${
-                               isItemInWishList
-                                 ? "fill-darkGreen"
-                                 : "fill-offWhite"
-                             } 
+                             ${isItemInWishList
+                        ? "fill-darkGreen"
+                        : "fill-offWhite"
+                      } 
                              hover:fill-darkGreen`}
                   />
                 </button>

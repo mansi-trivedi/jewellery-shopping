@@ -10,6 +10,7 @@ type CartItemData = {
   productId: string;
   quantity: number;
   subtotal: string;
+  SKU: string;
 };
 
 type CartData = {

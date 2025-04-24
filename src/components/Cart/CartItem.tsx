@@ -4,6 +4,7 @@ import { FaTrashCan } from "react-icons/fa6";
 import { CartAPIProps } from "types/cart";
 import { useCartContext } from "context/CartContext";
 import { fetchProductImages } from "@/app/utils/imageUtils";
+import Link from "next/link";
 
 type CartItemPropsTypes = {
   cartItem: CartAPIProps["cartItem"];
@@ -11,7 +12,7 @@ type CartItemPropsTypes = {
 
 const CartItem: React.FC<CartItemPropsTypes> = (props) => {
   const { cartItem } = props;
-  const { name, description, quantity, productId, price, cartItemId, images } =
+  const { name, description, quantity, productId, price, cartItemId, images, SKU } =
     cartItem ?? {};
   const [itemQuantity, setItemQuantity] = useState<number>(quantity);
   // const [inputValue, setInputValue] = useState<number>(quantity);
@@ -62,7 +63,13 @@ const CartItem: React.FC<CartItemPropsTypes> = (props) => {
             )}
           </div>
           <div className="product-information px-2 my-2">
-            <p className="font-semibold text-darkBlue">{name}</p>
+            <Link
+              href={{
+                pathname: `/product/${SKU}`,
+              }}
+            >
+              <p className="font-semibold text-darkBlue cursor-pointer">{name}</p>
+            </Link>
             <p className="mx-0 mt-1 mb-0 text-sm text-darkBlue">
               {description}
             </p>
