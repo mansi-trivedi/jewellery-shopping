@@ -109,6 +109,11 @@ const Cart: FC = () => {
                         const paymentDate =
                           paypalResult.purchase_units[0]?.payments?.captures[0]
                             ?.create_time;
+                        const date = new Date(paymentDate);
+                        const formattedDate = date
+                          .toISOString()
+                          .slice(0, 19)
+                          .replace("T", " ");
                         const paymentMethod = "PayPal";
                         const amount = parseFloat(
                           paypalResult.purchase_units[0]?.payments?.captures[0]
@@ -124,7 +129,7 @@ const Cart: FC = () => {
                           paymentStatus,
                           orderItems: cartItems,
                           paymentId,
-                          paymentDate,
+                          paymentDate: formattedDate,
                           paymentMethod,
                           amount,
                           addressLine1: addressDetails.address_line_1,
