@@ -12,6 +12,7 @@ import {
 } from "@/app/data/order";
 import { extractAddressDetails } from "@/utils/addressUtil";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 const Cart: FC = () => {
   const { cartItems, setCartItemsHandler, cart } = useCartContext();
@@ -144,6 +145,26 @@ const Cart: FC = () => {
                         (async () => {
                           await completeOrderAndCreateItems(params);
                           await removeCartAndCartItems(cart?.cartId ?? "");
+                          try {
+                            const response = await fetch("/api/send-email", {
+                              method: "POST",
+                              body: JSON.stringify({
+                                name: "Ryan",
+                                email: "nareshmaheshwari2344@gmail.com",
+                                orderId: orderId,
+                                orderItems: cartItems,
+                                totalAmount: amount,
+                                address: `${addressDetails.address_line_1}, ${addressDetails.address_line_2}, ${addressDetails.admin_area_1}, ${addressDetails.admin_area_2}, ${addressDetails.country_code}, ${addressDetails.postal_code}`,
+                              }),
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                            });
+                            await response.json();
+                          } catch (e) {
+                            console.error(e);
+                          }
+                          toast.success("Order Places successfully");
                           router.reload();
                         })();
                       }
