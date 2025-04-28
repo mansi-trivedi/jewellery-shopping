@@ -1,5 +1,33 @@
 import { executeQuery } from "@/app/libs/mysql";
 import serverResponse from "@/app/utils/nextServerResponse";
+import { Order, OrderItem } from "types/order";
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("userId");
+
+  try {
+    const rows = await executeQuery("call GetUserOrders(?)", [userId]);
+    const orderDetails = rows[0][0] as Order;
+    const orderItems = rows[1] as Array<OrderItem>;
+
+    return serverResponse({
+      success: true,
+      data: {
+        orderDetails: orderDetails,
+        orderItems: orderItems,
+      },
+    });
+  } catch (error) {
+    return serverResponse({
+      success: false,
+      message: "Internal Server Error",
+      error: error instanceof Error ? error.message : undefined,
+      status: 500,
+      data: null,
+    });
+  }
+}
 
 export async function POST(request: Request) {
   try {

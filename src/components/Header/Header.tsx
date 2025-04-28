@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   FiHeart,
   FiShoppingCart,
@@ -23,6 +23,7 @@ const Header = () => {
   const [searchModalOpen, setSearchModalOpen] = useState<boolean>(false);
   const [navigationModalOpen, setNavigationModalOpen] =
     useState<boolean>(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const router = useRouter();
   const isMobile = useMediaQuery({ maxWidth: 1023 });
 
@@ -32,6 +33,10 @@ const Header = () => {
 
   const handleNavigationModal = () => {
     setNavigationModalOpen(!navigationModalOpen);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   const handleUserLogout = useCallback(async () => {
@@ -46,6 +51,10 @@ const Header = () => {
       router.push("/");
     }
   }, [handleUserLoggedInState, router]);
+
+  useEffect(() => {
+    setIsDropdownOpen(false);
+  }, [router.asPath]);
 
   return (
     <>
@@ -66,9 +75,27 @@ const Header = () => {
             />
 
             {isLoggedIn ? (
-              <button type="button" onClick={handleUserLogout}>
-                <PiUserFill size={24} className="hover:fill-darkGreen" />
-              </button>
+              <div className="relative">
+                <button type="button" onClick={toggleDropdown}>
+                  <PiUserFill size={24} className="hover:fill-darkGreen" />
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 shadow-md rounded-md z-10">
+                    <Link
+                      href={"/orders"}
+                      className="block w-full text-left px-4 py-2 text-sm text-blackShade hover:bg-gray-100 focus:outline-none focus:bg-gray-100 active:bg-gray-200 rounded-t-md rounded-b-md"
+                    >
+                      Orders
+                    </Link>
+                    <button
+                      onClick={handleUserLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-blackShade hover:bg-gray-100 focus:outline-none focus:bg-gray-100 active:bg-gray-200 rounded-t-md rounded-b-md"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <Link href="/login">
                 <FiUser size={24} className="hover:fill-darkGreen" />

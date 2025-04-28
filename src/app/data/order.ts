@@ -1,8 +1,29 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 import { BASE_URL } from "constants/api";
 import { resolvePromise } from "../utils/apiUtils";
 import { CartAPIProps } from "types/cart";
+import { OrderAPIProps } from "types/order";
+
+const getUserOrders = async (
+  userId: string
+): Promise<
+  [OrderAPIProps["getOrderAndOrderItemDetailsResponse"] | null, AxiosError]
+> => {
+  const requestConfig: AxiosRequestConfig = {
+    method: "get",
+    url: `${BASE_URL}/api/order?userId=${userId}`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const [response, error] = await resolvePromise(
+    axios.request<OrderAPIProps["getOrderAndOrderItemDetailsResponse"]>(
+      requestConfig
+    )
+  );
+  return [response?.data ?? null, error];
+};
 
 type InsertOrderFn = {
   totalPrice: number;
@@ -86,4 +107,4 @@ const deleteOrder = async (orderId: string) => {
 };
 
 export type { CompleteOrderAndCreateItemsParams };
-export { insertOrder, deleteOrder, completeOrderAndCreateItems };
+export { insertOrder, deleteOrder, completeOrderAndCreateItems, getUserOrders };

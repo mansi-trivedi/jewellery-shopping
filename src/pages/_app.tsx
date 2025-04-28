@@ -10,6 +10,7 @@ import { parseCookies } from "@/app/utils/cookie";
 import { NextPageContext } from "next";
 import { CartProvider } from "context/CartContext";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { getUserFromToken } from "@/app/libs/auth";
 
 type MyAppPropsTypes = {
   isAuthenticated: boolean;
@@ -86,9 +87,12 @@ export default MyApp;
 MyApp.getInitialProps = async ({ ctx }: { ctx: NextPageContext }) => {
   let isAuthenticated = false;
   const cookies = parseCookies(ctx?.req?.headers.cookie || "");
-  if (cookies["authToken"]) {
+  const user = await getUserFromToken(cookies["authToken"]);
+
+  if (user) {
     isAuthenticated = true;
   }
+
   return {
     isAuthenticated: isAuthenticated,
   };

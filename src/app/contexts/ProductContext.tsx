@@ -13,6 +13,7 @@ import {
 import { getWishList } from "@/app/data/wishlist";
 import { ProductAPIProps } from "types/product";
 import { useRouter } from "next/router";
+import { useUserContext } from "./UserContext";
 
 type ProductProviderPropTypes = {
   children: ReactNode;
@@ -46,6 +47,7 @@ const ProductContext = createContext(DEFAULT_VALUE);
 
 const ProductProvider: FC<ProductProviderPropTypes> = ({ children }) => {
   const router = useRouter();
+  const { isLoggedIn } = useUserContext();
   const [wishListProductsSkuIds, setWishListProductsSkuIds] = useState<
     ProductContextType["wishListProductsSkuIds"]
   >(DEFAULT_VALUE.wishListProductsSkuIds);
@@ -94,15 +96,19 @@ const ProductProvider: FC<ProductProviderPropTypes> = ({ children }) => {
 
   /** Gets and Sets the initial wish list products codes */
   useEffect(() => {
-    (async () => {
-      const [response] = await getWishList();
-      if (response?.success) {
-        response?.data?.forEach((product) =>
-          addProductToWishList(product?.SKU ?? "")
-        );
-      }
-    })();
-  }, [addProductToWishList]);
+    if (isLoggedIn) {
+      (async () => {
+        const [response] = await getWishList();
+        if (response?.success) {
+          response?.data?.forEach((product) =>
+            addProductToWishList(product?.SKU ?? "")
+          );
+        }
+      })();
+    } else {
+      setWishListProductsSkuIds(new Set());
+    }
+  }, [addProductToWishList, isLoggedIn]);
 
   /**
    * add your context values and handlers here

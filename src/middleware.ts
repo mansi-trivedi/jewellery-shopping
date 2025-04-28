@@ -42,5 +42,6 @@ export const config = {
     "/api/wishlist",
     "/wishlist",
     "/login",
+    "/orders",
   ],
 };
