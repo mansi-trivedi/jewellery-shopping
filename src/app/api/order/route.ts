@@ -8,7 +8,7 @@ export async function GET(request: Request) {
 
   try {
     const rows = await executeQuery("call GetUserOrders(?)", [userId]);
-    const orderDetails = rows[0][0] as Order;
+    const orderDetails = rows[0] as Array<Order>;
     const orderItems = rows[1] as Array<OrderItem>;
 
     return serverResponse({

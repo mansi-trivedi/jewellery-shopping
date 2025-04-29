@@ -23,7 +23,7 @@ type OrderItem = {
 };
 
 type GetOrderAndOrderItemDetailsResponse = APIResponse<{
-  orderDetails: Order;
+  orderDetails: Array<Order>;
   orderItems: Array<OrderItem>;
 }>;
 
